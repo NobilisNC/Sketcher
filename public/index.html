@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Document</title>
+    <script src="https://cdn.socket.io/socket.io-1.4.5.js"></script>
+    <style>
+        #sketcher {
+            position: relative;
+        }
+
+        #sketcher canvas {
+            position: absolute;
+            top: 0; left: 0;
+        }
+    </style>
+</head>
+<body>
+    <div id="sketcher" style="border:1px solid red;"></div>
+    <script>
+        // var C = document.querySelector("canvas#doodle");
+        // var ctx = C.getContext("2d");
+        // ctx.fillStyle = "rgba(0,0,0,1)";
+        // ctx.fillRect(10, 10, 50, 50);
+
+        // var DoodleJS = (function(document, window){
+        //     var url = "http://localhost:3000/";
+        //     var socket;
+
+        //     function init() {
+        //         socket = io(url);
+        //     }
+
+        //     function sendBitmap() {
+        //         var canvas = document.querySelector("canvas#doodle");
+        //         socket.emit("sav", {"data": document.querySelector("canvas#doodle").toDataURL().replace(/^data:image\/\w+;base64,/, "")});
+        //     }
+
+        //     window.addEventListener("load", function(e){
+        //         init();
+        //         sendBitmap();
+        //     });
+
+        //     return {
+        //         init: init
+        //         url: url
+        //     };
+        // });
+        
+        // var D = DoodleJS(document, window);
+    </script>
+    <script src="Sketcher.js"></script>
+</body>
+</html>

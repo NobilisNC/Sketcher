@@ -1,2 +1,2 @@
-# Doodle
+# Sketcher
 A collaborative drawing app.

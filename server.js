@@ -1,3 +1,4 @@
+var fs = require("fs");
 var http = require("http").Server();
 var io = require("socket.io")(http);
 
@@ -8,6 +9,15 @@ io.on("connection", function(socket){
 
     socket.on("mov", function(data){
         console.log("Movement : "+data);
+    });
+
+    socket.on("sav", function(data){
+        var file = fs.openSync('lol.png', 'w');
+        var buff = new Buffer(data.data, 'base64');
+        fs.write(file, buff, 0, buff.length, 0, function(err, data){
+            console.log("File saved.");
+        });
+        console.log("Save : "+data.data);
     });
 });
 
