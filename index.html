@@ -1,0 +1,28 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Document</title>
+    <script src="https://cdn.socket.io/socket.io-1.4.5.js"></script>
+</head>
+<body>
+    <script>
+        var DoodleJS = (function(){
+            var url = "http://localhost:3000/";
+            var socket = io(url);
+
+            function init() {
+                socket.emit("nom", "contenu");
+            }
+
+            init();
+
+            return {
+                "init": init
+            };
+        });
+        
+        var D = DoodleJS();
+    </script>
+</body>
+</html>
