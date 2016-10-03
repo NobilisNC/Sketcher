@@ -1,5 +1,6 @@
 var Sketcher = (function(document, window){
     var frame = document.querySelector("div#sketcher");
+    var socket = io("http://localhost:3000/");
     var canvas = [];
     var layers = [];
     var selectedLayer = "background";
@@ -44,20 +45,20 @@ var Sketcher = (function(document, window){
         }
     }
 
-    function clear(ctx) {
-        ctx.clearRect(0, 0, width, height);
+    function getContext(name) {
+        return document.querySelector("canvas#"+name).getContext("2d");
     }
 
     function addLayer(name, zIndex = 0) {
         frame.innerHTML = '<canvas id="'+name+'"></canvas>'+frame.innerHTML;
-        layers[name] = document.querySelector('canvas#'+name).getContext("2d");
+        layers[name] = getContext(name);
         layers[name].canvas.width = width;
         layers[name].canvas.height = height;
         layers[name].canvas.style.zIndex = zIndex;
     }
 
-    function getContext(name) {
-        return document.querySelector("#"+name).getContext("2d");
+    function clear(ctx) {
+        ctx.clearRect(0, 0, width, height);
     }
 
     frame.style.width = width+"px";
@@ -70,6 +71,8 @@ var Sketcher = (function(document, window){
     addLayer(selectedLayer);
 
     return {
-
+        getContext: getContext,
+        addLayer: addLayer,
+        clear: clear
     };
 })(document, window);
