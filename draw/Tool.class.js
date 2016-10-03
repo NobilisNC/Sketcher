@@ -81,6 +81,7 @@ var Tools = ( function() {
       Tool : _Tool,
       Line : Line,
       Rectangle : Rect
+      
     }
 
 }());
