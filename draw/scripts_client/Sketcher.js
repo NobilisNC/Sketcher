@@ -73,6 +73,7 @@ var Sketcher = (function($){
 
     //Chargement page
     $(function(){
+        console.log("test");
         //On créer les canvas
         root = $('#sketcher');
         root.width(400);
