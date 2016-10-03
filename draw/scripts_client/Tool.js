@@ -1,6 +1,6 @@
 var Tools = ( function() {
 
-    /* Abstartc Class _Tool
+    /* Abstract Class _Tool
      *
      *
      *
@@ -81,7 +81,7 @@ var Tools = ( function() {
       Tool : _Tool,
       Line : Line,
       Rectangle : Rect
-      
+
     }
 
 }());
