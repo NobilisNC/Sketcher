@@ -58,11 +58,12 @@
                     border-top: 1px solid #999;
                     padding: 0;
                 }
-                
+
                 #sketcher_layers_list {
                     font-size: 0px;
                     margin: 0;
                     padding: 0;
+                    width: 150px;
                     list-style: none;
                 }
 
@@ -70,26 +71,42 @@
                         position: relative;
                     }
                     
-                    #sketcher_layers_list li a {
+                    #sketcher_layers_list li a.sketcher_layer_link {
                         color: #000;
                         padding: 5px 10px 5px 20px;
                         font-size: 15px;
+                        line-height: 20px;
                         background: #ccc;
-                        display: block;
+                        display: inline-block;
+                        width: 120px;
+                        height: 30px;
                     }
 
-                    #sketcher_layers_list li input {
-                        position: absolute;
-                        top: 5px; left: 0;
-                    }
-
-                        #sketcher_layers_list li a:hover {
+                        #sketcher_layers_list li a.sketcher_layer_link:hover {
                             background: #ddd;
                         }
 
-                        #sketcher_layers_list li a.active {
+                        #sketcher_layers_list li.active a.sketcher_layer_link {
                             background: #aaa;
                         }
+
+                    #sketcher_layers_list li a.sketcher_check {
+                        background: #ccc;
+                        font-size: 14px;
+                        line-height: 0;
+                        color: #000;
+                        margin: 0;
+                        padding: 0;
+                        width: 15px;
+                        height: 15px;
+                        text-align: center;
+                        display: inline-block;
+                        vertical-align: top;
+                    }
+                        #sketcher_layers_list li.active a.sketcher_check{
+                            background: #aaa;
+                        }
+
 
             #sketcher_buttons {
                 z-index: 999;

@@ -1,8 +1,10 @@
 class Layer {
     constructor(name, zIndex, width, height, frame) {
+        this.id = Math.round(Math.random()*1000000)%1000000;
         this.name = name;
-        frame.innerHTML = '<canvas id="'+this.name+'"></canvas>'+frame.innerHTML;
-        this.node = frame.querySelector('#'+this.name);
+        this.node = document.createElement('canvas');
+        this.node.setAttribute('id', 'sketcher_layer_'+this.id);
+        frame.appendChild(this.node);
         this.visible = true;
         this.zIndex = zIndex;
         this.width = width;
@@ -12,11 +14,12 @@ class Layer {
     }
 
     updateVisibility() {
-        document.querySelector('#'+this.name).style.display = this.visible ? "block" : "none";
+        this.node.style.display = this.visible ? 'block' : 'none';
     }
 
     toggleVisibility() {
         this.visible = this.visible ? false : true;
+        this.updateVisibility();
     }
 
     setVisibility(visibility) {
@@ -36,14 +39,17 @@ var Color = {
     green: "#0f0",
     blue: "#00f",
     orange: "#ffb603",
-    lightblue: "#a6f7ff"
+    lightblue: "#a6f7ff",
+    lightgreen: "#7abf30",
+    pink: "#f70e93",
+    purple: "#ae22f6"
 };
 
 var Sketcher = (function(document, window){
     var frame = document.querySelector("div#sketcher");
     // var socket = io("http://localhost:3000/");
-    var layers = {};
-    var selectedLayer = "background";
+    var layers = [];
+    var selectedLayer;
     var clicked = false;
     var pos = {x:0, y:0};
     var width = window.innerWidth;
@@ -53,7 +59,7 @@ var Sketcher = (function(document, window){
     function onMouseUp(e) {
         frame.removeEventListener("mousemove", onMouseMove);
 
-        clear(getContext("trackpad"));
+        clear(getContext(layers[0].id));
 
         if(clicked) {
             var ctx = getContext(selectedLayer);
@@ -80,7 +86,7 @@ var Sketcher = (function(document, window){
         if(e.offsetX < 0 || e.offsetY < 0 ||  e.offsetX > width || e.offsetY > height) {
             onMouseUp(null);
         } else {
-            var ctx = getContext("trackpad");
+            var ctx = getContext(layers[0].id);
             clear(ctx);
             ctx.strokeStyle = color;
             ctx.beginPath();
@@ -91,22 +97,36 @@ var Sketcher = (function(document, window){
         }
     }
 
-    function getContext(name) {
-        return document.querySelector("canvas#"+name).getContext("2d");
-    }
+    function getLayer(id) {
+        var ret = null;
 
-    function countLayers() {
-        var ret = 0;
-
-        for(var i in layers) {
-            ret++;
-        }
+        layers.forEach(function(layer, i) {
+            if(layer.id == id) {
+                ret = layer;
+            }
+        });
 
         return ret;
     }
 
+    function getLayers() {
+        var ret = [];
+
+        layers.forEach(function(layer, i) {
+            if(layer.name != "trackpad")
+                ret.push(layer);
+        });
+
+        return ret;
+    }
+
+    function getContext(id) {
+        return getLayer(id).node.getContext("2d");
+    }
+
     function addLayer(name, zIndex = 0) {
-        layers[name] = new Layer(name, zIndex == 0 ? countLayers : zIndex, width, height, frame);
+        layers.push(new Layer(name, zIndex == 0 ? layers.length : zIndex, width, height, frame));
+        selectedLayer = layers[layers.length-1].id;
     }
 
     function addLayerPrompt() {
@@ -116,7 +136,6 @@ var Sketcher = (function(document, window){
         } else {
             name = name.toLowerCase();
             addLayer(name);
-            selectedLayer = name;
 
             return true;
         }
@@ -126,19 +145,41 @@ var Sketcher = (function(document, window){
         return selectedLayer;
     }
 
-    function selectLayer(name) {
-        if(name in layers) {
-            selectedLayer = name;
+    function selectLayer(id) {
+        var layer = getLayer(id);
+        if(layer != null) {
+            selectedLayer = layer.id;
             return true;
         } else {
-            console.log('No layer named "'+name+'".');
-            console.log(layers);
+            console.error('No layer with id "'+id+'".');
             return false;
         }
     }
 
-    function setLayerVisibility(name, visibility) {
-        layers[name].setVisibility(visibility);
+    function deleteLayer(id) {
+        var layer = getLayer(id);
+        if(layer != null) {
+            layer.node.remove();
+            var index = -1;
+            layers.forEach(function(layer, i) {
+                if(layer.id == id) {
+                    index = i;
+                }
+            });
+            delete layers[index];
+            return true;
+        } else {
+            console.error('No layer named "'+name+'".');
+            return false;
+        }
+    }
+
+    function setLayerVisibility(id, visibility) {
+        getLayer(id).setVisibility(visibility);
+    }
+
+    function toggleLayerVisibility(id) {
+        getLayer(id).toggleVisibility();
     }
 
     function selectColor(colorName) {
@@ -155,17 +196,6 @@ var Sketcher = (function(document, window){
         ctx.clearRect(0, 0, width, height);
     }
 
-    function getLayers() {
-        var ret = [];
-
-        for(var name in layers) {
-            if(name != "trackpad")
-                ret.push(layers[name]);
-        }
-
-        return ret;
-    }
-
     frame.style.width = width+"px";
     frame.style.height = height+"px";
 
@@ -173,7 +203,7 @@ var Sketcher = (function(document, window){
     frame.addEventListener("mousedown", onMouseDown);
 
     addLayer("trackpad", 100);
-    addLayer(selectedLayer);
+    addLayer("background");
 
     return {
         getContext: getContext,
@@ -182,7 +212,9 @@ var Sketcher = (function(document, window){
         getSelectedLayer: getSelectedLayer,
         selectLayer: selectLayer,
         setLayerVisibility: setLayerVisibility,
+        toggleLayerVisibility: toggleLayerVisibility,
         selectColor: selectColor,
+        deleteLayer: deleteLayer,
         clear: clear,
         getLayers: getLayers
     };
