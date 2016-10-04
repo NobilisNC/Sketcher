@@ -1,6 +1,5 @@
 class Layer {
     constructor(name, zIndex, width, height, frame) {
-
         this.name = name;
         frame.innerHTML = '<canvas id="'+this.name+'"></canvas>'+frame.innerHTML;
         this.node = frame.querySelector('#'+this.name);
