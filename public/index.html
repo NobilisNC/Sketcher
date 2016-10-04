@@ -1,0 +1,162 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Document</title>
+    <script src="https://cdn.socket.io/socket.io-1.4.5.js"></script>
+    <link rel="stylesheet" href="css/fontawesome.min.css">
+    <style>
+        * {
+            box-sizing: border-box;
+        }
+
+        body {
+            margin: 0;
+            font-family: "Tahoma", sans-serif;
+        }
+
+            a {
+                color: #3a2;
+                text-decoration: none;
+            }
+
+            #sketcher {
+                position: relative;
+            }
+
+            #sketcher canvas {
+                position: absolute;
+                top: 0; left: 0;
+            }
+
+            #sketcher_palette {
+                z-index: 999;
+                position: absolute;
+                border: 1px solid #999;
+                border-radius: 3px;
+                width: 106px;
+                padding: 2px;
+                top: 100px; left: 0;
+                font-size: 0px;
+            }
+
+                #sketcher_palette a.sketcher_color {
+                    width: 20px;
+                    height: 20px;
+                    display: inline-block;
+                }
+
+            #sketcher_layers {
+                z-index: 999;
+                border: 1px solid #999;
+                border-radius: 3px;
+                position: absolute;
+                top: 10px; right: 10px;
+            }
+                
+                #sketcher_layers_buttons {
+                    border-top: 1px solid #999;
+                    padding: 0;
+                }
+                
+                #sketcher_layers_list {
+                    font-size: 0px;
+                    margin: 0;
+                    padding: 0;
+                    list-style: none;
+                }
+
+                    #sketcher_layers_list li {
+                        position: relative;
+                    }
+                    
+                    #sketcher_layers_list li a {
+                        color: #000;
+                        padding: 5px 10px 5px 20px;
+                        font-size: 15px;
+                        background: #ccc;
+                        display: block;
+                    }
+
+                    #sketcher_layers_list li input {
+                        position: absolute;
+                        top: 5px; left: 0;
+                    }
+
+                        #sketcher_layers_list li a:hover {
+                            background: #ddd;
+                        }
+
+                        #sketcher_layers_list li a.active {
+                            background: #aaa;
+                        }
+
+            #sketcher_buttons {
+                z-index: 999;
+                position: absolute;
+                top: 0; left: 0;
+            }
+
+            a.sketcher_button {
+                color: #000;
+                background: #ccc;
+                margin: 5px;
+                padding: 3px 4px 4px 4px;
+                display: inline-block;
+                border: 1px solid #999;
+                border-radius: 3px;
+                width: 27px;
+                height: 27px;
+                text-align: center;
+                box-shadow: inset -2px -2px 4px #aaa, inset 2px 2px 4px #fff;
+            }
+
+                a.sketcher_button:hover {
+                    background: #ddd;
+                }
+
+                a.sketcher_button:active {
+                    background: #ccc;
+                    padding: 5px 0px 0px 5px;
+                    box-shadow: inset 2px 2px 4px #aaa, inset -2px -2px 4px #fff;
+                }
+    </style>
+</head>
+<body>
+    <div id="sketcher"></div>
+    <script>
+        // var C = document.querySelector("canvas#doodle");
+        // var ctx = C.getContext("2d");
+        // ctx.fillStyle = "rgba(0,0,0,1)";
+        // ctx.fillRect(10, 10, 50, 50);
+
+        // var DoodleJS = (function(document, window){
+        //     var url = "http://localhost:3000/";
+        //     var socket;
+
+        //     function init() {
+        //         socket = io(url);
+        //     }
+
+        //     function sendBitmap() {
+        //         var canvas = document.querySelector("canvas#doodle");
+        //         socket.emit("sav", {"data": document.querySelector("canvas#doodle").toDataURL().replace(/^data:image\/\w+;base64,/, "")});
+        //     }
+
+        //     window.addEventListener("load", function(e){
+        //         init();
+        //         sendBitmap();
+        //     });
+
+        //     return {
+        //         init: init
+        //         url: url
+        //     };
+        // });
+        
+        // var D = DoodleJS(document, window);
+    </script>
+    <script src="js/Sketcher.js"></script>
+    <script src="js/SketcherUI.js"></script>
+</body>
+</html>
