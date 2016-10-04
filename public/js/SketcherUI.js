@@ -8,32 +8,35 @@ var SketcherUI = (function(document, window){
     var layersButtons = document.createElement('div');
     var layersList = document.createElement('ul');
 
-    buttons.addEventListener('mousedown', function(e) { e.preventDefault(); e.stopPropagation(); });
-    palette.addEventListener('mousedown', function(e) { e.preventDefault(); e.stopPropagation(); });
-    layers.addEventListener('mousedown', function(e) { e.preventDefault(); e.stopPropagation(); });
+    this.buttons.addEventListener('mousedown', function(e) { e.preventDefault(); e.stopPropagation(); });
+    this.palette.addEventListener('mousedown', function(e) { e.preventDefault(); e.stopPropagation(); });
+    this.layers.addEventListener('mousedown', function(e) { e.preventDefault(); e.stopPropagation(); });
 
-    buttons.setAttribute('id', 'sketcher_buttons');
-    palette.setAttribute('id', 'sketcher_palette');
-    layers.setAttribute('id', 'sketcher_layers');
-    layersButtons.setAttribute('id', 'sketcher_layers_buttons');
-    layersList.setAttribute('id', 'sketcher_layers_list');
+    this.buttons.setAttribute('id', 'sketcher_buttons');
+    this.palette.setAttribute('id', 'sketcher_palette');
+    this.layers.setAttribute('id', 'sketcher_layers');
+    this.layersButtons.setAttribute('id', 'sketcher_layers_buttons');
+    this.layersList.setAttribute('id', 'sketcher_layers_list');
 
-    document.body.insertBefore(buttons, frame);
-    document.body.insertBefore(palette, frame);
+    document.body.insertBefore(this.buttons, this.frame);
+    document.body.insertBefore(this.palette, this.frame);
 
-    layers.appendChild(layersList);
-    layers.appendChild(layersButtons);
-    document.body.insertBefore(layers, frame);
+    this.layers.appendChild(this.layersList);
+    this.layers.appendChild(this.layersButtons);
+    document.body.insertBefore(this.layers, this.frame);
 
     function updatePalette() {
-        palette.innerHTML = '';
+        this.palette.innerHTML = '';
+        while (this.palette.firstChild) {
+            this.palette.removeChild(this.palette.firstChild);
+        }
 
         for(var color in Color) {
-            palette.innerHTML += '<a class="sketcher_color" style="background-color:'+Color[color]+';" alt="'+color+'" href="#"></a>';
+            this.palette.innerHTML += '<a class="sketcher_color" style="background-color:'+Color[color]+';" alt="'+color+'" href="#"></a>';
         }
 
         Array.prototype.forEach.call(
-            palette.querySelectorAll('.sketcher_color'),
+            this.palette.querySelectorAll('.sketcher_color'),
             function(color) {
                 color.addEventListener('click', function(e) {
                     Sketcher.selectColor(this.getAttribute('alt'));
@@ -43,15 +46,15 @@ var SketcherUI = (function(document, window){
     }
 
     function updateLayers() {
-        while (layersList.firstChild) {
-            layersList.removeChild(layersList.firstChild);
+        while (this.layersList.firstChild) {
+            this.layersList.removeChild(this.layersList.firstChild);
         }
 
         Sketcher.getLayers().forEach(function(layer) {
             var li = document.createElement('li');
             li.setAttribute('data-id', layer.id);
             li.setAttribute('data-name', layer.name);
-            if(layer.name == Sketcher.getSelectedLayer())
+            if(layer.id == Sketcher.getSelectedLayer())
                 li.setAttribute('class', 'active');
 
             // Create a container for layer commands
@@ -71,17 +74,17 @@ var SketcherUI = (function(document, window){
             aVis.innerHTML = '<i class="fa fa-eye'+(layer.isVisible() ? '' : '-slash')+'"></i>';
             div.appendChild(aVis);
 
-            var aDel = document.createElement('a');
-            aDel.setAttribute('data-action', 'deleteLayer');
-            aDel.setAttribute('class', 'sketcher_check');
-            aDel.innerHTML = '<i class="fa fa-trash"></i>';
-            div.appendChild(aDel);
-
             var aRai = document.createElement('a');
             aRai.setAttribute('data-action', 'raiseLayer');
             aRai.setAttribute('class', 'sketcher_check');
             aRai.innerHTML = '<i class="fa fa-arrow-up"></i>';
             div.appendChild(aRai);
+
+            var aDel = document.createElement('a');
+            aDel.setAttribute('data-action', 'deleteLayer');
+            aDel.setAttribute('class', 'sketcher_check');
+            aDel.innerHTML = '<i class="fa fa-trash"></i>';
+            div.appendChild(aDel);
 
             var aDem = document.createElement('a');
             aDem.setAttribute('data-action', 'demoteLayer');
@@ -91,11 +94,11 @@ var SketcherUI = (function(document, window){
 
             li.appendChild(div);
 
-            layersList.appendChild(li);
+            this.layersList.appendChild(li);
         });
 
         Array.prototype.forEach.call(
-            layersList.querySelectorAll('a.sketcher_layer_link[data-action="selectLayer"]'),
+            this.layersList.querySelectorAll('a.sketcher_layer_link[data-action="selectLayer"]'),
             function(link){
                 link.addEventListener('click', function(e) {
                     Sketcher.selectLayer(e.srcElement.parentNode.getAttribute("data-id"));
@@ -105,7 +108,7 @@ var SketcherUI = (function(document, window){
         );
 
         Array.prototype.forEach.call(
-            layersList.querySelectorAll('a[data-action="toggleLayerVisibility"], a[data-action="deleteLayer"], a[data-action="raiseLayer"], a[data-action="demoteLayer"]'),
+            this.layersList.querySelectorAll('a[data-action="toggleLayerVisibility"], a[data-action="deleteLayer"], a[data-action="raiseLayer"], a[data-action="demoteLayer"]'),
             function(check, i){
                 var id = check.parentNode.parentNode.getAttribute("data-id");
                 var action = check.getAttribute("data-action");
@@ -134,8 +137,8 @@ var SketcherUI = (function(document, window){
     }
 
     // Add native components to containers
-    addButton('square', function(e){ console.log('select square'); }, buttons, 'square');
-    addButton('addLayer', function(e){ Sketcher.addLayerPrompt(); updateLayers(); }, layersButtons, 'plus');
+    addButton('square', function(e){ console.log('select square'); }, this.buttons, 'square');
+    addButton('addLayer', function(e){ Sketcher.addLayerPrompt(); updateLayers(); }, this.layersButtons, 'plus');
     updatePalette();
     updateLayers();
     

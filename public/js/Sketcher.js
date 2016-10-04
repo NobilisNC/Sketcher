@@ -64,38 +64,38 @@ var Sketcher = (function(document, window){
     function onMouseUp(e) {
         frame.removeEventListener("mousemove", onMouseMove);
 
-        clear(getContext(layers[0].id));
+        clear(getContext(this.layers[0].id));
 
         if(clicked) {
-            var ctx = getContext(selectedLayer);
-            ctx.strokeStyle = color;
+            var ctx = getContext(this.selectedLayer);
+            ctx.strokeStyle = this.color;
             ctx.beginPath();
-            ctx.moveTo(pos.x, pos.y);
+            ctx.moveTo(this.pos.x, this.pos.y);
             ctx.lineTo(e.offsetX, e.offsetY);
             ctx.closePath();
             ctx.stroke();
         }
 
-        clicked = false;
+        this.clicked = false;
     }
 
     function onMouseDown(e) {
-        if(e.buttons == 1 && e.button == 0 && !clicked) {
-            clicked = true;
-            pos = {x:e.offsetX, y:e.offsetY};
-            frame.addEventListener("mousemove", onMouseMove);
+        if(e.buttons == 1 && e.button == 0 && !this.clicked) {
+            this.clicked = true;
+            this.pos = {x:e.offsetX, y:e.offsetY};
+            this.frame.addEventListener("mousemove", onMouseMove);
         }
     }
 
     function onMouseMove(e) {
-        if(e.offsetX < 0 || e.offsetY < 0 ||  e.offsetX > width || e.offsetY > height) {
+        if(e.offsetX < 0 || e.offsetY < 0 ||  e.offsetX > this.width || e.offsetY > this.height) {
             onMouseUp(null);
         } else {
-            var ctx = getContext(layers[0].id);
+            var ctx = getContext(this.layers[0].id);
             clear(ctx);
-            ctx.strokeStyle = color;
+            ctx.strokeStyle = this.color;
             ctx.beginPath();
-            ctx.moveTo(pos.x, pos.y);
+            ctx.moveTo(this.pos.x, this.pos.y);
             ctx.lineTo(e.offsetX, e.offsetY);
             ctx.closePath();
             ctx.stroke();
@@ -105,7 +105,7 @@ var Sketcher = (function(document, window){
     function getLayer(id) {
         var ret = null;
 
-        layers.forEach(function(layer) {
+        this.layers.forEach(function(layer) {
             if(layer.id == id) {
                 ret = layer;
             }
@@ -117,7 +117,7 @@ var Sketcher = (function(document, window){
     function getLayerOnLevel(n) {
         var ret = null;
 
-        layers.forEach(function(layer) {
+        this.layers.forEach(function(layer) {
             if(layer.zIndex == n) {
                 ret = layer;
             }
@@ -126,12 +126,26 @@ var Sketcher = (function(document, window){
         return ret;
     }
 
+    function countLayers() {
+        var c = 0;
+
+        this.layers.forEach(function() {
+            c++;
+        });
+
+        return c;
+    }
+
     function getLayers() {
+        if(countLayers() == 1) {
+            return [];
+        }
+
         var ret = [];
 
         var lvl = 1;
         var layer;
-        while(ret.length < layers.length-1) {
+        while(ret.length < countLayers()-1) {
             layer = getLayerOnLevel(lvl++);
             if(layer != null)
                 ret.push(layer);
@@ -145,8 +159,14 @@ var Sketcher = (function(document, window){
     }
 
     function addLayer(name, zIndex = 0) {
-        layers.push(new Layer(name, zIndex == 0 ? layers.length : zIndex, width, height, frame));
-        selectedLayer = layers[layers.length-1].id;
+        var i = layers.push(new Layer(
+            name,
+            zIndex == 0 ? countLayers() : zIndex,
+            this.width,
+            this.height,
+            this.frame
+        ));
+        this.selectedLayer = this.layers[i-1].id;
     }
 
     function addLayerPrompt() {
@@ -162,7 +182,7 @@ var Sketcher = (function(document, window){
     }
 
     function getSelectedLayer() {
-        return selectedLayer;
+        return this.selectedLayer;
     }
 
     function selectLayer(id) {
@@ -181,17 +201,17 @@ var Sketcher = (function(document, window){
         if(layer != null) {
             layer.node.remove();
             var index = -1;
-            layers.forEach(function(layer, i) {
+            this.layers.forEach(function(layer, i) {
                 if(layer.id == id) {
                     index = i;
                 }
             });
 
-            layers.slice(index).forEach(function(layer) {
+            this.layers.slice(index).forEach(function(layer) {
                 layer.zIndex--;
                 layer.update();
             });
-            delete layers[index];
+            delete this.layers[index];
             return true;
         } else {
             console.error('No layer named "'+name+'".');
@@ -239,7 +259,7 @@ var Sketcher = (function(document, window){
 
     function selectColor(colorName) {
         if(colorName in Color) {
-            color = Color[colorName]
+            this.color = Color[colorName]
             return true;
         } else {
             console.error(colorName+" is not a color.");
@@ -247,15 +267,19 @@ var Sketcher = (function(document, window){
         }
     }
 
-    function clear(ctx) {
-        ctx.clearRect(0, 0, width, height);
+    function getSelectedColor() {
+        return this.color;
     }
 
-    frame.style.width = width+"px";
-    frame.style.height = height+"px";
+    function clear(ctx) {
+        ctx.clearRect(0, 0, this.width, this.height);
+    }
 
-    frame.addEventListener("mouseup", onMouseUp);
-    frame.addEventListener("mousedown", onMouseDown);
+    this.frame.style.width = this.width+"px";
+    this.frame.style.height = this.height+"px";
+
+    this.frame.addEventListener("mouseup", onMouseUp);
+    this.frame.addEventListener("mousedown", onMouseDown);
 
     addLayer("trackpad", 100);
     addLayer("background");
@@ -269,6 +293,7 @@ var Sketcher = (function(document, window){
         setLayerVisibility: setLayerVisibility,
         toggleLayerVisibility: toggleLayerVisibility,
         selectColor: selectColor,
+        getSelectedColor: getSelectedColor,
         deleteLayer: deleteLayer,
         raiseLayer: raiseLayer,
         demoteLayer: demoteLayer,
