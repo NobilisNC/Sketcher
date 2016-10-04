@@ -30,6 +30,16 @@ class Layer {
     }
 }
 
+var Color = {
+    white: "#fff",
+    black: "#000",
+    red: "#f00",
+    green: "#0f0",
+    blue: "#00f",
+    orange: "#ffb603",
+    lightblue: "#a6f7ff"
+};
+
 var Sketcher = (function(document, window){
     var frame = document.querySelector("div#sketcher");
     // var socket = io("http://localhost:3000/");
@@ -39,6 +49,7 @@ var Sketcher = (function(document, window){
     var pos = {x:0, y:0};
     var width = window.innerWidth;
     var height = window.innerHeight;
+    var color = Color.red;
     
     function onMouseUp(e) {
         frame.removeEventListener("mousemove", onMouseMove);
@@ -47,6 +58,7 @@ var Sketcher = (function(document, window){
 
         if(clicked) {
             var ctx = getContext(selectedLayer);
+            ctx.strokeStyle = color;
             ctx.beginPath();
             ctx.moveTo(pos.x, pos.y);
             ctx.lineTo(e.offsetX, e.offsetY);
@@ -71,6 +83,7 @@ var Sketcher = (function(document, window){
         } else {
             var ctx = getContext("trackpad");
             clear(ctx);
+            ctx.strokeStyle = color;
             ctx.beginPath();
             ctx.moveTo(pos.x, pos.y);
             ctx.lineTo(e.offsetX, e.offsetY);
@@ -98,9 +111,16 @@ var Sketcher = (function(document, window){
     }
 
     function addLayerPrompt() {
-        var name = prompt("Please enter layer name", "Foreground").toLowerCase();
-        addLayer(name);
-        selectedLayer = name;
+        var name = prompt("Please enter layer name", "Foreground");
+        if(name === null) {
+            return false;
+        } else {
+            name = name.toLowerCase();
+            addLayer(name);
+            selectedLayer = name;
+
+            return true;
+        }
     }
 
     function getSelectedLayer() {
@@ -120,6 +140,16 @@ var Sketcher = (function(document, window){
 
     function setLayerVisibility(name, visibility) {
         layers[name].setVisibility(visibility);
+    }
+
+    function selectColor(colorName) {
+        if(colorName in Color) {
+            color = Color[colorName]
+            return true;
+        } else {
+            console.error(colorName+" is not a color.");
+            return false;
+        }
     }
 
     function clear(ctx) {
@@ -153,6 +183,7 @@ var Sketcher = (function(document, window){
         getSelectedLayer: getSelectedLayer,
         selectLayer: selectLayer,
         setLayerVisibility: setLayerVisibility,
+        selectColor: selectColor,
         clear: clear,
         getLayers: getLayers
     };

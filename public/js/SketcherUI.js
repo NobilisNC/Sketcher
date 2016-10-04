@@ -3,19 +3,40 @@ var SketcherUI = (function(document, window){
 
     // Create UI components containers
     var buttons = document.createElement('div');
+    var palette = document.createElement('div');
     var layers = document.createElement('div');
     var layersButtons = document.createElement('div');
     var layersList = document.createElement('ul');
 
+    buttons.addEventListener("mousedown", function(e) { e.preventDefault(); e.stopPropagation(); });
+    palette.addEventListener("mousedown", function(e) { e.preventDefault(); e.stopPropagation(); });
+    layers.addEventListener("mousedown", function(e) { e.preventDefault(); e.stopPropagation(); });
+
     buttons.setAttribute("id", "sketcher_buttons");
+    palette.setAttribute("id", "sketcher_palette");
     layers.setAttribute("id", "sketcher_layers");
     layersButtons.setAttribute("id", "sketcher_layers_buttons");
     layersList.setAttribute("id", "sketcher_layers_list");
 
     document.body.insertBefore(buttons, frame);
+    document.body.insertBefore(palette, frame);
     layers.appendChild(layersList);
     layers.appendChild(layersButtons);
     document.body.insertBefore(layers, frame);
+
+    function updatePalette() {
+        palette.innerHTML = "";
+
+        for(var color in Color) {
+            palette.innerHTML += '<a class="sketcher_color" style="background-color:'+Color[color]+';" alt="'+color+'" href="#"></a>';
+        }
+
+        palette.querySelectorAll(".sketcher_color").forEach(function(color, i) {
+            color.addEventListener("click", function(e) {
+                Sketcher.selectColor(this.getAttribute("alt"));
+            });
+        });
+    }
 
     function updateLayers() {
         layersList.innerHTML = "";
@@ -31,11 +52,8 @@ var SketcherUI = (function(document, window){
 
             layersList.innerHTML += elm;
         });
+
         layersList.querySelectorAll("a").forEach(function(link, i){
-            link.addEventListener("mousedown", function(e) {
-                e.preventDefault();
-                e.stopPropagation();
-            });
             link.addEventListener("click", function(e) {
                 Sketcher.selectLayer(link.innerHTML.toLowerCase());
                 updateLayers();
@@ -57,10 +75,6 @@ var SketcherUI = (function(document, window){
         }
 
         var b = container.querySelector('#sketcher_button_'+name);
-        b.addEventListener("mousedown", function(e){
-            e.preventDefault();
-            e.stopPropagation();
-        });
         b.addEventListener("click", func);
     }
 
@@ -71,6 +85,7 @@ var SketcherUI = (function(document, window){
     // Add native components to containers
     addButton('square', function(e){ console.log('select square'); }, buttons, "square");
     addButton('addLayer', function(e){ Sketcher.addLayerPrompt(); updateLayers(); }, layersButtons, "plus");
+    updatePalette();
     updateLayers();
     
     return {
