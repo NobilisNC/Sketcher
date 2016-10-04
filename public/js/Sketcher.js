@@ -2,29 +2,34 @@ class Layer {
     constructor(name, zIndex, width, height, frame) {
         this.id = Math.round(Math.random()*1000000)%1000000;
         this.name = name;
+        this.zIndex = zIndex;
         this.node = document.createElement('canvas');
         this.node.setAttribute('id', 'sketcher_layer_'+this.id);
         frame.appendChild(this.node);
         this.visible = true;
-        this.zIndex = zIndex;
         this.width = width;
         this.height = height;
         this.node.width = this.width;
         this.node.height = this.height;
+        this.opacity = 1;
+
+        this.update();
     }
 
-    updateVisibility() {
+    update() {
         this.node.style.display = this.visible ? 'block' : 'none';
+        this.node.style.zIndex = this.zIndex;
+        console.log('updated', this.zIndex);
     }
 
     toggleVisibility() {
         this.visible = this.visible ? false : true;
-        this.updateVisibility();
+        this.update();
     }
 
     setVisibility(visibility) {
         this.visible = visibility;
-        this.updateVisibility();
+        this.update();
     }
 
     isVisible() {
@@ -100,8 +105,20 @@ var Sketcher = (function(document, window){
     function getLayer(id) {
         var ret = null;
 
-        layers.forEach(function(layer, i) {
+        layers.forEach(function(layer) {
             if(layer.id == id) {
+                ret = layer;
+            }
+        });
+
+        return ret;
+    }
+
+    function getLayerOnLevel(n) {
+        var ret = null;
+
+        layers.forEach(function(layer) {
+            if(layer.zIndex == n) {
                 ret = layer;
             }
         });
@@ -112,12 +129,15 @@ var Sketcher = (function(document, window){
     function getLayers() {
         var ret = [];
 
-        layers.forEach(function(layer, i) {
-            if(layer.name != "trackpad")
+        var lvl = 1;
+        var layer;
+        while(ret.length < layers.length-1) {
+            layer = getLayerOnLevel(lvl++);
+            if(layer != null)
                 ret.push(layer);
-        });
+        }
 
-        return ret;
+        return ret.reverse();
     }
 
     function getContext(id) {
@@ -166,6 +186,11 @@ var Sketcher = (function(document, window){
                     index = i;
                 }
             });
+
+            layers.slice(index).forEach(function(layer) {
+                layer.zIndex--;
+                layer.update();
+            });
             delete layers[index];
             return true;
         } else {
@@ -183,7 +208,33 @@ var Sketcher = (function(document, window){
     }
 
     function raiseLayer(id) {
-        console.log(id);
+        var layer = getLayer(id);
+        var prev = getLayerOnLevel(layer.zIndex+1);
+
+        if(prev == null || prev.name == "trackpad") {
+           return false; 
+        } else {
+            layer.zIndex++;
+            layer.update();
+            
+            prev.zIndex--;
+            prev.update();
+        }
+    }
+
+    function demoteLayer(id) {
+        var layer = getLayer(id);
+        var next = getLayerOnLevel(layer.zIndex-1);
+
+        if(next == null || next.name == "trackpad") {
+           return false; 
+        } else {
+            layer.zIndex--;
+            layer.update();
+            
+            next.zIndex++;
+            next.update();
+        }
     }
 
     function selectColor(colorName) {
@@ -219,6 +270,8 @@ var Sketcher = (function(document, window){
         toggleLayerVisibility: toggleLayerVisibility,
         selectColor: selectColor,
         deleteLayer: deleteLayer,
+        raiseLayer: raiseLayer,
+        demoteLayer: demoteLayer,
         clear: clear,
         getLayers: getLayers
     };

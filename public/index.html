@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <title>Document</title>
+    <title>Sketcher</title>
     <!--<script src="https://cdn.socket.io/socket.io-1.4.5.js"></script>-->
     <link rel="stylesheet" href="css/fontawesome.min.css">
     <style>
@@ -27,6 +27,7 @@
             #sketcher canvas {
                 position: absolute;
                 top: 0; left: 0;
+                cursor: default;
             }
 
             #sketcher_palette {
@@ -44,7 +45,12 @@
                     width: 20px;
                     height: 20px;
                     display: inline-block;
+                    border: 1px solid transparent;
                 }
+
+                    #sketcher_palette a.sketcher_color:hover {
+                        opacity: .5;
+                    }
 
             #sketcher_layers {
                 z-index: 999;

@@ -20,6 +20,7 @@ var SketcherUI = (function(document, window){
 
     document.body.insertBefore(buttons, frame);
     document.body.insertBefore(palette, frame);
+
     layers.appendChild(layersList);
     layers.appendChild(layersButtons);
     document.body.insertBefore(layers, frame);
@@ -31,11 +32,14 @@ var SketcherUI = (function(document, window){
             palette.innerHTML += '<a class="sketcher_color" style="background-color:'+Color[color]+';" alt="'+color+'" href="#"></a>';
         }
 
-        Array.prototype.forEach(function(color, i) {
-            color.addEventListener('click', function(e) {
-                Sketcher.selectColor(this.getAttribute('alt'));
-            });
-        }, palette.querySelectorAll('.sketcher_color'));
+        Array.prototype.forEach.call(
+            palette.querySelectorAll('.sketcher_color'),
+            function(color) {
+                color.addEventListener('click', function(e) {
+                    Sketcher.selectColor(this.getAttribute('alt'));
+                });
+            }
+        );
     }
 
     function updateLayers() {
@@ -43,46 +47,48 @@ var SketcherUI = (function(document, window){
             layersList.removeChild(layersList.firstChild);
         }
 
-        Sketcher.getLayers().forEach(function(layer, i) {
+        Sketcher.getLayers().forEach(function(layer) {
             var li = document.createElement('li');
             li.setAttribute('data-id', layer.id);
             li.setAttribute('data-name', layer.name);
             if(layer.name == Sketcher.getSelectedLayer())
                 li.setAttribute('class', 'active');
-            
+
+            // Create a container for layer commands
             var div = document.createElement('div');
             div.setAttribute('class', 'sketcher_layer_commands');
 
+            // Create buttons for layer commands
             var aSel = document.createElement('a');
             aSel.setAttribute('data-action', 'selectLayer');
             aSel.setAttribute('class', 'sketcher_layer_link');
             aSel.innerHTML = layer.name[0].toUpperCase()+layer.name.substr(1);
+            li.appendChild(aSel);
 
             var aVis = document.createElement('a');
             aVis.setAttribute('data-action', 'toggleLayerVisibility');
             aVis.setAttribute('class', 'sketcher_check');
             aVis.innerHTML = '<i class="fa fa-eye'+(layer.isVisible() ? '' : '-slash')+'"></i>';
+            div.appendChild(aVis);
 
             var aDel = document.createElement('a');
             aDel.setAttribute('data-action', 'deleteLayer');
             aDel.setAttribute('class', 'sketcher_check');
             aDel.innerHTML = '<i class="fa fa-trash"></i>';
+            div.appendChild(aDel);
 
             var aRai = document.createElement('a');
             aRai.setAttribute('data-action', 'raiseLayer');
             aRai.setAttribute('class', 'sketcher_check');
             aRai.innerHTML = '<i class="fa fa-arrow-up"></i>';
+            div.appendChild(aRai);
 
             var aDem = document.createElement('a');
             aDem.setAttribute('data-action', 'demoteLayer');
             aDem.setAttribute('class', 'sketcher_check');
             aDem.innerHTML = '<i class="fa fa-arrow-down"></i>';
-
-            li.appendChild(aSel);
-            div.appendChild(aVis);
-            div.appendChild(aDel);
-            div.appendChild(aRai);
             div.appendChild(aDem);
+
             li.appendChild(div);
 
             layersList.appendChild(li);
@@ -90,7 +96,7 @@ var SketcherUI = (function(document, window){
 
         Array.prototype.forEach.call(
             layersList.querySelectorAll('a.sketcher_layer_link[data-action="selectLayer"]'),
-            function(link, i){
+            function(link){
                 link.addEventListener('click', function(e) {
                     Sketcher.selectLayer(e.srcElement.parentNode.getAttribute("data-id"));
                     updateLayers();
