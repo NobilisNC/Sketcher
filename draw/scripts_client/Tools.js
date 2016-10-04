@@ -11,17 +11,22 @@ var Tools = ( function() {
       this.linewidth = lw;
     }
 
-    _Tool.prototype.setColor = function(c) {
+    _Tool.prototype.setColor = function (c) {
       this.color = c;
     }
 
-    _Tool.prototype.setLineWidth = function(lw) {
+    _Tool.prototype.setLineWidth = function (lw) {
       this.linewidth = lw;
     }
 
-    _Tool.prototype.test = function(arg) {
+    _Tool.prototype.test = function (arg) {
       console.log(this.color);
     }
+
+    //AbstractFunctions
+    _Tool.prototype.onMouseDown;
+    _Tool.prototype.onMouseMove;
+    _Tool.prototype.onMouseUp;
 
     function private() {
       console.log("private");
@@ -34,14 +39,14 @@ var Tools = ( function() {
      */
      function Line(lay, c, lw) {
        _Tool.call(this, lay,c, lw)
-       this.x1;
-       this.x2;
+       this.p1;
+       this.p2;
      }
 
      Line.prototype = Object.create(_Tool.prototype);
      Line.prototype.constructor = Line;
 
-     Line.prototype.draw = function(ctx, p1, p2) {
+     Line.prototype.draw = function (ctx, p1, p2) {
         //Conf du tracé
         // ...
         ctx.beginPath();
@@ -49,6 +54,20 @@ var Tools = ( function() {
         ctx.lineTo(p2.x,p1.y);
         ctx.endPath();
         ctx.stroke();
+     }
+
+     Line.prototype.onMouseDown = function (e) {
+       this.p1 = {e.clientX, e.clientY };
+
+     }
+
+     Line.prototype.onMouseMove = function (e) {
+       
+
+     }
+
+     Line.prototype.onMouseUp = function (e) {
+
      }
 
      /* Class Rect extends _Tool
@@ -68,17 +87,28 @@ var Tools = ( function() {
       this.fill_color = cf;
     }
 
-    Rect.prototype.draw = function(ctx, p1, p2) {
+    Rect.prototype.draw = function (ctx, p1, p2) {
       //Reglage tracé
       //...
       ctx.fillRect(p1.x, p1.y, p2.x, p2.y, fill_color); //Remplissage
       ctx.drawRect(p1.x, p1.y, p2.x, p2.y,color); // Bordure
     }
 
+    Rect.prototype.onMouseDown = function (e) {
+
+    }
+
+    Rect.prototype.onMouseMove = function (e) {
+
+    }
+
+    Rect.prototype.onMouseUp = function (e) {
+
+    }
+
 
 
     return {
-      Tool : _Tool,
       Line : Line,
       Rectangle : Rect
 
