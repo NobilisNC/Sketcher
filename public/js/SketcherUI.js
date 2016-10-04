@@ -1,22 +1,22 @@
 var SketcherUI = (function(document, window){
-    var frame = document.querySelector('div#sketcher');
+    this.frame = document.querySelector('div#sketcher');
 
     // Create UI components containers
-    var buttons = document.createElement('div');
-    var palette = document.createElement('div');
-    var layers = document.createElement('div');
-    var layersButtons = document.createElement('div');
-    var layersList = document.createElement('ul');
+    this.buttons = document.createElement('div');
+    this.palette = document.createElement('div');
+    this.layers = document.createElement('div');
+    this.layersButtons = document.createElement('div');
+    this.layersList = document.createElement('ul');
 
     this.buttons.addEventListener('mousedown', function(e) { e.preventDefault(); e.stopPropagation(); });
     this.palette.addEventListener('mousedown', function(e) { e.preventDefault(); e.stopPropagation(); });
     this.layers.addEventListener('mousedown', function(e) { e.preventDefault(); e.stopPropagation(); });
 
-    this.buttons.setAttribute('id', 'sketcher_buttons');
-    this.palette.setAttribute('id', 'sketcher_palette');
-    this.layers.setAttribute('id', 'sketcher_layers');
-    this.layersButtons.setAttribute('id', 'sketcher_layers_buttons');
-    this.layersList.setAttribute('id', 'sketcher_layers_list');
+    this.buttons.setAttribute('id', 'sk_buttons');
+    this.palette.setAttribute('id', 'sk_palette');
+    this.layers.setAttribute('id', 'sk_layers');
+    this.layersButtons.setAttribute('id', 'sk_layers_buttons');
+    this.layersList.setAttribute('id', 'sk_layers_list');
 
     document.body.insertBefore(this.buttons, this.frame);
     document.body.insertBefore(this.palette, this.frame);
@@ -32,14 +32,14 @@ var SketcherUI = (function(document, window){
         }
 
         for(var color in Color) {
-            this.palette.innerHTML += '<a class="sketcher_color" style="background-color:'+Color[color]+';" alt="'+color+'" href="#"></a>';
+            this.palette.innerHTML += '<a class="sk_color" style="background-color:'+Color[color]+';" alt="'+color+'" href="#"></a>';
         }
 
         Array.prototype.forEach.call(
-            this.palette.querySelectorAll('.sketcher_color'),
+            this.palette.querySelectorAll('.sk_color'),
             function(color) {
                 color.addEventListener('click', function(e) {
-                    Sketcher.selectColor(this.getAttribute('alt'));
+                    S.selectColor(this.getAttribute('alt'));
                 });
             }
         );
@@ -50,45 +50,45 @@ var SketcherUI = (function(document, window){
             this.layersList.removeChild(this.layersList.firstChild);
         }
 
-        Sketcher.getLayers().forEach(function(layer) {
+        S.getLayers().forEach(function(layer) {
             var li = document.createElement('li');
             li.setAttribute('data-id', layer.id);
             li.setAttribute('data-name', layer.name);
-            if(layer.id == Sketcher.getSelectedLayer())
+            if(layer.id == S.getSelectedLayer())
                 li.setAttribute('class', 'active');
 
             // Create a container for layer commands
             var div = document.createElement('div');
-            div.setAttribute('class', 'sketcher_layer_commands');
+            div.setAttribute('class', 'sk_layer_commands');
 
             // Create buttons for layer commands
             var aSel = document.createElement('a');
             aSel.setAttribute('data-action', 'selectLayer');
-            aSel.setAttribute('class', 'sketcher_layer_link');
+            aSel.setAttribute('class', 'sk_layer_link');
             aSel.innerHTML = layer.name[0].toUpperCase()+layer.name.substr(1);
             li.appendChild(aSel);
 
             var aVis = document.createElement('a');
             aVis.setAttribute('data-action', 'toggleLayerVisibility');
-            aVis.setAttribute('class', 'sketcher_check');
+            aVis.setAttribute('class', 'sk_check');
             aVis.innerHTML = '<i class="fa fa-eye'+(layer.isVisible() ? '' : '-slash')+'"></i>';
             div.appendChild(aVis);
 
             var aRai = document.createElement('a');
             aRai.setAttribute('data-action', 'raiseLayer');
-            aRai.setAttribute('class', 'sketcher_check');
+            aRai.setAttribute('class', 'sk_check');
             aRai.innerHTML = '<i class="fa fa-arrow-up"></i>';
             div.appendChild(aRai);
 
             var aDel = document.createElement('a');
             aDel.setAttribute('data-action', 'deleteLayer');
-            aDel.setAttribute('class', 'sketcher_check');
+            aDel.setAttribute('class', 'sk_check');
             aDel.innerHTML = '<i class="fa fa-trash"></i>';
             div.appendChild(aDel);
 
             var aDem = document.createElement('a');
             aDem.setAttribute('data-action', 'demoteLayer');
-            aDem.setAttribute('class', 'sketcher_check');
+            aDem.setAttribute('class', 'sk_check');
             aDem.innerHTML = '<i class="fa fa-arrow-down"></i>';
             div.appendChild(aDem);
 
@@ -98,22 +98,16 @@ var SketcherUI = (function(document, window){
         });
 
         Array.prototype.forEach.call(
-            this.layersList.querySelectorAll('a.sketcher_layer_link[data-action="selectLayer"]'),
-            function(link){
-                link.addEventListener('click', function(e) {
-                    Sketcher.selectLayer(e.srcElement.parentNode.getAttribute("data-id"));
-                    updateLayers();
-                });
-            }
-        );
-
-        Array.prototype.forEach.call(
-            this.layersList.querySelectorAll('a[data-action="toggleLayerVisibility"], a[data-action="deleteLayer"], a[data-action="raiseLayer"], a[data-action="demoteLayer"]'),
-            function(check, i){
-                var id = check.parentNode.parentNode.getAttribute("data-id");
-                var action = check.getAttribute("data-action");
-                check.addEventListener('click', function(e) {
-                    Sketcher[action](id);
+            this.layersList.querySelectorAll('a[data-action="selectLayer"], a[data-action="toggleLayerVisibility"], a[data-action="deleteLayer"], a[data-action="raiseLayer"], a[data-action="demoteLayer"]'),
+            function(btn){
+				if(btn.parentNode.tagName == "LI") {
+					var id = btn.parentNode.getAttribute("data-id");
+				} else {
+					var id = btn.parentNode.parentNode.getAttribute("data-id");
+				}
+                var action = btn.getAttribute("data-action");
+                btn.addEventListener('click', function(e) {
+                    S[action](id);
                     updateLayers();
                 });
             }
@@ -123,12 +117,12 @@ var SketcherUI = (function(document, window){
 
     function addButton(name, func, container, icon = '') {
         if(icon == '') {
-            container.innerHTML += '<a class="sketcher_button" id="sketcher_button_'+name+'" href="#">'+name+'</a>';
+            container.innerHTML += '<a class="sk_button" id="sk_button_'+name+'" href="#">'+name+'</a>';
         } else {
-            container.innerHTML += '<a class="sketcher_button" id="sketcher_button_'+name+'" href="#"><i alt="'+name+'" class="fa fa-'+icon+'"></a>';
+            container.innerHTML += '<a class="sk_button" id="sk_button_'+name+'" href="#"><i alt="'+name+'" class="fa fa-'+icon+'"></a>';
         }
 
-        var b = container.querySelector('#sketcher_button_'+name);
+        var b = container.querySelector('#sk_button_'+name);
         b.addEventListener('click', func);
     }
 
@@ -138,10 +132,10 @@ var SketcherUI = (function(document, window){
 
     // Add native components to containers
     addButton('square', function(e){ console.log('select square'); }, this.buttons, 'square');
-    addButton('addLayer', function(e){ Sketcher.addLayerPrompt(); updateLayers(); }, this.layersButtons, 'plus');
+    addButton('addLayer', function(e){ S.addLayerPrompt(); updateLayers(); }, this.layersButtons, 'plus');
     updatePalette();
     updateLayers();
-    
+
     return {
         addButton: addNormalButton,
         updateLayers: updateLayers
