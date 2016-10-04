@@ -5,10 +5,9 @@ var Tools = ( function() {
      *
      *
      */
-    function _Tool(lay, c, lw) {
-      this.layer = lay;
+    function _Tool( c, lw) {
       this.color = c;
-      this.linewidth = lw;
+      this.line_width = lw;
     }
 
     _Tool.prototype.setColor = function (c) {
@@ -16,11 +15,7 @@ var Tools = ( function() {
     }
 
     _Tool.prototype.setLineWidth = function (lw) {
-      this.linewidth = lw;
-    }
-
-    _Tool.prototype.test = function (arg) {
-      console.log(this.color);
+      this.line_width = lw;
     }
 
     //AbstractFunctions
@@ -28,17 +23,20 @@ var Tools = ( function() {
     _Tool.prototype.onMouseMove;
     _Tool.prototype.onMouseUp;
 
-    function private() {
-      console.log("private");
-    }
+    _Tool.prototype.config_context = function (ctx) {
+      ctx.strokeStyle = this.color;
+      ctx.lineWidth = this.line_width;
+
+    };
+
 
     /* Class Line extend _Tool
      *
      *
      *
      */
-     function Line(lay, c, lw) {
-       _Tool.call(this, lay,c, lw)
+     function Line(c, lw) {
+       _Tool.call(this, c, lw)
        this.p1;
        this.p2;
      }
@@ -46,27 +44,34 @@ var Tools = ( function() {
      Line.prototype = Object.create(_Tool.prototype);
      Line.prototype.constructor = Line;
 
-     Line.prototype.draw = function (ctx, p1, p2) {
+     Line.prototype.draw = function (ctx) {
         //Conf du tracé
         // ...
+
         ctx.beginPath();
-        ctx.moveTo(p1.x, p1.y);
-        ctx.lineTo(p2.x,p1.y);
-        ctx.endPath();
+        ctx.moveTo(this.p1.x, this.p1.y);
+        ctx.lineTo(this.p2.x,this.p2.y);
+        ctx.closePath();
         ctx.stroke();
      }
 
      Line.prototype.onMouseDown = function (e) {
-       this.p1 = {e.clientX, e.clientY };
+
+       this.p1 = {x : e.clientX, y : e.clientY };
 
      }
 
-     Line.prototype.onMouseMove = function (e) {
-       
+     Line.prototype.onMouseMove = function (e, ctx) {
+       this.p2 =  {x : e.clientX, y : e.clientY};
+       this.config_context(ctx);
+       this.draw(ctx);
 
      }
 
-     Line.prototype.onMouseUp = function (e) {
+     Line.prototype.onMouseUp = function (e, ctx) {
+       this.p2 = { x :e.clientX, y : e.clientY};
+       this.config_context(ctx);
+       this.draw(ctx);
 
      }
 
@@ -75,8 +80,8 @@ var Tools = ( function() {
       *
       *
       */
-    function Rect(lay, c, cf, lw ) {
-      _Tool.call(this,lay,c, lw);
+    function Rect( c, cf, lw ) {
+      _Tool.call(this,c, lw);
       this.fill_color =  cf;
     }
 
@@ -87,22 +92,22 @@ var Tools = ( function() {
       this.fill_color = cf;
     }
 
-    Rect.prototype.draw = function (ctx, p1, p2) {
+    Rect.prototype.draw = function (ctx) {
       //Reglage tracé
       //...
-      ctx.fillRect(p1.x, p1.y, p2.x, p2.y, fill_color); //Remplissage
+      ctx.fillRect(this.p1.x, this.p1.y, this.p2.x, this.p2.y); //Remplissage
       ctx.drawRect(p1.x, p1.y, p2.x, p2.y,color); // Bordure
     }
 
-    Rect.prototype.onMouseDown = function (e) {
+    Rect.prototype.onMouseDown = function (e, ctx) {
 
     }
 
-    Rect.prototype.onMouseMove = function (e) {
+    Rect.prototype.onMouseMove = function (e, ctx) {
 
     }
 
-    Rect.prototype.onMouseUp = function (e) {
+    Rect.prototype.onMouseUp = function (e, ctx) {
 
     }
 
@@ -115,10 +120,3 @@ var Tools = ( function() {
     }
 
 }());
-
-
-var a = new Tools.Rectangle("a", "b", "c");
-console.log("Instance of Tool >" + a instanceof Tools.Tool );
-a.test();
-a.setColor("aaa");
-a.test();

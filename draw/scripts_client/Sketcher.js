@@ -1,8 +1,9 @@
-var Sketcher = (function($){
+var Sketcher = (function($, Tools){
     var root;
     var layer_mouse;
     var posX, posY;
     var suivi = false;
+    var my_tool = new Tools.Line('#00FF00', 10);
 
 
     function sortLayers() {
@@ -28,19 +29,17 @@ var Sketcher = (function($){
 
   function onMouseDown(e){
     if (e.button == 0 && !suivi){
-         console.log("APPUI");
          suivi = true;
-         posX = e.clientX;
-         posY = e.clientY;
+         my_tool.onMouseDown(e);
 
         $(this).mousemove(function(event){
-            onMouseMove(event);
+            $(this).get(0).getContext('2d').clearRect(0,0, layer_mouse.width() , layer_mouse.height());
+            my_tool.onMouseMove(event,$(this).get(0).getContext('2d'));
         });
     }
   }
 
   function onMouseMove(e){
-    console.log("Sourisbouge");
     var ctx = $('#event').get(0).getContext('2d');
     ctx.clearRect(0,0, layer_mouse.width() , layer_mouse.height());
 
@@ -53,27 +52,13 @@ var Sketcher = (function($){
 
   function onMouseUp(e){
   $(this).unbind('mousemove');
-  console.log("ARRET");
   suivi = false;
-
-
-  $(this).get(0).getContext('2d').clearRect(0,0, layer_mouse.width() , layer_mouse.height());
-
-  var def_ctx = $('#draw').get(0).getContext('2d');
-  def_ctx.beginPath();
-  def_ctx.moveTo(posX, posY);
-  def_ctx.lineTo(e.clientX, e.clientY);
-  def_ctx.closePath();
-  def_ctx.stroke();
-
-
-
-
-  }
+ $(this).get(0).getContext('2d').clearRect(0,0, layer_mouse.width() , layer_mouse.height());
+  my_tool.onMouseUp(e, $('#draw').get(0).getContext('2d') );
+ }
 
     //Chargement page
     $(function(){
-        console.log("test");
         //On créer les canvas
         root = $('#sketcher');
         root.width(400);
@@ -89,8 +74,6 @@ var Sketcher = (function($){
         layer_mouse.mousedown(onMouseDown);
         layer_mouse.mouseup(onMouseUp);
       }
-      console.log(layer_mouse.width());
-      console.log(layer_mouse.height());
 
 
 
@@ -99,4 +82,4 @@ var Sketcher = (function($){
     return {
 
     };
-})(jQuery);
+})(jQuery, Tools);
