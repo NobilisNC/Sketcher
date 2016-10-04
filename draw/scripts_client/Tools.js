@@ -59,6 +59,7 @@ var Tools = ( function() {
 
        this.p1 = {x : e.offsetX, y : e.offsetY };
 
+
      }
 
      Line.prototype.onMouseMove = function (e, ctx) {
@@ -95,13 +96,14 @@ var Tools = ( function() {
     Rect.prototype.draw = function (ctx) {
 
       ctx.fillStyle = this.cf;
-      ctx.fillRect(this.p1.x, this.p1.y, this.p2.x, this.p2.y);
-      ctx.strokeRect(this.p1.x, this.p1.y, this.p2.x, this.p2.y);
+      ctx.fillRect(this.p1.x, this.p1.y, this.p2.x - this.p1.x, this.p2.y - this.p1.y);
+      ctx.strokeRect(this.p1.x, this.p1.y, this.p2.x - this.p1.x, this.p2.y - this.p1.y);
 
     }
 
     Rect.prototype.onMouseDown = function (e, ctx) {
        this.p1 = {x : e.offsetX, y : e.offsetY };
+
 
     }
 
