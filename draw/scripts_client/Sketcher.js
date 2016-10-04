@@ -3,7 +3,7 @@ var Sketcher = (function($, Tools){
     var layer_mouse;
     var posX, posY;
     var suivi = false;
-    var my_tool = new Tools.Line('#00FF00', 10);
+    var my_tool = new Tools.Rectangle('#00FF00', 10);
 
 
     function sortLayers() {

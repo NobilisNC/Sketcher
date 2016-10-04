@@ -57,19 +57,19 @@ var Tools = ( function() {
 
      Line.prototype.onMouseDown = function (e) {
 
-       this.p1 = {x : e.clientX, y : e.clientY };
+       this.p1 = {x : e.offsetX, y : e.offsetY };
 
      }
 
      Line.prototype.onMouseMove = function (e, ctx) {
-       this.p2 =  {x : e.clientX, y : e.clientY};
+       this.p2 =  {x : e.offsetX, y : e.offsetY};
        this.config_context(ctx);
        this.draw(ctx);
 
      }
 
      Line.prototype.onMouseUp = function (e, ctx) {
-       this.p2 = { x :e.clientX, y : e.clientY};
+       this.p2 = { x :e.offsetX, y : e.offsetY};
        this.config_context(ctx);
        this.draw(ctx);
 
@@ -80,8 +80,8 @@ var Tools = ( function() {
       *
       *
       */
-    function Rect( c, cf, lw ) {
-      _Tool.call(this,c, lw);
+    function Rect( c, lw, cf ) {
+      _Tool.call(this, c, lw);
       this.fill_color =  cf;
     }
 
@@ -93,22 +93,28 @@ var Tools = ( function() {
     }
 
     Rect.prototype.draw = function (ctx) {
-      //Reglage tracé
-      //...
-      ctx.fillRect(this.p1.x, this.p1.y, this.p2.x, this.p2.y); //Remplissage
-      ctx.drawRect(p1.x, p1.y, p2.x, p2.y,color); // Bordure
+
+      ctx.fillStyle = this.cf;
+      ctx.fillRect(this.p1.x, this.p1.y, this.p2.x, this.p2.y);
+      ctx.strokeRect(this.p1.x, this.p1.y, this.p2.x, this.p2.y);
+
     }
 
     Rect.prototype.onMouseDown = function (e, ctx) {
+       this.p1 = {x : e.offsetX, y : e.offsetY };
 
     }
 
     Rect.prototype.onMouseMove = function (e, ctx) {
-
+      this.p2 =  {x : e.offsetX, y : e.offsetY};
+      this.config_context(ctx);
+      this.draw(ctx);
     }
 
     Rect.prototype.onMouseUp = function (e, ctx) {
-
+      this.p2 = { x :e.offsetX, y : e.offsetY};
+      this.config_context(ctx);
+      this.draw(ctx);
     }
 
 
