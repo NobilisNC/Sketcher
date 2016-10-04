@@ -1,26 +1,60 @@
+class Layer {
+    constructor(name, zIndex, width, height, frame) {
+
+        this.name = name;
+        frame.innerHTML = '<canvas id="'+this.name+'"></canvas>'+frame.innerHTML;
+        this.node = frame.querySelector('#'+this.name);
+        this.visible = true;
+        this.zIndex = zIndex;
+        this.width = width;
+        this.height = height;
+        this.node.width = this.width;
+        this.node.height = this.height;
+    }
+
+    updateVisibility() {
+        document.querySelector('#'+this.name).style.display = this.visible ? "block" : "none";
+    }
+
+    toggleVisibility() {
+        this.visible = this.visible ? false : true;
+    }
+
+    setVisibility(visibility) {
+        this.visible = visibility;
+        this.updateVisibility();
+    }
+
+    isVisible() {
+        return this.visible;
+    }
+}
+
 var Sketcher = (function(document, window){
     var frame = document.querySelector("div#sketcher");
-    var socket = io("http://localhost:3000/");
-    var canvas = [];
-    var layers = [];
+    // var socket = io("http://localhost:3000/");
+    var layers = {};
     var selectedLayer = "background";
     var clicked = false;
     var pos = {x:0, y:0};
-    var width = 500;
-    var height = 500;
+    var width = window.innerWidth;
+    var height = window.innerHeight;
     
     function onMouseUp(e) {
-        clicked = false;
         frame.removeEventListener("mousemove", onMouseMove);
 
         clear(getContext("trackpad"));
 
-        var ctx = getContext(selectedLayer);
-        ctx.beginPath();
-        ctx.moveTo(pos.x, pos.y);
-        ctx.lineTo(e.offsetX, e.offsetY);
-        ctx.closePath();
-        ctx.stroke();
+        if(clicked) {
+            var ctx = getContext(selectedLayer);
+            ctx.beginPath();
+            ctx.moveTo(pos.x, pos.y);
+            ctx.lineTo(e.offsetX, e.offsetY);
+            ctx.closePath();
+            ctx.stroke();
+        }
+
+        clicked = false;
     }
 
     function onMouseDown(e) {
@@ -49,16 +83,58 @@ var Sketcher = (function(document, window){
         return document.querySelector("canvas#"+name).getContext("2d");
     }
 
+    function countLayers() {
+        var ret = 0;
+
+        for(var i in layers) {
+            ret++;
+        }
+
+        return ret;
+    }
+
     function addLayer(name, zIndex = 0) {
-        frame.innerHTML = '<canvas id="'+name+'"></canvas>'+frame.innerHTML;
-        layers[name] = getContext(name);
-        layers[name].canvas.width = width;
-        layers[name].canvas.height = height;
-        layers[name].canvas.style.zIndex = zIndex;
+        layers[name] = new Layer(name, zIndex == 0 ? countLayers : zIndex, width, height, frame);
+    }
+
+    function addLayerPrompt() {
+        var name = prompt("Please enter layer name", "Foreground").toLowerCase();
+        addLayer(name);
+        selectedLayer = name;
+    }
+
+    function getSelectedLayer() {
+        return selectedLayer;
+    }
+
+    function selectLayer(name) {
+        if(name in layers) {
+            selectedLayer = name;
+            return true;
+        } else {
+            console.log('No layer named "'+name+'".');
+            console.log(layers);
+            return false;
+        }
+    }
+
+    function setLayerVisibility(name, visibility) {
+        layers[name].setVisibility(visibility);
     }
 
     function clear(ctx) {
         ctx.clearRect(0, 0, width, height);
+    }
+
+    function getLayers() {
+        var ret = [];
+
+        for(var name in layers) {
+            if(name != "trackpad")
+                ret.push(layers[name]);
+        }
+
+        return ret;
     }
 
     frame.style.width = width+"px";
@@ -73,6 +149,11 @@ var Sketcher = (function(document, window){
     return {
         getContext: getContext,
         addLayer: addLayer,
-        clear: clear
+        addLayerPrompt: addLayerPrompt,
+        getSelectedLayer: getSelectedLayer,
+        selectLayer: selectLayer,
+        setLayerVisibility: setLayerVisibility,
+        clear: clear,
+        getLayers: getLayers
     };
 })(document, window);
