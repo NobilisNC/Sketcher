@@ -31,64 +31,85 @@ var SketcherUI = (function(document, window){
             palette.innerHTML += '<a class="sketcher_color" style="background-color:'+Color[color]+';" alt="'+color+'" href="#"></a>';
         }
 
-        palette.querySelectorAll('.sketcher_color').forEach(function(color, i) {
+        Array.prototype.forEach(function(color, i) {
             color.addEventListener('click', function(e) {
                 Sketcher.selectColor(this.getAttribute('alt'));
             });
-        });
+        }, palette.querySelectorAll('.sketcher_color'));
     }
 
     function updateLayers() {
         while (layersList.firstChild) {
             layersList.removeChild(layersList.firstChild);
         }
+
         Sketcher.getLayers().forEach(function(layer, i) {
-            var elm = '<li data-id="'+layer.id+'" data-name="'+layer.name+'" ';
-            elm += (layer.name == Sketcher.getSelectedLayer() ? ' class="active"' : '')+'>';
-            elm += '<a class="sketcher_layer_link" data-action="selectLayer" href="#">';
-            elm += layer.name.charAt(0).toUpperCase()+layer.name.slice(1);
-            elm += '</a><a href="#" data-action="toggleLayerVisibility" class="sketcher_check';
-            elm += '" id="sketcher_layer_'+layer.name+'_visible">';
-            elm += '<i class="fa fa-eye'+(layer.isVisible() ? "" : "-slash")+'"></i>';
-            elm += '</a><a href="#" data-action="deleteLayer" class="sketcher_check">';
-            elm += '<i class="fa fa-trash"></i>';
-            elm += '</a></li>';
+            var li = document.createElement('li');
+            li.setAttribute('data-id', layer.id);
+            li.setAttribute('data-name', layer.name);
+            if(layer.name == Sketcher.getSelectedLayer())
+                li.setAttribute('class', 'active');
+            
+            var div = document.createElement('div');
+            div.setAttribute('class', 'sketcher_layer_commands');
 
-            layersList.innerHTML += elm;
+            var aSel = document.createElement('a');
+            aSel.setAttribute('data-action', 'selectLayer');
+            aSel.setAttribute('class', 'sketcher_layer_link');
+            aSel.innerHTML = layer.name[0].toUpperCase()+layer.name.substr(1);
+
+            var aVis = document.createElement('a');
+            aVis.setAttribute('data-action', 'toggleLayerVisibility');
+            aVis.setAttribute('class', 'sketcher_check');
+            aVis.innerHTML = '<i class="fa fa-eye'+(layer.isVisible() ? '' : '-slash')+'"></i>';
+
+            var aDel = document.createElement('a');
+            aDel.setAttribute('data-action', 'deleteLayer');
+            aDel.setAttribute('class', 'sketcher_check');
+            aDel.innerHTML = '<i class="fa fa-trash"></i>';
+
+            var aRai = document.createElement('a');
+            aRai.setAttribute('data-action', 'raiseLayer');
+            aRai.setAttribute('class', 'sketcher_check');
+            aRai.innerHTML = '<i class="fa fa-arrow-up"></i>';
+
+            var aDem = document.createElement('a');
+            aDem.setAttribute('data-action', 'demoteLayer');
+            aDem.setAttribute('class', 'sketcher_check');
+            aDem.innerHTML = '<i class="fa fa-arrow-down"></i>';
+
+            li.appendChild(aSel);
+            div.appendChild(aVis);
+            div.appendChild(aDel);
+            div.appendChild(aRai);
+            div.appendChild(aDem);
+            li.appendChild(div);
+
+            layersList.appendChild(li);
         });
 
-        layersList.querySelectorAll('a.sketcher_layer_link[data-action="selectLayer"]').forEach(function(link, i){
-            link.addEventListener('click', function(e) {
-                Sketcher.selectLayer(e.srcElement.parentNode.getAttribute("data-id"));
-                updateLayers();
-            });
-        });
+        Array.prototype.forEach.call(
+            layersList.querySelectorAll('a.sketcher_layer_link[data-action="selectLayer"]'),
+            function(link, i){
+                link.addEventListener('click', function(e) {
+                    Sketcher.selectLayer(e.srcElement.parentNode.getAttribute("data-id"));
+                    updateLayers();
+                });
+            }
+        );
 
-        layersList.querySelectorAll('a.sketcher_check[data-action="toggleLayerVisibility"]').forEach(function(check, i){
-            check.addEventListener('click', function(e) {
-                if(e.srcElement.tagName === 'I') {
-                    Sketcher.toggleLayerVisibility(e.srcElement.parentNode.parentNode.getAttribute("data-id"));
-                } else {
-                    Sketcher.toggleLayerVisibility(e.srcElement.parentNode.getAttribute("data-id"));
-                }
+        Array.prototype.forEach.call(
+            layersList.querySelectorAll('a[data-action="toggleLayerVisibility"], a[data-action="deleteLayer"], a[data-action="raiseLayer"], a[data-action="demoteLayer"]'),
+            function(check, i){
+                var id = check.parentNode.parentNode.getAttribute("data-id");
+                var action = check.getAttribute("data-action");
+                check.addEventListener('click', function(e) {
+                    Sketcher[action](id);
+                    updateLayers();
+                });
+            }
+        );
 
-                updateLayers();
-            });
-        });
-
-        layersList.querySelectorAll('a.sketcher_check[data-action="deleteLayer"]').forEach(function(check, i){
-            check.addEventListener('click', function(e) {
-                var id;
-                if(e.srcElement.tagName === 'I') {
-                    id = e.srcElement.parentNode.parentNode.getAttribute("data-id");
-                } else {
-                    id = e.srcElement.parentNode.getAttribute("data-id");
-                }
-                Sketcher.deleteLayer(id);
-
-                updateLayers();
-            });
-        });
     }
 
     function addButton(name, func, container, icon = '') {

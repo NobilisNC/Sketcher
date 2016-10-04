@@ -182,6 +182,10 @@ var Sketcher = (function(document, window){
         getLayer(id).toggleVisibility();
     }
 
+    function raiseLayer(id) {
+        console.log(id);
+    }
+
     function selectColor(colorName) {
         if(colorName in Color) {
             color = Color[colorName]

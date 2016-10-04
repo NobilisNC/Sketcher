@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <title>Document</title>
-    <script src="https://cdn.socket.io/socket.io-1.4.5.js"></script>
+    <!--<script src="https://cdn.socket.io/socket.io-1.4.5.js"></script>-->
     <link rel="stylesheet" href="css/fontawesome.min.css">
     <style>
         * {
@@ -69,6 +69,7 @@
 
                     #sketcher_layers_list li {
                         position: relative;
+                        height: 30px;
                     }
                     
                     #sketcher_layers_list li a.sketcher_layer_link {
@@ -90,6 +91,12 @@
                             background: #aaa;
                         }
 
+                    #sketcher_layers_list li div.sketcher_layer_commands {
+                        float: right;
+                        width: 30px;
+                        height: 30px;
+                    }
+
                     #sketcher_layers_list li a.sketcher_check {
                         background: #ccc;
                         font-size: 14px;
@@ -101,8 +108,11 @@
                         height: 15px;
                         text-align: center;
                         display: inline-block;
-                        vertical-align: top;
+                        cursor: pointer;
                     }
+                        #sketcher_layers_list li a.sketcher_check:hover{
+                            background: #ddd;
+                        }
                         #sketcher_layers_list li.active a.sketcher_check{
                             background: #aaa;
                         }
