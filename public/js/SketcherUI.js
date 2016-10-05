@@ -1,119 +1,143 @@
 var SketcherUI = (function(document, window){
-    var frame = document.querySelector('div#sketcher');
+	this.frame = document.querySelector('div#sketcher');
 
-    // Create UI components containers
-    var buttons = document.createElement('div');
-    var palette = document.createElement('div');
-    var layers = document.createElement('div');
-    var layersButtons = document.createElement('div');
-    var layersList = document.createElement('ul');
+	// Create UI components containers
+	this.buttons = document.createElement('div');
+	this.palette = document.createElement('div');
+	this.layers = document.createElement('div');
+	this.layersButtons = document.createElement('div');
+	this.layersList = document.createElement('ul');
 
-    buttons.addEventListener('mousedown', function(e) { e.preventDefault(); e.stopPropagation(); });
-    palette.addEventListener('mousedown', function(e) { e.preventDefault(); e.stopPropagation(); });
-    layers.addEventListener('mousedown', function(e) { e.preventDefault(); e.stopPropagation(); });
+	this.buttons.addEventListener('mousedown', function(e) { e.preventDefault(); e.stopPropagation(); });
+	this.palette.addEventListener('mousedown', function(e) { e.preventDefault(); e.stopPropagation(); });
+	this.layers.addEventListener('mousedown', function(e) { e.preventDefault(); e.stopPropagation(); });
 
-    buttons.setAttribute('id', 'sketcher_buttons');
-    palette.setAttribute('id', 'sketcher_palette');
-    layers.setAttribute('id', 'sketcher_layers');
-    layersButtons.setAttribute('id', 'sketcher_layers_buttons');
-    layersList.setAttribute('id', 'sketcher_layers_list');
+	this.buttons.setAttribute('id', 'sk_buttons');
+	this.palette.setAttribute('id', 'sk_palette');
+	this.layers.setAttribute('id', 'sk_layers');
+	this.layersButtons.setAttribute('id', 'sk_layers_buttons');
+	this.layersList.setAttribute('id', 'sk_layers_list');
 
-    document.body.insertBefore(buttons, frame);
-    document.body.insertBefore(palette, frame);
-    layers.appendChild(layersList);
-    layers.appendChild(layersButtons);
-    document.body.insertBefore(layers, frame);
+	document.body.insertBefore(this.buttons, this.frame);
+	document.body.insertBefore(this.palette, this.frame);
 
-    function updatePalette() {
-        palette.innerHTML = '';
+	this.layers.appendChild(this.layersList);
+	this.layers.appendChild(this.layersButtons);
+	document.body.insertBefore(this.layers, this.frame);
 
-        for(var color in Color) {
-            palette.innerHTML += '<a class="sketcher_color" style="background-color:'+Color[color]+';" alt="'+color+'" href="#"></a>';
-        }
+	function updatePalette() {
+		this.palette.innerHTML = '';
+		while (this.palette.firstChild) {
+			this.palette.removeChild(this.palette.firstChild);
+		}
 
-        palette.querySelectorAll('.sketcher_color').forEach(function(color, i) {
-            color.addEventListener('click', function(e) {
-                Sketcher.selectColor(this.getAttribute('alt'));
-            });
-        });
-    }
+		for(var color in Color) {
+			this.palette.innerHTML += '<a class="sk_color" style="background-color:'+Color[color]+';" alt="'+color+'" href="#"></a>';
+		}
 
-    function updateLayers() {
-        while (layersList.firstChild) {
-            layersList.removeChild(layersList.firstChild);
-        }
-        Sketcher.getLayers().forEach(function(layer, i) {
-            var elm = '<li data-id="'+layer.id+'" data-name="'+layer.name+'" ';
-            elm += (layer.name == Sketcher.getSelectedLayer() ? ' class="active"' : '')+'>';
-            elm += '<a class="sketcher_layer_link" data-action="selectLayer" href="#">';
-            elm += layer.name.charAt(0).toUpperCase()+layer.name.slice(1);
-            elm += '</a><a href="#" data-action="toggleLayerVisibility" class="sketcher_check';
-            elm += '" id="sketcher_layer_'+layer.name+'_visible">';
-            elm += '<i class="fa fa-eye'+(layer.isVisible() ? "" : "-slash")+'"></i>';
-            elm += '</a><a href="#" data-action="deleteLayer" class="sketcher_check">';
-            elm += '<i class="fa fa-trash"></i>';
-            elm += '</a></li>';
+		Array.prototype.forEach.call(
+			this.palette.querySelectorAll('.sk_color'),
+			function(color) {
+				color.addEventListener('click', function(e) {
+					S.selectColor(this.getAttribute('alt'));
+				});
+			}
+		);
+	}
 
-            layersList.innerHTML += elm;
-        });
+	function updateLayers() {
+		while (this.layersList.firstChild) {
+			this.layersList.removeChild(this.layersList.firstChild);
+		}
 
-        layersList.querySelectorAll('a.sketcher_layer_link[data-action="selectLayer"]').forEach(function(link, i){
-            link.addEventListener('click', function(e) {
-                Sketcher.selectLayer(e.srcElement.parentNode.getAttribute("data-id"));
-                updateLayers();
-            });
-        });
+		S.getLayers().forEach(function(layer) {
+			var li = document.createElement('li');
+			li.setAttribute('data-id', layer.id);
+			li.setAttribute('data-name', layer.name);
+			if(layer.id == S.getSelectedLayer())
+				li.setAttribute('class', 'active');
 
-        layersList.querySelectorAll('a.sketcher_check[data-action="toggleLayerVisibility"]').forEach(function(check, i){
-            check.addEventListener('click', function(e) {
-                if(e.srcElement.tagName === 'I') {
-                    Sketcher.toggleLayerVisibility(e.srcElement.parentNode.parentNode.getAttribute("data-id"));
-                } else {
-                    Sketcher.toggleLayerVisibility(e.srcElement.parentNode.getAttribute("data-id"));
-                }
+			// Create a container for layer commands
+			var div = document.createElement('div');
+			div.setAttribute('class', 'sk_layer_commands');
 
-                updateLayers();
-            });
-        });
+			// Create buttons for layer commands
+			var aSel = document.createElement('a');
+			aSel.setAttribute('data-action', 'selectLayer');
+			aSel.setAttribute('class', 'sk_layer_link');
+			aSel.innerHTML = layer.name[0].toUpperCase()+layer.name.substr(1);
+			li.appendChild(aSel);
 
-        layersList.querySelectorAll('a.sketcher_check[data-action="deleteLayer"]').forEach(function(check, i){
-            check.addEventListener('click', function(e) {
-                var id;
-                if(e.srcElement.tagName === 'I') {
-                    id = e.srcElement.parentNode.parentNode.getAttribute("data-id");
-                } else {
-                    id = e.srcElement.parentNode.getAttribute("data-id");
-                }
-                Sketcher.deleteLayer(id);
+			var aVis = document.createElement('a');
+			aVis.setAttribute('data-action', 'toggleLayerVisibility');
+			aVis.setAttribute('class', 'sk_check');
+			aVis.innerHTML = '<i class="fa fa-eye'+(layer.isVisible() ? '' : '-slash')+'"></i>';
+			div.appendChild(aVis);
 
-                updateLayers();
-            });
-        });
-    }
+			var aRai = document.createElement('a');
+			aRai.setAttribute('data-action', 'raiseLayer');
+			aRai.setAttribute('class', 'sk_check');
+			aRai.innerHTML = '<i class="fa fa-arrow-up"></i>';
+			div.appendChild(aRai);
 
-    function addButton(name, func, container, icon = '') {
-        if(icon == '') {
-            container.innerHTML += '<a class="sketcher_button" id="sketcher_button_'+name+'" href="#">'+name+'</a>';
-        } else {
-            container.innerHTML += '<a class="sketcher_button" id="sketcher_button_'+name+'" href="#"><i alt="'+name+'" class="fa fa-'+icon+'"></a>';
-        }
+			var aDel = document.createElement('a');
+			aDel.setAttribute('data-action', 'deleteLayer');
+			aDel.setAttribute('class', 'sk_check');
+			aDel.innerHTML = '<i class="fa fa-trash"></i>';
+			div.appendChild(aDel);
 
-        var b = container.querySelector('#sketcher_button_'+name);
-        b.addEventListener('click', func);
-    }
+			var aDem = document.createElement('a');
+			aDem.setAttribute('data-action', 'demoteLayer');
+			aDem.setAttribute('class', 'sk_check');
+			aDem.innerHTML = '<i class="fa fa-arrow-down"></i>';
+			div.appendChild(aDem);
 
-    function addNormalButton(name, func, icon = '') {
-        addButton(name, func, buttons, icon);
-    }
+			li.appendChild(div);
 
-    // Add native components to containers
-    addButton('square', function(e){ console.log('select square'); }, buttons, 'square');
-    addButton('addLayer', function(e){ Sketcher.addLayerPrompt(); updateLayers(); }, layersButtons, 'plus');
-    updatePalette();
-    updateLayers();
-    
-    return {
-        addButton: addNormalButton,
-        updateLayers: updateLayers
-    };
+			this.layersList.appendChild(li);
+		});
+
+		Array.prototype.forEach.call(
+			this.layersList.querySelectorAll('a[data-action="selectLayer"], a[data-action="toggleLayerVisibility"], a[data-action="deleteLayer"], a[data-action="raiseLayer"], a[data-action="demoteLayer"]'),
+			function(btn){
+				if(btn.parentNode.tagName == "LI") {
+					var id = btn.parentNode.getAttribute("data-id");
+				} else {
+					var id = btn.parentNode.parentNode.getAttribute("data-id");
+				}
+				var action = btn.getAttribute("data-action");
+				btn.addEventListener('click', function(e) {
+					S[action](id);
+					updateLayers();
+				});
+			}
+		);
+
+	}
+
+	function addButton(name, func, container, icon = '') {
+		if(icon == '') {
+			container.innerHTML += '<a class="sk_button" id="sk_button_'+name+'" href="#">'+name+'</a>';
+		} else {
+			container.innerHTML += '<a class="sk_button" id="sk_button_'+name+'" href="#"><i alt="'+name+'" class="fa fa-'+icon+'"></a>';
+		}
+
+		var b = container.querySelector('#sk_button_'+name);
+		b.addEventListener('click', func);
+	}
+
+	function addNormalButton(name, func, icon = '') {
+		addButton(name, func, buttons, icon);
+	}
+
+	// Add native components to containers
+	addButton('square', function(e){ console.log('select square'); }, this.buttons, 'square');
+	addButton('addLayer', function(e){ S.addLayerPrompt(); updateLayers(); }, this.layersButtons, 'plus');
+	updatePalette();
+	updateLayers();
+
+	return {
+		addButton: addNormalButton,
+		updateLayers: updateLayers
+	};
 })(document, window);
