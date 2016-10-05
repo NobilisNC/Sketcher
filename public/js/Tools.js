@@ -8,6 +8,7 @@ var _Tools = ( function() {
     function _Tool( c, lw) {
       this.color = c;
       this.line_width = lw;
+      this._stroke = true;
     }
 
     _Tool.prototype.setColor = function (c) {
@@ -16,6 +17,14 @@ var _Tools = ( function() {
 
     _Tool.prototype.setLineWidth = function (lw) {
       this.line_width = lw;
+    }
+
+    _Tool.prototype.stroke = function (stroke) {
+      if (typeof stroke === 'boolean')
+        this._stroke = stroke;
+
+      return this._stroke;
+
     }
 
     //AbstractFunctions
@@ -83,21 +92,31 @@ var _Tools = ( function() {
       */
     function Rect( c, lw, cf ) {
       _Tool.call(this, c, lw);
-      this.fill_color =  cf;
+      this._fill_color =  cf;
+      this._fill = false;
     }
 
     Rect.prototype = Object.create(_Tool.prototype);
     Rect.prototype.constructor = Rect;
 
     Rect.prototype.setFillColor = function(cf) {
-      this.fill_color = cf;
+      this._fill_color = cf;
+    }
+
+    Rect.prototype.fill = function (fill) {
+      if (typeof fill === 'boolean')
+        this._fill = fill;
+
+      return this._fill;
     }
 
     Rect.prototype.draw = function (ctx) {
 
       ctx.fillStyle = this.cf;
-      ctx.fillRect(this.p1.x, this.p1.y, this.p2.x - this.p1.x, this.p2.y - this.p1.y);
-      ctx.strokeRect(this.p1.x, this.p1.y, this.p2.x - this.p1.x, this.p2.y - this.p1.y);
+      if(this._fill)
+        ctx.fillRect(this.p1.x, this.p1.y, this.p2.x - this.p1.x, this.p2.y - this.p1.y);
+      if (this._stroke)
+        ctx.strokeRect(this.p1.x, this.p1.y, this.p2.x - this.p1.x, this.p2.y - this.p1.y);
 
     }
 
@@ -170,14 +189,25 @@ var _Tools = ( function() {
     */
     function Circle( c, lw, cf ) {
       _Tool.call(this, c, lw);
-      this.fill_color =  cf;
+      this._fill_color =  cf;
+      this._fill = false;
     }
 
     Circle.prototype = Object.create(_Tool.prototype);
     Circle.prototype.constructor = Circle;
 
     Circle.prototype.setFillColor = function(cf) {
-      this.fill_color = cf;
+      this._fill_color = cf;
+    }
+
+    Circle.prototype.fill = function (fill) {
+
+      console.log(fill)
+      console.log(typeof fill);
+      if (typeof fill === 'boolean')
+        this._fill = fill;
+
+      return this._fill;
     }
 
     Circle.prototype.draw = function (ctx) {
@@ -185,8 +215,10 @@ var _Tools = ( function() {
       ctx.fillStyle = this.cf;
       ctx.beginPath();
       ctx.arc(this.p1.x,this.p1.y,Math.sqrt( Math.pow(this.p2.x-this.p1.x, 2) + Math.pow(this.p2.y-this.p1.y,2) ),0, 2*Math.PI);
-      ctx.fill();
-      ctx.stroke();
+      if (this._fill)
+        ctx.fill();
+      if (this._stroke)
+        ctx.stroke();
 
     }
 
