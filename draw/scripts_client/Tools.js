@@ -119,11 +119,58 @@ var Tools = ( function() {
       this.draw(ctx);
     }
 
+    /* Class Pencil extends _Tool
+     *
+     *
+     *
+     */
+   function Pencil( c, lw, cf ) {
+     _Tool.call(this, c, lw);
+     this.p0;
+     this.points = [];
+   }
+
+   Pencil.prototype = Object.create(_Tool.prototype);
+   Pencil.prototype.constructor = Pencil;
+
+   Pencil.prototype.draw = function (ctx) {
+     ctx.beginPath();
+     ctx.moveTo(this.p0.x, this.p0.y);
+     for (var point of this.points) {
+        ctx.lineTo(point.x, point.y);
+     }
+     ctx.stroke();
+     ctx.closePath();
+
+   }
+
+   Pencil.prototype.onMouseDown = function (e, ctx) {
+      this.p0 =  {x : e.offsetX, y : e.offsetY };
+      this.points = [];
+
+
+   }
+
+   Pencil.prototype.onMouseMove = function (e, ctx) {
+     this.points.push ( {x : e.offsetX, y : e.offsetY } );
+     this.config_context(ctx);
+     this.draw(ctx);
+   }
+
+   Pencil.prototype.onMouseUp = function (e, ctx) {
+     this.points.push ( {x : e.offsetX, y : e.offsetY } );
+     this.config_context(ctx);
+     this.draw(ctx);
+   }
+
+
+
 
 
     return {
       Line : Line,
-      Rectangle : Rect
+      Rectangle : Rect,
+      Pencil : Pencil
 
     }
 

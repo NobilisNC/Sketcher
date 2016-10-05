@@ -1,9 +1,8 @@
 var Sketcher = (function($, Tools){
     var root;
     var layer_mouse;
-    var posX, posY;
     var suivi = false;
-    var my_tool = new Tools.Rectangle('#00FF00', 10);
+    var my_tool = new Tools.Line("#f456D4", 3);
 
 
     function sortLayers() {
@@ -39,16 +38,6 @@ var Sketcher = (function($, Tools){
     }
   }
 
-  function onMouseMove(e){
-    var ctx = $('#event').get(0).getContext('2d');
-    ctx.clearRect(0,0, layer_mouse.width() , layer_mouse.height());
-
-    ctx.beginPath();
-    ctx.moveTo(posX,posY);
-    ctx.lineTo(e.clientX, e.clientY);
-    ctx.closePath();
-    ctx.stroke();
-  }
 
   function onMouseUp(e){
   $(this).unbind('mousemove');
