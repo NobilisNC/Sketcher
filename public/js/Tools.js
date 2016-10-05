@@ -1,4 +1,4 @@
-var Tools = ( function() {
+var _Tools = ( function() {
 
     /* Abstract Class _Tool
      *
@@ -163,15 +163,44 @@ var Tools = ( function() {
      this.draw(ctx);
    }
 
-
-
-
-
     return {
-      Line : Line,
-      Rectangle : Rect,
-      Pencil : Pencil
-
+      line : Line,
+      rectangle : Rect,
+      pencil : Pencil
     }
 
 }());
+
+
+var Tools = (function(t) {
+
+  var _line;
+  var _rectangle;
+  var _pencil;
+  var _current;
+
+  function initalization(default_color, default_line_width, default_fill_color) {
+    _line = new t.line(default_color, default_line_width);
+    _rectangle = new t.rectangle(default_color, default_line_width, default_fill_color);
+    _pencil = new t.pencil(default_color, default_line_width);
+
+    _current = _pencil;
+  }
+
+  function getCurrentTool() {
+       return _current;
+  }
+
+
+  function setCurrentTool(name) {
+
+
+  }
+
+  return {
+    init : initalization,
+    getTool : getCurrentTool,
+    setTool : setCurrentTool
+  }
+
+}(_Tools));
