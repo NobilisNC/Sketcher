@@ -174,25 +174,32 @@ var _Tools = ( function() {
 
 var Tools = (function(t) {
 
-  var _line;
-  var _rectangle;
-  var _pencil;
-  var _current;
+  var tools;
+  var current;
+
 
   function initalization(default_color, default_line_width, default_fill_color) {
-    _line = new t.line(default_color, default_line_width);
-    _rectangle = new t.rectangle(default_color, default_line_width, default_fill_color);
-    _pencil = new t.pencil(default_color, default_line_width);
+    tools = {
+                "line" : new t.line(default_color, default_line_width),
+                "rectangle" : new t.rectangle(default_color, default_line_width, default_fill_color),
+                "pencil" : new t.pencil(default_color, default_line_width)
+            }
 
-    _current = _pencil;
+
+    current = "pencil";
   }
 
   function getCurrentTool() {
-       return _current;
+       return tools[current];
   }
 
 
   function setCurrentTool(name) {
+    if ( name in tools) {
+        current = name;
+    } else {
+      console.log(name+' is not a tool');
+    }
 
 
   }
