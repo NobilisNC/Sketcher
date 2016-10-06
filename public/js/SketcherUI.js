@@ -18,12 +18,19 @@ var SketcherUI = (function(document, window){
 	this.layersButtons.setAttribute('id', 'sk_layers_buttons');
 	this.layersList.setAttribute('id', 'sk_layers_list');
 
-	document.body.insertBefore(this.buttons, this.frame);
-	document.body.insertBefore(this.palette, this.frame);
+	this.frame.appendChild(this.buttons);
+	this.frame.appendChild(this.palette);
 
 	this.layers.appendChild(this.layersList);
 	this.layers.appendChild(this.layersButtons);
-	document.body.insertBefore(this.layers, this.frame);
+	this.frame.appendChild(this.layers);
+
+	function updateFrame() {
+		this.frame.width = window.innerWidth;
+		this.frame.height = window.innerHeight;
+		document.body.querySelector('#sk_container').style.width = window.innerWidth+'px'
+		document.body.querySelector('#sk_container').style.height = window.innerHeight+'px';
+	}
 
 	function updatePalette() {
 		this.palette.innerHTML = '';
@@ -72,8 +79,7 @@ var SketcherUI = (function(document, window){
 			thumb.setAttribute('data-id', layer.id);
 			thumb.setAttribute('class', 'sk_layer_thumbnail');
 			var thumbImg = document.createElement('img');
-			thumbImg.src = layer.thumbnail;
-			console.log(layer.thumbnail);
+			thumbImg.src = layer.thumbnail == undefined ? '' : layer.thumbnail;
 			thumb.appendChild(thumbImg);
 			aSel.appendChild(thumb);
 
@@ -186,26 +192,27 @@ var SketcherUI = (function(document, window){
 		if(win != null) {
 			e.preventDefault();
 			e.stopPropagation();
+
 			var x = e.clientX - win.getAttribute('data-x');
 			var y = e.clientY - win.getAttribute('data-y');
 
-			if(x >= 0 && x + win.offsetWidth <= document.body.offsetWidth) {
+			if(x >= 0 && x + win.offsetWidth <= document.getElementById('sk_container').offsetWidth) {
 				win.style.left = x + 'px';
 			} else {
 				if(x < 0) {
 					win.style.left = '0px';
 				} else {
-					win.style.left = (document.body.offsetWidth - win.offsetWidth) + 'px';
+					win.style.left = (document.getElementById('sk_container').offsetWidth - win.offsetWidth) + 'px';
 				}
 			}
 
-			if(y >= 0 && y + win.offsetHeight <= document.body.offsetHeight) {
+			if(y >= 0 && y + win.offsetHeight <= document.getElementById('sk_container').offsetHeight) {
 				win.style.top = y + 'px';
 			} else {
 				if(y < 0) {
 					win.style.top = '0px';
 				} else {
-					win.style.top = (document.body.offsetHeight - win.offsetHeight) + 'px';
+					win.style.top = (document.getElementById('sk_container').offsetHeight - win.offsetHeight) + 'px';
 				}
 			}
 		}
@@ -214,11 +221,34 @@ var SketcherUI = (function(document, window){
 	// Add native components to containers
 	addButton('square', function(e){ console.log('select square'); }, this.buttons, 'square');
 	addButton('addLayer', function(e){ S.addLayerPrompt(); updateLayers(); }, this.layersButtons, 'plus');
+	updateFrame();
 	updatePalette();
 	updateLayers();
 
 	document.body.addEventListener('mousedown', window_onMouseDown, true);
 	document.body.addEventListener('mouseup', window_onMouseUp, true);
+	Array.prototype.forEach.call(
+		this.frame.querySelectorAll('.sk_window_title'),
+		function(win) {
+			var foldBtn = document.createElement('a');
+			foldBtn.innerHTML = '<i class="fa fa-minus-square-o"></i>';
+			foldBtn.setAttribute('data-action', 'fold');
+			win.appendChild(foldBtn);
+
+			foldBtn.addEventListener('click', function(e) {
+				var win = foldBtn.parentNode.parentNode;
+				if(win.getAttribute('data-folded') == 'true') {
+					win.setAttribute('data-folded', 'false');
+					win.querySelector('a[data-action="fold"] i').setAttribute('class', 'fa fa-minus-square-o');
+				} else {
+					win.setAttribute('data-folded', 'true');
+					win.querySelector('a[data-action="fold"] i').setAttribute('class', 'fa fa-plus-square-o');
+				}
+			});
+		}
+	);
+
+	window.addEventListener('resize', function(e) { updateFrame(); });
 
 	return {
 		addButton: addNormalButton,

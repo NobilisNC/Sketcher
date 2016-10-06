@@ -1,0 +1,207 @@
+* {
+	box-sizing: border-box;
+	margin: 0;
+}
+
+body {
+	font-family: "Tahoma", sans-serif;
+	overflow: hidden;
+}
+
+	a {
+		color: #3a2;
+		text-decoration: none;
+	}
+
+	#sk_container {
+		position: relative;
+	}
+
+	#sketcher {
+		position: absolute;
+	}
+
+	#sketcher canvas {
+		position: absolute;
+		top: 0; left: 0;
+		cursor: default;
+	}
+
+	#sketcher_ui {
+		float: left;
+	}
+
+	#sk_palette {
+		z-index: 999;
+		position: absolute;
+		border: 1px solid #999;
+		border-radius: 3px;
+		width: 106px;
+		padding: 2px;
+		top: 100px; left: 0;
+		font-size: 0px;
+	}
+
+		#sk_palette a.sk_color {
+			width: 20px;
+			height: 20px;
+			display: inline-block;
+			border: 1px solid transparent;
+		}
+
+			#sk_palette a.sk_color:hover {
+				opacity: .5;
+			}
+
+	#sk_layers {
+		position: absolute;
+		top: 10px; right: 10px;
+		z-index: 999;
+		border: 1px solid #999;
+		border-radius: 3px;
+	}
+
+		#sk_layers_buttons {
+			background: #fff;
+			padding: 0;
+		}
+
+		#sk_layers_list {
+			font-size: 0px;
+			padding: 0;
+			width: 250px;
+			list-style: none;
+		}
+
+			#sk_layers_list li {
+				height: 41px;
+				border-bottom: 1px solid #999;
+			}
+
+			#sk_layers_list li a.sk_layer_link {
+				position: relative;
+				color: #000;
+				padding: 5px 10px 5px 60px;
+				font-size: 15px;
+				line-height: 30px;
+				background: #ccc;
+				display: inline-block;
+				width: 220px;
+				height: 40px;
+				cursor: pointer;
+			}
+
+				#sk_layers_list li a.sk_layer_link:hover {
+					background: #ddd;
+				}
+
+				#sk_layers_list li.active a.sk_layer_link {
+					background: #aaa;
+				}
+
+				#sk_layers_list li a.sk_layer_link div.sk_layer_thumbnail {
+					width: 50px;
+					height: 40px;
+					position: absolute;
+					left: 0;
+					top: 0;
+					line-height: 38px;
+				}
+
+				#sk_layers_list li a.sk_layer_link div.sk_layer_thumbnail img {
+					background: #fff;
+					border-radius: 3px;
+					max-width: 50px;
+					max-height: 40px;
+					vertical-align: middle;
+				}
+
+			#sk_layers_list li div.sk_layer_commands {
+				float: right;
+				width: 30px;
+				height: 40px;
+			}
+
+			#sk_layers_list li a.sk_check {
+				background: #ccc;
+				font-size: 14px;
+				line-height: 20px;
+				color: #000;
+				padding: 0;
+				width: 15px;
+				height: 20px;
+				text-align: center;
+				display: inline-block;
+				cursor: pointer;
+			}
+				#sk_layers_list li a.sk_check:hover{
+					background: #ddd;
+				}
+				#sk_layers_list li.active a.sk_check{
+					background: #aaa;
+				}
+
+
+	#sk_buttons {
+		z-index: 999;
+		position: absolute;
+		top: 0; left: 0;
+	}
+
+	a.sk_button {
+		color: #000;
+		background: #ccc;
+		margin: 5px;
+		padding: 3px 4px 4px 4px;
+		display: inline-block;
+		border: 1px solid #999;
+		border-radius: 3px;
+		width: 27px;
+		height: 27px;
+		text-align: center;
+		box-shadow: inset -2px -2px 4px #aaa, inset 2px 2px 4px #fff;
+	}
+
+		a.sk_button:hover {
+			background: #ddd;
+		}
+
+		a.sk_button:active {
+			background: #ccc;
+			padding: 5px 0px 0px 5px;
+			box-shadow: inset 2px 2px 4px #aaa, inset -2px -2px 4px #fff;
+		}
+
+div.sk_window {
+	position: absolute;
+	top: 10px; left: 10px;
+	border: 1px solid red;
+	z-index: 999;
+}
+
+	h1.sk_window_title {
+		font-size: 16px;
+		font-weight: 200;
+		padding: 3px 5px;
+	}
+
+		a[data-action="fold"] {
+			color: #999;
+			float: right;
+		}
+
+	div.sk_toolbox {
+		padding: 0 3px 0 1px;
+		max-width: 167px;
+		border-top: 1px solid red;
+	}
+
+		div.sk_window[data-folded="true"] div.sk_toolbox {
+			height: 0;
+			overflow: hidden;
+			border: none;
+		}
+
+		div.sk_toolbox a.sk_button {
+			margin: 5px 0 0 2px;
+		}
