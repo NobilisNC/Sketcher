@@ -19,6 +19,34 @@ class Layer {
 	update() {
 		this.node.style.display = this.visible ? 'block' : 'none';
 		this.node.style.zIndex = this.zIndex;
+
+		this.updateThumbnail();
+	}
+
+	updateThumbnail() {
+		var ctx = this.node.getContext('2d');
+		var before = new Image();
+		var scale = 200/this.width;
+
+		before.src = this.node.toDataURL("image/png");
+		before.onload = (function(e) {
+			var ctx = this.node.getContext('2d');
+
+			this.node.width = 200;
+			this.node.height = this.height*scale;
+			ctx.scale(scale, scale);
+			ctx.drawImage(before, 0, 0);
+			this.thumbnail = this.node.toDataURL("image/png");
+			this.node.width = this.width;
+			this.node.height = this.height;
+
+			ctx.drawImage(e.target, 0, 0);
+
+			var img = document.querySelector('.sk_layer_thumbnail[data-id="' + this.id + '"]');
+			if(img != null) {
+				img.querySelector('img').src = this.thumbnail;
+			}
+		}).bind(this);
 	}
 
 	toggleVisibility() {
@@ -66,37 +94,48 @@ var Sketcher = function() {
 	this.frame.style.width = this.width+"px";
 	this.frame.style.height = this.height+"px";
 
-	this.frame.addEventListener("mouseup", this.onMouseUp.bind(this));
-	this.frame.addEventListener("mousedown", this.onMouseDown.bind(this));
+	this.onMouseUp = this._onMouseUp.bind(this);
+	this.onMouseDown = this._onMouseDown.bind(this);
+	this.onMouseMove = this._onMouseMove.bind(this);
+
+	this.frame.addEventListener("contextmenu", function(e) { e.preventDefault(); });
+	this.frame.addEventListener("mouseup", this.onMouseUp);
+	this.frame.addEventListener("mousedown", this.onMouseDown);
 
 	this.addLayer("trackpad", 100);
 	this.addLayer("background");
 }
 
-Sketcher.prototype.onMouseUp = function(e) {
-	this.frame.removeEventListener("mousemove", this.onMouseMove);
-
+Sketcher.prototype._onMouseUp = function(e) {
 	this.clear(this.getContext(this.layers[0].id));
 
 	if(this.clicked) {
 		var ctx = this.getContext(this.selectedLayer);
 		this.tool.onMouseUp(e, ctx);
+		this.getLayer(this.selectedLayer).updateThumbnail();
 	}
 
-	this.clicked = false;
+	if(!e.shiftKey) {
+		this.frame.removeEventListener("mousemove", this.onMouseMove);
+		this.clicked = false;
+	}
 };
 
-Sketcher.prototype.onMouseDown = function(e) {
-	if(e.buttons == 1 && e.button == 0 && !this.clicked) {
+Sketcher.prototype._onMouseDown = function(e) {
+	if(e.button == 0 && !this.clicked) {
 		this.clicked = true;
 		this.tool.onMouseDown(e, this.getContext(this.selectedLayer));
-		this.frame.addEventListener("mousemove", this.onMouseMove.bind(this));
+		this.frame.addEventListener("mousemove", this.onMouseMove);
+	}else if(e.button == 2 && this.clicked) {
+		e.preventDefault();
+		e.stopPropagation();
+		this.clicked = false;
 	}
 }
 
-Sketcher.prototype.onMouseMove = function(e) {
+Sketcher.prototype._onMouseMove = function(e) {
 	if(e.offsetX < 0 || e.offsetY < 0 ||  e.offsetX > this.width || e.offsetY > this.height || !this.clicked) {
-		this.onMouseUp(null);
+		this.onMouseUp(e);
 	} else {
 		var ctx = this.getContext(this.layers[0].id);
 		this.clear(ctx);
@@ -222,7 +261,7 @@ Sketcher.prototype.deleteLayer = function(id) {
 		delete this.layers[index];
 		return true;
 	} else {
-		console.error('No layer named "'+name+'".');
+		console.error('No layer with id "' + id + '".');
 		return false;
 	}
 }
@@ -267,7 +306,7 @@ Sketcher.prototype.demoteLayer = function(id) {
 
 Sketcher.prototype.selectColor = function(colorName) {
 	if(colorName in Color) {
-		this.color = Color[colorName]
+		this.tool.setColor(Color[colorName]);
 		return true;
 	} else {
 		console.error(colorName+" is not a color.");
