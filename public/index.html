@@ -8,11 +8,12 @@
 	<style>
 		* {
 			box-sizing: border-box;
+			margin: 0;
 		}
 
 		body {
-			margin: 0;
 			font-family: "Tahoma", sans-serif;
+			overflow: hidden;
 		}
 
 			a {
@@ -67,7 +68,6 @@
 
 				#sk_layers_list {
 					font-size: 0px;
-					margin: 0;
 					padding: 0;
 					width: 150px;
 					list-style: none;
@@ -109,7 +109,6 @@
 						font-size: 14px;
 						line-height: 0;
 						color: #000;
-						margin: 0;
 						padding: 0;
 						width: 15px;
 						height: 15px;
@@ -156,20 +155,19 @@
 				}
 	div.sk_window {
 		position: absolute;
-		top: 0; left: 200px;
+		top: 10px; left: 10px;
 		border: 1px solid red;
+		z-index: 999;
 	}
 
 		h1.sk_window_title {
 			font-size: 16px;
 			font-weight: 200;
-			margin: 0;
 			padding: 3px 5px;
 			border-bottom: 1px solid red;
 		}
 
 	div.sk_toolbox {
-		z-index: 999;
 		padding: 0 3px 0 1px;
 		max-width: 167px;
 	}
@@ -194,6 +192,7 @@
 		</div>
 	</div> -->
 	<script src="js/Tools.js"></script>
+	<script>Tools.init("#000000", 1, "#000000");</script>
 	<script src="js/Sketcher.js"></script>
 	<script src="js/SketcherUI.js"></script>
 </body>

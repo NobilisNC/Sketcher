@@ -1,5 +1,5 @@
 var SketcherUI = (function(document, window){
-	this.frame = document.querySelector('div#sketcher');
+	this.frame = document.querySelector('div#sketcher_ui');
 
 	// Create UI components containers
 	this.buttons = document.createElement('div');
@@ -32,7 +32,7 @@ var SketcherUI = (function(document, window){
 		}
 
 		for(var color in Color) {
-			this.palette.innerHTML += '<a class="sk_color" style="background-color:'+Color[color]+';" alt="'+color+'" href="#"></a>';
+			this.palette.innerHTML += '<a class="sk_color" style="background-color:' + Color[color] + ';" alt="' + color + '" href="#"></a>';
 		}
 
 		Array.prototype.forEach.call(
@@ -65,13 +65,13 @@ var SketcherUI = (function(document, window){
 			var aSel = document.createElement('a');
 			aSel.setAttribute('data-action', 'selectLayer');
 			aSel.setAttribute('class', 'sk_layer_link');
-			aSel.innerHTML = layer.name[0].toUpperCase()+layer.name.substr(1);
+			aSel.innerHTML = layer.name[0].toUpperCase() + layer.name.substr(1);
 			li.appendChild(aSel);
 
 			var aVis = document.createElement('a');
 			aVis.setAttribute('data-action', 'toggleLayerVisibility');
 			aVis.setAttribute('class', 'sk_check');
-			aVis.innerHTML = '<i class="fa fa-eye'+(layer.isVisible() ? '' : '-slash')+'"></i>';
+			aVis.innerHTML = '<i class="fa fa-eye' + (layer.isVisible() ? '' : '-slash') + '"></i>';
 			div.appendChild(aVis);
 
 			var aRai = document.createElement('a');
@@ -117,12 +117,12 @@ var SketcherUI = (function(document, window){
 
 	function addButton(name, func, container, icon = '') {
 		if(icon == '') {
-			container.innerHTML += '<a class="sk_button" id="sk_button_'+name+'" href="#">'+name+'</a>';
+			container.innerHTML += '<a class="sk_button" id="sk_button_' + name + '" href="#">' + name + '</a>';
 		} else {
-			container.innerHTML += '<a class="sk_button" id="sk_button_'+name+'" href="#"><i alt="'+name+'" class="fa fa-'+icon+'"></a>';
+			container.innerHTML += '<a class="sk_button" id="sk_button_' + name + '" href="#"><i alt="' + name + '" class="fa fa-' + icon + '"></a>';
 		}
 
-		var b = container.querySelector('#sk_button_'+name);
+		var b = container.querySelector('#sk_button_' + name);
 		b.addEventListener('click', func);
 	}
 
@@ -130,11 +130,86 @@ var SketcherUI = (function(document, window){
 		addButton(name, func, buttons, icon);
 	}
 
+	function addWindow() {
+		var win = document.createElement('div');
+		win.setAttribute('class', 'sk_window');
+
+		var title = document.createElement('h1');
+		title.setAttribute('class', 'sk_window_title');
+
+
+
+		return win;
+	}
+
+	function window_onMouseUp(e) {
+		var elm;
+		Array.prototype.forEach.call(
+			document.querySelectorAll('.sk_window_title'),
+			function(elm) {
+				var win = elm.parentNode;
+				if(win.getAttribute('data-dragged') == '1') {
+					win.removeAttribute('data-dragged');
+					win.removeAttribute('data-x');
+					win.removeAttribute('data-y');
+					document.body.removeEventListener('mousemove', window_onMouseMove);
+				}
+			}
+		);
+	}
+
+	function window_onMouseDown(e) {
+		if(e.srcElement.getAttribute('class') == 'sk_window_title') {
+			e.preventDefault();
+			e.stopPropagation();
+
+			var win = e.srcElement.parentNode;
+			win.setAttribute('data-dragged', '1');
+			win.setAttribute('data-x', e.offsetX);
+			win.setAttribute('data-y', e.offsetY);
+
+			document.body.addEventListener('mousemove', window_onMouseMove);
+		}
+	}
+
+	function window_onMouseMove(e) {
+		var win = document.querySelector('div.sk_window[data-dragged="1"]');
+		if(win != null) {
+			e.preventDefault();
+			e.stopPropagation();
+			var x = e.clientX - win.getAttribute('data-x');
+			var y = e.clientY - win.getAttribute('data-y');
+
+			if(x >= 0 && x + win.offsetWidth <= document.body.offsetWidth) {
+				win.style.left = x + 'px';
+			} else {
+				if(x < 0) {
+					win.style.left = '0px';
+				} else {
+					win.style.left = (document.body.offsetWidth - win.offsetWidth) + 'px';
+				}
+			}
+
+			if(y >= 0 && y + win.offsetHeight <= document.body.offsetHeight) {
+				win.style.top = y + 'px';
+			} else {
+				if(y < 0) {
+					win.style.top = '0px';
+				} else {
+					win.style.top = (document.body.offsetHeight - win.offsetHeight) + 'px';
+				}
+			}
+		}
+	}
+
 	// Add native components to containers
 	addButton('square', function(e){ console.log('select square'); }, this.buttons, 'square');
 	addButton('addLayer', function(e){ S.addLayerPrompt(); updateLayers(); }, this.layersButtons, 'plus');
 	updatePalette();
 	updateLayers();
+
+	document.body.addEventListener('mousedown', window_onMouseDown, true);
+	document.body.addEventListener('mouseup', window_onMouseUp, true);
 
 	return {
 		addButton: addNormalButton,
