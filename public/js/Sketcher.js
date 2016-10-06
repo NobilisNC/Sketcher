@@ -49,20 +49,17 @@ var Color = {
 	purple: "#ae22f6"
 };
 
-/* *** *** *** *** */
+
 
 var Sketcher = function() {
 	this.frame = document.querySelector("div#sketcher");
 	this.layers = [];
 	this.selectedLayer;
 	this.clicked = false;
-	//this.pos = {x:0, y:0};
 	this.width = window.innerWidth;
 	this.height = window.innerHeight;
-	//this.color = Color.red;
+	this.color = Color.red;
 
-	//Ajout Tools
-	//Tools.[TOOLNAME](Color, lineWidth)
 	this.tool = Tools.getTool();
 
 	this.frame.style.width = this.width+"px";
@@ -91,13 +88,8 @@ Sketcher.prototype.onMouseUp = function(e) {
 Sketcher.prototype.onMouseDown = function(e) {
 	if(e.buttons == 1 && e.button == 0 && !this.clicked) {
 		this.clicked = true;
-<<<<<<< HEAD
-		this.pos = {x:e.offsetX, y:e.offsetY};
-		this.frame.addEventListener("mousemove", this.onMouseMove.bind(this));
-=======
 		this.tool.onMouseDown(e, this.getContext(this.selectedLayer));
-		frame.addEventListener("mousemove", this.onMouseMove.bind(this));
->>>>>>> 2292e00b2235a2f47a28024f765bed51356fcda3
+		this.frame.addEventListener("mousemove", this.onMouseMove.bind(this));
 	}
 }
 
@@ -274,7 +266,7 @@ Sketcher.prototype.demoteLayer = function(id) {
 
 Sketcher.prototype.selectColor = function(colorName) {
 	if(colorName in Color) {
-		this.tool.setColor(Color[colorName]);
+		this.color = Color[colorName]
 		return true;
 	} else {
 		console.error(colorName+" is not a color.");
