@@ -49,17 +49,21 @@ var Color = {
 	purple: "#ae22f6"
 };
 
-
+/* *** *** *** *** */
 
 var Sketcher = function() {
 	this.frame = document.querySelector("div#sketcher");
 	this.layers = [];
 	this.selectedLayer;
 	this.clicked = false;
-	this.pos = {x:0, y:0};
+	//this.pos = {x:0, y:0};
 	this.width = window.innerWidth;
 	this.height = window.innerHeight;
-	this.color = Color.red;
+	//this.color = Color.red;
+
+	//Ajout Tools
+	//Tools.[TOOLNAME](Color, lineWidth)
+	this.tool = Tools.getTool();
 
 	this.frame.style.width = this.width+"px";
 	this.frame.style.height = this.height+"px";
@@ -78,12 +82,7 @@ Sketcher.prototype.onMouseUp = function(e) {
 
 	if(this.clicked) {
 		var ctx = this.getContext(this.selectedLayer);
-		ctx.strokeStyle = this.color;
-		ctx.beginPath();
-		ctx.moveTo(this.pos.x, this.pos.y);
-		ctx.lineTo(e.offsetX, e.offsetY);
-		ctx.closePath();
-		ctx.stroke();
+		this.tool.onMouseUp(e, ctx);
 	}
 
 	this.clicked = false;
@@ -92,8 +91,13 @@ Sketcher.prototype.onMouseUp = function(e) {
 Sketcher.prototype.onMouseDown = function(e) {
 	if(e.buttons == 1 && e.button == 0 && !this.clicked) {
 		this.clicked = true;
+<<<<<<< HEAD
 		this.pos = {x:e.offsetX, y:e.offsetY};
 		this.frame.addEventListener("mousemove", this.onMouseMove.bind(this));
+=======
+		this.tool.onMouseDown(e, this.getContext(this.selectedLayer));
+		frame.addEventListener("mousemove", this.onMouseMove.bind(this));
+>>>>>>> 2292e00b2235a2f47a28024f765bed51356fcda3
 	}
 }
 
@@ -103,12 +107,7 @@ Sketcher.prototype.onMouseMove = function(e) {
 	} else {
 		var ctx = this.getContext(this.layers[0].id);
 		this.clear(ctx);
-		ctx.strokeStyle = this.color;
-		ctx.beginPath();
-		ctx.moveTo(this.pos.x, this.pos.y);
-		ctx.lineTo(e.offsetX, e.offsetY);
-		ctx.closePath();
-		ctx.stroke();
+		this.tool.onMouseMove(e, ctx);
 	}
 }
 
@@ -275,7 +274,7 @@ Sketcher.prototype.demoteLayer = function(id) {
 
 Sketcher.prototype.selectColor = function(colorName) {
 	if(colorName in Color) {
-		this.color = Color[colorName]
+		this.tool.setColor(Color[colorName]);
 		return true;
 	} else {
 		console.error(colorName+" is not a color.");
