@@ -93,7 +93,7 @@ Sketcher.prototype.onMouseDown = function(e) {
 	if(e.buttons == 1 && e.button == 0 && !this.clicked) {
 		this.clicked = true;
 		this.pos = {x:e.offsetX, y:e.offsetY};
-		frame.addEventListener("mousemove", this.onMouseMove.bind(this));
+		this.frame.addEventListener("mousemove", this.onMouseMove.bind(this));
 	}
 }
 
