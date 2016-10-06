@@ -63,30 +63,32 @@
 
 				#sk_layers_buttons {
 					border-top: 1px solid #999;
+					background: #fff;
 					padding: 0;
 				}
 
 				#sk_layers_list {
 					font-size: 0px;
 					padding: 0;
-					width: 150px;
+					width: 250px;
 					list-style: none;
 				}
 
 					#sk_layers_list li {
-						position: relative;
-						height: 30px;
+						height: 41px;
+						border-bottom: 1px solid #999;
 					}
 
 					#sk_layers_list li a.sk_layer_link {
+						position: relative;
 						color: #000;
-						padding: 5px 10px 5px 20px;
+						padding: 5px 10px 5px 60px;
 						font-size: 15px;
-						line-height: 20px;
+						line-height: 30px;
 						background: #ccc;
 						display: inline-block;
-						width: 120px;
-						height: 30px;
+						width: 220px;
+						height: 40px;
 						cursor: pointer;
 					}
 
@@ -98,20 +100,36 @@
 							background: #aaa;
 						}
 
+						#sk_layers_list li a.sk_layer_link div.sk_layer_thumbnail {
+							width: 50px;
+							height: 40px;
+							position: absolute;
+							left: 0;
+							top: 0;
+						}
+
+						#sk_layers_list li a.sk_layer_link div.sk_layer_thumbnail img {
+							background: #fff;
+							border-radius: 3px;
+							max-width: 50px;
+							max-height: 40px;
+							vertical-align: middle;
+						}
+
 					#sk_layers_list li div.sk_layer_commands {
 						float: right;
 						width: 30px;
-						height: 30px;
+						height: 40px;
 					}
 
 					#sk_layers_list li a.sk_check {
 						background: #ccc;
 						font-size: 14px;
-						line-height: 0;
+						line-height: 20px;
 						color: #000;
 						padding: 0;
 						width: 15px;
-						height: 15px;
+						height: 20px;
 						text-align: center;
 						display: inline-block;
 						cursor: pointer;
@@ -192,7 +210,7 @@
 		</div>
 	</div> -->
 	<script src="js/Tools.js"></script>
-	<script>Tools.init("#000000", 1, "#000000");</script>
+	<script>Tools.init("#000000", 5, "#000000");</script>
 	<script src="js/Sketcher.js"></script>
 	<script src="js/SketcherUI.js"></script>
 </body>

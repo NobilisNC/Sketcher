@@ -68,6 +68,15 @@ var SketcherUI = (function(document, window){
 			aSel.innerHTML = layer.name[0].toUpperCase() + layer.name.substr(1);
 			li.appendChild(aSel);
 
+			var thumb = document.createElement('div');
+			thumb.setAttribute('data-id', layer.id);
+			thumb.setAttribute('class', 'sk_layer_thumbnail');
+			var thumbImg = document.createElement('img');
+			thumbImg.src = layer.thumbnail;
+			console.log(layer.thumbnail);
+			thumb.appendChild(thumbImg);
+			aSel.appendChild(thumb);
+
 			var aVis = document.createElement('a');
 			aVis.setAttribute('data-action', 'toggleLayerVisibility');
 			aVis.setAttribute('class', 'sk_check');
@@ -159,7 +168,7 @@ var SketcherUI = (function(document, window){
 	}
 
 	function window_onMouseDown(e) {
-		if(e.srcElement.getAttribute('class') == 'sk_window_title') {
+		if(e.target.getAttribute('class') == 'sk_window_title') {
 			e.preventDefault();
 			e.stopPropagation();
 
