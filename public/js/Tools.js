@@ -262,7 +262,9 @@ var Tools = (function(t) {
 			}
 
 
-	current = "circle";
+
+    current = "rectangle";
+
   }
 
   function getCurrentTool() {
