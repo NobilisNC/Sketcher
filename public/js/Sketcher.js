@@ -65,6 +65,7 @@ var Sketcher = function() {
 	//Tools.[TOOLNAME](Color, lineWidth)
 	this.tool = Tools.getTool();
 
+
 	this.frame.style.width = this.width+"px";
 	this.frame.style.height = this.height+"px";
 
