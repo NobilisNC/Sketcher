@@ -43,7 +43,7 @@ class Window {
 			e.preventDefault();
 			e.stopPropagation();
 
-			var win = e.srcElement.parentNode;
+			var win = e.target.parentNode;
 			win.setAttribute('data-dragged', '1');
 			win.setAttribute('data-x', e.offsetX);
 			win.setAttribute('data-y', e.offsetY);
