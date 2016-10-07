@@ -103,7 +103,7 @@ body {
 					width: 50px;
 					height: 40px;
 					position: absolute;
-					left: 0;
+					left: 2px;
 					top: 0;
 					line-height: 38px;
 				}
@@ -137,9 +137,14 @@ body {
 				#sk_layers_list li a.sk_check:hover{
 					background: #ddd;
 				}
+
 				#sk_layers_list li.active a.sk_check{
 					background: #aaa;
 				}
+
+					#sk_layers_list li.active a.sk_check:hover{
+						background: #ddd;
+					}
 
 
 	#sk_buttons {
@@ -177,17 +182,25 @@ div.sk_window {
 	top: 10px; left: 10px;
 	border: 1px solid red;
 	z-index: 999;
+	min-width: 150px;
+	max-width: 250px;
 }
 
 	h1.sk_window_title {
 		font-size: 16px;
 		font-weight: 200;
 		padding: 3px 5px;
+		cursor: move;
 	}
 
 		a[data-action="fold"] {
 			color: #999;
 			float: right;
+			cursor: n-resize;
+		}
+
+		div.sk_window[data-folded="true"] a[data-action="fold"] {
+			cursor: s-resize;
 		}
 
 	div.sk_toolbox {

@@ -145,88 +145,14 @@ var SketcherUI = (function(document, window){
 		addButton(name, func, buttons, icon);
 	}
 
-	function addWindow() {
-		var win = document.createElement('div');
-		win.setAttribute('class', 'sk_window');
-
-		var title = document.createElement('h1');
-		title.setAttribute('class', 'sk_window_title');
-
-
-
-		return win;
-	}
-
-	function window_onMouseUp(e) {
-		var elm;
-		Array.prototype.forEach.call(
-			document.querySelectorAll('.sk_window_title'),
-			function(elm) {
-				var win = elm.parentNode;
-				if(win.getAttribute('data-dragged') == '1') {
-					win.removeAttribute('data-dragged');
-					win.removeAttribute('data-x');
-					win.removeAttribute('data-y');
-					document.body.removeEventListener('mousemove', window_onMouseMove);
-				}
-			}
-		);
-	}
-
-	function window_onMouseDown(e) {
-		if(e.target.getAttribute('class') == 'sk_window_title') {
-			e.preventDefault();
-			e.stopPropagation();
-
-			var win = e.srcElement.parentNode;
-			win.setAttribute('data-dragged', '1');
-			win.setAttribute('data-x', e.offsetX);
-			win.setAttribute('data-y', e.offsetY);
-
-			document.body.addEventListener('mousemove', window_onMouseMove);
-		}
-	}
-
-	function window_onMouseMove(e) {
-		var win = document.querySelector('div.sk_window[data-dragged="1"]');
-		if(win != null) {
-			e.preventDefault();
-			e.stopPropagation();
-
-			var x = e.clientX - win.getAttribute('data-x');
-			var y = e.clientY - win.getAttribute('data-y');
-
-			if(x >= 0 && x + win.offsetWidth <= document.getElementById('sk_container').offsetWidth) {
-				win.style.left = x + 'px';
-			} else {
-				if(x < 0) {
-					win.style.left = '0px';
-				} else {
-					win.style.left = (document.getElementById('sk_container').offsetWidth - win.offsetWidth) + 'px';
-				}
-			}
-
-			if(y >= 0 && y + win.offsetHeight <= document.getElementById('sk_container').offsetHeight) {
-				win.style.top = y + 'px';
-			} else {
-				if(y < 0) {
-					win.style.top = '0px';
-				} else {
-					win.style.top = (document.getElementById('sk_container').offsetHeight - win.offsetHeight) + 'px';
-				}
-			}
-		}
-	}
-
 	// Add native components to containers
 	addButton('square', function(e){ console.log('select square'); }, this.buttons, 'square');
 	addButton('addLayer', function(e){ S.addLayerPrompt(); updateLayers(); }, this.layersButtons, 'plus');
+
 	updateFrame();
 	updatePalette();
 	updateLayers();
 
-	document.body.addEventListener('mousedown', window_onMouseDown, true);
-	document.body.addEventListener('mouseup', window_onMouseUp, true);
 	Array.prototype.forEach.call(
 		this.frame.querySelectorAll('.sk_window_title'),
 		function(win) {
@@ -248,7 +174,10 @@ var SketcherUI = (function(document, window){
 		}
 	);
 
+	var a = new Window('Lol', this.frame);
+
 	window.addEventListener('resize', function(e) { updateFrame(); });
+
 
 	return {
 		addButton: addNormalButton,
