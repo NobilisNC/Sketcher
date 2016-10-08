@@ -1,24 +1,15 @@
-class Layer {
-	constructor(name, zIndex, width, height, frame) {
-		this.id = Math.round(Math.random()*1000000)%1000000;
-		this.name = name;
-		this.zIndex = zIndex;
-		this.node = document.createElement('canvas');
-		this.visible = true;
-		this.focus = false;
-		this.width = width;
-		this.height = height;
-		this.opacity = 1;
+var Layer = function(name, zIndex, width, height, frame) {
+	this.id = Math.round(Math.random()*1000000)%1000000;
+	this.name = name;
+	this.zIndex = zIndex;
+	this.node = document.createElement('canvas');
+	this.visible = true;
+	this.focus = false;
+	this.width = width;
+	this.height = height;
+	this.opacity = 1;
 
-		this.node.width = this.width;
-		this.node.height = this.height;
-		this.node.setAttribute('id', 'sk_layer_'+this.id);
-		frame.appendChild(this.node);
-
-		this.update();
-	}
-
-	createMenuItem(container) {
+	this.createMenuItem = function(container) {
 		this.menuItem = document.createElement('li');
 		this.menuItem.setAttribute('data-id', this.id);
 		this.menuItem.setAttribute('data-name', this.name);
@@ -89,14 +80,14 @@ class Layer {
 		);
 	}
 
-	update() {
+	this.update = function() {
 		this.node.style.display = this.visible ? 'block' : 'none';
 		this.node.style.zIndex = this.zIndex;
 
 		this.updateThumbnail();
 	}
 
-	updateThumbnail() {
+	this.updateThumbnail = function() {
 		var ctx = this.node.getContext('2d');
 		var before = new Image();
 		var scale = 200/this.width;
@@ -122,24 +113,31 @@ class Layer {
 		}).bind(this);
 	}
 
-	toggleVisibility() {
+	this.toggleVisibility = function() {
 		this.visible = this.visible ? false : true;
 		this.update();
 	}
 
-	setVisibility(visibility) {
+	this.setVisibility = function(visibility) {
 		this.visible = visibility;
 		this.update();
 	}
 
-	isVisible() {
+	this.isVisible = function() {
 		return this.visible;
 	}
 
-	getContext() {
+	this.getContext = function() {
 		return this.node.getContext('2d');
 	}
 
-	select() { this.focus = true; }
-	blur() { this.focus = false; }
-}
+	this.select = function() { this.focus = true; }
+	this.blur = function() { this.focus = false; }
+
+	this.node.width = this.width;
+	this.node.height = this.height;
+	this.node.setAttribute('id', 'sk_layer_'+this.id);
+	frame.appendChild(this.node);
+
+	this.update();
+};
