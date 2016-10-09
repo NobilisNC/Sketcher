@@ -14,12 +14,22 @@ var Sketcher = Sketcher || (function(document, window) {
 		document.body.appendChild(this.node);
 	}
 
-	this.load = function() {
-		Object.keys(this.libs).forEach(function(name) {
+	this.load = function(name = null) {
+		if(name == null) {
+			load(Object.keys(this.libs)[0]);
+		} else if(name in this.libs) {
 			this.libs[name].node = document.createElement('script');
 			this.libs[name].node.src = this.basedir+this.libs[name].filename;
+			this.libs[name].node.onload = (function(e) {
+				var nextId = Object.keys(this.libs).indexOf(name)+1;
+				if(nextId < Object.keys(this.libs).length) {
+					load(Object.keys(this.libs)[nextId]);
+				}
+			}).bind(this);
 			document.body.appendChild(this.libs[name].node);
-		});
+		} else {
+			return false;
+		}
 	};
 
 	this.createElement = function(id, parent = null) {

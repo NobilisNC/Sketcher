@@ -14,13 +14,13 @@ Sketcher.Color = {
 };
 
 /*
-/	Sketcher singleton
+/	Core singleton
 /	Main object that controls the drawing frame
 */
 Sketcher.Core = (function(document, window) {
 
 	// Constructor
-	function SketcherSingleton() {
+	function CoreSingleton() {
 		this.frame = Sketcher.createElement('sketcher_layers', Sketcher.node);
 		this.layers = [];
 		this.selectedLayer;
@@ -292,7 +292,7 @@ Sketcher.Core = (function(document, window) {
 	}
 
 	// Let's assume this is a singleton
-	var instance = (instance || new SketcherSingleton());
+	var instance = (instance || new CoreSingleton());
 
 	return instance;
 })(document, window);
