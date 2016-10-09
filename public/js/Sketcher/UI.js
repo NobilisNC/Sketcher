@@ -1,5 +1,5 @@
-var SketcherUI = (function(document, window){
-	this.frame = document.querySelector('div#sketcher_ui');
+Sketcher.UI = (function(document, window){
+	this.frame = Sketcher.createElement('sketcher_ui');
 
 	// Create UI components containers
 	this.buttons = document.createElement('div');
@@ -14,7 +14,7 @@ var SketcherUI = (function(document, window){
 
 	this.buttons.setAttribute('id', 'sk_buttons');
 	this.palette.setAttribute('id', 'sk_palette');
-	this.layers.setAttribute('id', 'sk_layers');
+	this.layers.setAttribute('id', 'sk_layers_widget');
 	this.layersButtons.setAttribute('id', 'sk_layers_buttons');
 	this.layersList.setAttribute('id', 'sk_layers_list');
 
@@ -28,8 +28,8 @@ var SketcherUI = (function(document, window){
 	function updateFrame() {
 		this.frame.width = window.innerWidth;
 		this.frame.height = window.innerHeight;
-		document.body.querySelector('#sk_container').style.width = window.innerWidth+'px'
-		document.body.querySelector('#sk_container').style.height = window.innerHeight+'px';
+		Sketcher.node.style.width = window.innerWidth+'px'
+		Sketcher.node.style.height = window.innerHeight+'px';
 	}
 
 	function updatePalette() {
@@ -38,15 +38,15 @@ var SketcherUI = (function(document, window){
 			this.palette.removeChild(this.palette.firstChild);
 		}
 
-		for(var color in Color) {
-			this.palette.innerHTML += '<a class="sk_color" style="background-color:' + Color[color] + ';" alt="' + color + '" href="#"></a>';
+		for(var color in Sketcher.Color) {
+			this.palette.innerHTML += '<a class="sk_color" style="background-color:' + Sketcher.Color[color] + ';" alt="' + color + '" href="#"></a>';
 		}
 
 		Array.prototype.forEach.call(
 			this.palette.querySelectorAll('.sk_color'),
 			function(color) {
 				color.addEventListener('click', function(e) {
-					S.selectColor(this.getAttribute('alt'));
+					Sketcher.Core.selectColor(this.getAttribute('alt'));
 				});
 			}
 		);
@@ -57,7 +57,7 @@ var SketcherUI = (function(document, window){
 			this.layersList.removeChild(this.layersList.firstChild);
 		}
 
-		S.getLayers().forEach(function(layer) {
+		Sketcher.Core.getLayers().forEach(function(layer) {
 			layer.createMenuItem(this.layersList);
 		});
 
@@ -82,7 +82,7 @@ var SketcherUI = (function(document, window){
 
 	// Add native components to containers
 	addButton('square', function(e){ console.log('select square'); }, this.buttons, 'square');
-	addButton('addLayer', function(e){ S.addLayer(); updateLayers(); }, this.layersButtons, 'plus');
+	addButton('addLayer', function(e){ Sketcher.Core.addLayer(); updateLayers(); }, this.layersButtons, 'plus');
 
 	updateFrame();
 	updatePalette();
@@ -109,7 +109,7 @@ var SketcherUI = (function(document, window){
 		}
 	);
 
-	var a = new Window('Lol', this.frame);
+	var a = new Sketcher.Window('Lol', this.frame);
 
 	window.addEventListener('resize', function(e) { updateFrame(); });
 

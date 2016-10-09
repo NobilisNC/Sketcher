@@ -73,8 +73,8 @@ var Layer = function(name, zIndex, width, height, frame) {
 				}
 				var action = btn.getAttribute("data-action");
 				btn.addEventListener('click', function(e) {
-					S[action](id);
-					SketcherUI.updateLayers();
+					Sketcher.Core[action](id);
+					Sketcher.UI.updateLayers();
 				});
 			}
 		);

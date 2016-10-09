@@ -1,10 +1,10 @@
-var AbstractWidget = function(parent) {
+Sketcher.AbstractWidget = function(parent) {
 	this.parent = parent || null;
 	this.node = null;
 };
 
-var Window = function(title, parent) {
-	AbstractWidget.call(this, parent);
+Sketcher.Window = function(title, parent) {
+	Sketcher.AbstractWidget.call(this, parent);
 
 	this.titleText = title;
 	this.dragged = false;
@@ -49,28 +49,46 @@ var Window = function(title, parent) {
 			var x = e.clientX - this.node.getAttribute('data-x');
 			var y = e.clientY - this.node.getAttribute('data-y');
 
-			console.log(x, y);
-
-			if(x >= 0 && x + this.node.offsetWidth <= document.getElementById('sk_container').offsetWidth) {
+			if(x >= 0 && x + this.node.offsetWidth <= Sketcher.node.offsetWidth) {
 				this.node.style.left = x + 'px';
 			} else {
 				if(x < 0) {
 					this.node.style.left = '0px';
 				} else {
-					this.node.style.left = (document.getElementById('sk_container').offsetWidth - this.node.offsetWidth) + 'px';
+					this.node.style.left = (Sketcher.node.offsetWidth - this.node.offsetWidth) + 'px';
 				}
 			}
 
-			if(y >= 0 && y + this.node.offsetHeight <= document.getElementById('sk_container').offsetHeight) {
+			if(y >= 0 && y + this.node.offsetHeight <= Sketcher.node.offsetHeight) {
 				this.node.style.top = y + 'px';
 			} else {
 				if(y < 0) {
 					this.node.style.top = '0px';
 				} else {
-					this.node.style.top = (document.getElementById('sk_container').offsetHeight - this.node.offsetHeight) + 'px';
+					this.node.style.top = (Sketcher.node.offsetHeight - this.node.offsetHeight) + 'px';
 				}
 			}
 		}
+	}
+
+	this.addFoldButton = function() {
+		this.foldBtn = document.createElement('a');
+		this.foldBtn.innerHTML = '<i class="fa fa-minus-square-o"></i>';
+		this.foldBtn.setAttribute('data-action', 'fold');
+		this.title.appendChild(this.foldBtn);
+
+		this.foldBtn.addEventListener(
+			'click',
+			(function(e) {
+				if(this.node.getAttribute('data-folded') == 'true') {
+					this.node.setAttribute('data-folded', 'false');
+					this.node.querySelector('a[data-action="fold"] i').setAttribute('class', 'fa fa-minus-square-o');
+				} else {
+					this.node.setAttribute('data-folded', 'true');
+					this.node.querySelector('a[data-action="fold"] i').setAttribute('class', 'fa fa-plus-square-o');
+				}
+			}).bind(this)
+		);
 	}
 
 	this.onMouseUp = this._onMouseUp.bind(this);
@@ -79,4 +97,17 @@ var Window = function(title, parent) {
 
 	this.title.addEventListener('mousedown', this.onMouseDown, true);
 	document.body.addEventListener('mouseup', this.onMouseUp, true);
+
+	this.addFoldButton();
+}
+
+Sketcher.Button = function(title, action, icon, parent) {
+	AbstractWidget.call(this, parent);
+
+	this.title = title;
+	this.action = action;
+	this.icon = icon || '';
+	this.node = document.createElement('a');
+	this.node.setAttribute('class', 'sk_button');
+	this.node.innerHTML = this.title;
 }
