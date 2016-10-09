@@ -1,3 +1,8 @@
+/*
+/	Layer
+/	 Basically a <canvas> handle
+/	 Also manages its own item in the layers list
+*/
 var Layer = function(name, zIndex, width, height, frame) {
 	this.id = Math.round(Math.random()*1000000)%1000000;
 	this.name = name;

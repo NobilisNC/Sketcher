@@ -1,3 +1,7 @@
+/*
+/	UI module
+/	 This module controls Widgets and user interaction
+*/
 Sketcher.UI = (function(document, window){
 	this.frame = Sketcher.createElement('sketcher_ui');
 

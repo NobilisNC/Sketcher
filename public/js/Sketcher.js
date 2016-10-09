@@ -1,3 +1,9 @@
+/*
+/	Sketcher namespace
+/	 Contains and load all modules.
+/	 This is the only script to be included in the HTML document
+/	 you want Sketcher to spawn in.
+*/
 var Sketcher = Sketcher || (function(document, window) {
 	this.basedir = 'js/Sketcher/';
 	this.libs = {
@@ -7,13 +13,10 @@ var Sketcher = Sketcher || (function(document, window) {
 		'Widgets': {filename: 'Widgets.js'},
 		'UI': {filename: 'UI.js'},
 	};
-	this.node = document.querySelector('#sketcher');
-	if(this.node == null) {
-		this.node = document.createElement('div');
-		this.node.setAttribute('id', 'sketcher');
-		document.body.appendChild(this.node);
-	}
 
+	/*
+	/	Dynamically loads every script specified in this.libs
+	*/
 	this.load = function(name = null) {
 		if(name == null) {
 			load(Object.keys(this.libs)[0]);
@@ -32,6 +35,10 @@ var Sketcher = Sketcher || (function(document, window) {
 		}
 	};
 
+	/*
+	/	Create a basic container with specified id
+	/	Appends the created element to document.body if no parent isn't specified.
+	*/
 	this.createElement = function(id, parent = null) {
 		var node = document.querySelector('div#'+id);
 		if(node == null) {
@@ -44,11 +51,11 @@ var Sketcher = Sketcher || (function(document, window) {
 		return node;
 	};
 
+	this.node = this.createElement('sketcher');
 	load();
 
 	return {
 		node: this.node,
-		load: this.load,
 		createElement: this.createElement
 	};
 })(document, window);

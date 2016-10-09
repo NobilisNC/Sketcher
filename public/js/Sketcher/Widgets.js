@@ -1,8 +1,16 @@
+/*
+/	Abstract Widget
+/	 Parent class for every widget
+*/
 Sketcher.AbstractWidget = function(parent) {
 	this.parent = parent || null;
 	this.node = null;
 };
 
+/*
+/	Window widget
+/	 A draggable window that contains other Widgets
+*/
 Sketcher.Window = function(title, parent) {
 	Sketcher.AbstractWidget.call(this, parent);
 
@@ -101,6 +109,11 @@ Sketcher.Window = function(title, parent) {
 	this.addFoldButton();
 }
 
+/*
+/	Button widget
+/	 A button that triggers an action.
+/	Can be filled with an icon or a text (if no icon is specified).
+*/
 Sketcher.Button = function(title, action, icon, parent) {
 	AbstractWidget.call(this, parent);
 

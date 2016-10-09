@@ -1,5 +1,8 @@
 var Sketcher = Sketcher || {};
 
+/*
+/	A small batch of colors, while waiting for a proper Color module
+*/
 Sketcher.Color = {
 	white: "#fff",
 	black: "#000",
@@ -15,7 +18,7 @@ Sketcher.Color = {
 
 /*
 /	Core singleton
-/	Main object that controls the drawing frame
+/	Main module that controls the drawing frame and holds user's settings
 */
 Sketcher.Core = (function(document, window) {
 
