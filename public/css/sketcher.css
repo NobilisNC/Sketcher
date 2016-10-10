@@ -214,9 +214,9 @@ div.sk_window {
 		}
 
 	div.sk_toolbox {
-		padding: 0 3px 0 1px;
+		padding: 0 3px 3px 1px;
+		min-height: 25px;
 		max-width: 167px;
-		border-top: 1px solid red;
 	}
 
 		div.sk_toolbox a.sk_button {

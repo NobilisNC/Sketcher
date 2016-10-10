@@ -249,7 +249,7 @@ Sketcher.ToolsAbstract = ( function() {
 
 		rawObject = JSON.parse(json_str, ctx);
 
-		if (rawObject.type === "Line") 
+		if (rawObject.type === "Line")
 			c = Line;
 		else if (rawObject.type === "Rect")
 			c = Rect;
@@ -259,7 +259,7 @@ Sketcher.ToolsAbstract = ( function() {
 			c = Circle;
 
 		obj = cast(rawObject.data, c)
-		obj.draw(ctx);	
+		obj.draw(ctx);
 	};
 
 	function cast(rawObj, constructor)
@@ -309,6 +309,7 @@ Sketcher.Tools = (function() {
 
 
 	function setCurrentTool(name) {
+		console.log(name);
 		if ( name in tools) {
 				current = name;
 		} else {

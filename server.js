@@ -24,3 +24,5 @@ io.on("connection", function(socket){
 http.listen(port, function(){
     console.log("Listening on "+port+".");
 });
+
+// Tous les X secondes, on envoie aux clients "qui modifie le dessin à ce temps T"

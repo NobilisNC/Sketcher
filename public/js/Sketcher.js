@@ -7,6 +7,7 @@
 var Sketcher = Sketcher || (function(document, window) {
 	this.basedir = 'js/Sketcher/';
 	this.libs = {
+		'Color': {filename: 'Color.js'},
 		'Tools': {filename: 'Tools.js'},
 		'Layer': {filename: 'Layer.js'},
 		'Core': {filename: 'Core.js'},

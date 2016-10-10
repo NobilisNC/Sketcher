@@ -147,43 +147,10 @@ Sketcher.Toolbox = function(parent) {
 	Sketcher.AbstractWidget.call(this, parent);
 
 	this.node = document.createElement('div');
-	this.node.setAttribute('id', 'sk_toolbox');
+	this.node.setAttribute('class', 'sk_toolbox');
 
 	this.parent = parent;
 	this.parent.appendChild(this.node);
-}
-
-Sketcher.LayerList = function(parent) {
-	Sketcher.AbstractWidget.call(this, parent);
-
-	this.node = document.createElement('ul');
-	this.node.setAttribute('id', 'sk_layers_list');
-	this.parent.appendChild(this.node);
-
-	console.log(this.parent);
-}
-
-/*
-/	Button widget
-/	 A button that triggers an action.
-/	Can be filled with an icon or a text (if no icon is specified).
-*/
-Sketcher.Button = function(title, action, parent, icon) {
-	Sketcher.AbstractWidget.call(this, parent);
-	this.title = title;
-	this.action = action;
-	this.icon = icon || '';
-	this.node = document.createElement('a');
-	this.node.setAttribute('class', 'sk_button');
-	this.node.innerHTML = this.icon == '' ? this.title : '<i class="fa fa-'+this.icon+'"></i>';
-	this.node.addEventListener('click', this.action);
-
-	if(parent && typeof parent == 'object' && parent.hasOwnProperty('appendChild')) {
-		this.parent = parent;
-		this.parent.appendChild(this.node);
-	}
-
-	console.log('ok');
 }
 
 Sketcher.LayerItem = function(layer, parent) {
@@ -280,4 +247,51 @@ Sketcher.LayerItem = function(layer, parent) {
 			this.thumbnailImg.src = this.thumbnailData;
 		}).bind(this);
 	}
+}
+
+Sketcher.LayerList = function(parent) {
+	Sketcher.AbstractWidget.call(this, parent);
+
+	this.node = document.createElement('ul');
+	this.node.setAttribute('id', 'sk_layers_list');
+	this.parent.appendChild(this.node);
+}
+
+/*
+/	Button widget
+/	 A button that triggers an action.
+/	Can be filled with an icon or a text (if no icon is specified).
+*/
+Sketcher.Button = function(title, action, parent, icon) {
+	Sketcher.AbstractWidget.call(this, parent);
+	this.title = title;
+	this.action = action;
+	this.icon = icon || '';
+	this.node = document.createElement('a');
+	this.node.setAttribute('class', 'sk_button');
+	this.node.innerHTML = this.icon == '' ? this.title : '<i class="fa fa-'+this.icon+'"></i>';
+	this.node.addEventListener('click', this.action);
+
+	if(parent && typeof parent == 'object' && parent.hasOwnProperty('appendChild')) {
+		this.parent = parent;
+		this.parent.appendChild(this.node);
+	}
+}
+
+Sketcher.Palette = function(parent) {
+
+	function PaletteSingleton(parent) {
+		Sketcher.Window.call(this, 'Palette', parent);
+
+		this.buttons = new Sketcher.Toolbox(this);
+		this.colors = [];
+		console.log(new Sketcher.ColorFromString("rgba(255, 100, 0, 1)"));
+		console.log(new Sketcher.ColorFromString("rgba(255, 100, 0, .9)"));
+		console.log(new Sketcher.ColorFromString("rgba(255, 100, 0, 0.9)"));
+		console.log(new Sketcher.ColorFromString("rgb(0, 100, 255)"));
+	}
+
+	var instance = instance || new PaletteSingleton(parent);
+
+	return instance;
 }

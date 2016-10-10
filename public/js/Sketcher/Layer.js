@@ -13,7 +13,7 @@ var Layer = function(name, zIndex, width, height, frame) {
 	this.width = width;
 	this.height = height;
 	this.opacity = 1;
-	
+
 	//Beta
 	this.object = [];
 
@@ -24,12 +24,13 @@ var Layer = function(name, zIndex, width, height, frame) {
 		this.menuItem.updateThumbnail();
 	}
 
-	this.update = function() {
+	this.update = function(updateThumb = false) {
 		this.node.style.display = this.visible ? 'block' : 'none';
 		this.node.style.zIndex = this.zIndex;
 
-		if(this.menuItem != undefined)
+		if(this.menuItem != undefined && updateThumb) {
 			this.menuItem.updateThumbnail();
+		}
 	}
 
 	this.toggleVisibility = function() {

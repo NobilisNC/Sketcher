@@ -6,10 +6,31 @@ Sketcher.UI = (function(document, window){
 	this.frame = Sketcher.createElement('sketcher_ui');
 
 	// Create UI components containers
-	this.buttons = document.createElement('div');
+	this.buttons = new Sketcher.Window('Tools', this.frame);
+	this.toolButtons = new Sketcher.Toolbox(this.buttons);
+	this.toolButtons.appendChild(
+		new Sketcher.Button(
+			'square',
+			function(e) {
+				Sketcher.Core.setTool('rectangle');
+			},
+			null,
+			'square'
+		).node
+	);
+	this.toolButtons.appendChild(
+		new Sketcher.Button(
+			'circle',
+			function(e) {
+				Sketcher.Core.setTool('circle');
+			},
+			null,
+			'circle'
+		).node
+	);
 	this.palette = document.createElement('div');
+	this.caca = new Sketcher.Palette(this.frame);
 	this.layer = new Sketcher.Window('Layers', this.frame, Sketcher.Core.getWidth()-260, 10);
-	console.log(Sketcher.Core.width);
 	this.layerList = new Sketcher.LayerList(this.layer);
 	this.layerButtons = new Sketcher.Toolbox(this.layer);
 	this.layerButtons.appendChild(
@@ -24,10 +45,10 @@ Sketcher.UI = (function(document, window){
 		).node
 	);
 
-	this.buttons.setAttribute('id', 'sk_buttons');
+	// this.buttons.setAttribute('id', 'sk_buttons');
 	this.palette.setAttribute('id', 'sk_palette');
 
-	this.frame.appendChild(this.buttons);
+	// this.frame.appendChild(this.buttons);
 	this.frame.appendChild(this.palette);
 
 	function updateFrame() {
@@ -43,8 +64,8 @@ Sketcher.UI = (function(document, window){
 			this.palette.removeChild(this.palette.firstChild);
 		}
 
-		for(var color in Sketcher.Color) {
-			this.palette.innerHTML += '<a class="sk_color" style="background-color:' + Sketcher.Color[color] + ';" alt="' + color + '" href="#"></a>';
+		for(var color in Sketcher.Colors) {
+			this.palette.innerHTML += '<a class="sk_color" style="background-color:' + Sketcher.Colors[color] + ';" alt="' + color + '" href="#"></a>';
 		}
 
 		Array.prototype.forEach.call(
@@ -67,16 +88,16 @@ Sketcher.UI = (function(document, window){
 
 	}
 
-	function addButton(name, func, container, icon = '') {
-		if(icon == '') {
-			container.innerHTML += '<a class="sk_button" id="sk_button_' + name + '" href="#">' + name + '</a>';
-		} else {
-			container.innerHTML += '<a class="sk_button" id="sk_button_' + name + '" href="#"><i alt="' + name + '" class="fa fa-' + icon + '"></a>';
-		}
-
-		var b = container.querySelector('#sk_button_' + name);
-		b.addEventListener('click', func);
-	}
+	// function addButton(name, func, container, icon = '') {
+	// 	if(icon == '') {
+	// 		container.innerHTML += '<a class="sk_button" id="sk_button_' + name + '" href="#">' + name + '</a>';
+	// 	} else {
+	// 		container.innerHTML += '<a class="sk_button" id="sk_button_' + name + '" href="#"><i alt="' + name + '" class="fa fa-' + icon + '"></a>';
+	// 	}
+	//
+	// 	var b = container.querySelector('#sk_button_' + name);
+	// 	b.addEventListener('click', func);
+	// }
 
 	function addNormalButton(name, func, icon = '') {
 		addButton(name, func, buttons, icon);
@@ -85,7 +106,8 @@ Sketcher.UI = (function(document, window){
 	this.updateLayers = _updateLayers.bind(this);
 
 	// Add native components to containers
-	addButton('square', function(e){ console.log('select square'); }, this.buttons, 'square');
+	// addButton('circle', function(e){ Sketcher.Tools.setTool('circle'); console.log('circle'); }, this.buttons, 'circle');
+	// addButton('square', function(e){ Sketcher.Tools.setTool('rectangle'); console.log('square'); }, this.buttons, 'square');
 
 	updateFrame();
 	updatePalette();

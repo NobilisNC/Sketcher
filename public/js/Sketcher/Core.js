@@ -1,21 +1,3 @@
-var Sketcher = Sketcher || {};
-
-/*
-/	A small batch of colors, while waiting for a proper Color module
-*/
-Sketcher.Color = {
-	white: "#fff",
-	black: "#000",
-	red: "#f00",
-	green: "#0f0",
-	blue: "#00f",
-	orange: "#ffb603",
-	lightblue: "#a6f7ff",
-	lightgreen: "#7abf30",
-	pink: "#f70e93",
-	purple: "#ae22f6"
-};
-
 /*
 /	Core singleton
 /	Main module that controls the drawing frame and holds user's settings
@@ -30,7 +12,7 @@ Sketcher.Core = (function(document, window) {
 		this.clicked = false;
 		this.width = window.innerWidth;
 		this.height = window.innerHeight;
-		this.color = Sketcher.Color.red;
+		this.color = Sketcher.Colors.red;
 
 		this.tool = Sketcher.Tools.getTool();
 
@@ -244,8 +226,8 @@ Sketcher.Core = (function(document, window) {
 		}
 
 		this.selectColor = function(colorName) {
-			if(colorName in Sketcher.Color) {
-				this.tool.setColor(Sketcher.Color[colorName]);
+			if(colorName in Sketcher.Colors) {
+				this.tool.setColor(Sketcher.Colors[colorName]);
 				return true;
 			} else {
 				console.error(colorName+" is not a color.");
@@ -291,8 +273,9 @@ Sketcher.Core = (function(document, window) {
 			toggleLayerVisibility: this.toggleLayerVisibility.bind(this),
 			selectColor: this.selectColor.bind(this),
 			getSelectedColor: (function() { return this.color; }).bind(this),
-			getWidth: (function() { return this.width }).bind(this),
-			getHeight: (function() { return this.height }).bind(this)
+			getWidth: (function() { return this.width; }).bind(this),
+			getHeight: (function() { return this.height; }).bind(this),
+			setTool: (function(tool) { Sketcher.Tools.setTool(tool); this.tool = Sketcher.Tools.getTool(); console.log(this.tool); }).bind(this)
 		};
 	}
 
