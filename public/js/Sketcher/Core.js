@@ -31,7 +31,8 @@ Sketcher.Core = (function(document, window) {
 		this.width = window.innerWidth;
 		this.height = window.innerHeight;
 		this.color = Sketcher.Color.red;
-
+		//Tools
+		Sketcher.Tools.init("#FF0000", 5, "#000000", this.width, this.height );
 		this.tool = Sketcher.Tools.getTool();
 
 		/***** EVENTS *****/
