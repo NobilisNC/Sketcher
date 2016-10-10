@@ -243,8 +243,60 @@ Sketcher.ToolsAbstract = ( function() {
 	}
 
 
+	/* Class Paint Bucket extends _Tool
+	*
+	*
+	*
+	*/
+	function PaintBucket( c, lw, width, height) {
+		_Tool.call(this, c, lw);
+		this.width = width;
+		this.height = height;
+	}
+
+    PaintBucket.prototype = Object.create(_Tool.prototype);
+	PaintBucket.prototype.constructor = PaintBucket;
 
 
+	PaintBucket.prototype.draw = function (ctx) {
+		var img = ctx.getImageData(0,0,this.width, this.height);
+		var pos =  (this.p.y * this.width + this.p.x) * 4; 
+		var targetColor = {r : img.data[pos], g : img.data[pos +1 ], b : img.data[pos +2],a: img.data[pos +3]};
+		console.log(targetColor);
+		
+		//var P = [];
+		//P.push 
+
+
+
+		
+
+		
+
+	
+
+	}
+
+	PaintBucket.prototype.onMouseDown = function (e, ctx) {
+		
+	}
+
+	PaintBucket.prototype.onMouseMove = function (e, ctx) {
+
+	}
+
+	PaintBucket.prototype.onMouseUp = function (e, ctx) {
+		this.p = { x :e.offsetX, y : e.offsetY};
+		this.config_context(ctx);
+		this.draw(ctx);
+
+		return '{ "type":"PaintBucket","data":' + JSON.stringify(this) + '}';
+	}
+
+
+	/* Function factory 
+	* Allow to parse JSON to _Tool
+	*/
 	function factory(json_str) {
 
 		rawObject = JSON.parse(json_str, ctx);
@@ -277,6 +329,7 @@ Sketcher.ToolsAbstract = ( function() {
 		rectangle : Rect,
 		pencil : Pencil,
 		circle : Circle,
+		paint_bucket : PaintBucket,
 
 		fromJSON : factory
 	}
@@ -290,15 +343,16 @@ Sketcher.Tools = (function() {
 	var current;
 
 
-	function initialization(default_color, default_line_width, default_fill_color) {
+	function initialization(default_color, default_line_width, default_fill_color, default_width, default_height) {
 	tools = {
 					 "line" : new Sketcher.ToolsAbstract.line(default_color, default_line_width),
 					 "rectangle" : new Sketcher.ToolsAbstract.rectangle(default_color, default_line_width, default_fill_color),
 					 "pencil" : new Sketcher.ToolsAbstract.pencil(default_color, default_line_width),
-					 "circle" : new Sketcher.ToolsAbstract.circle(default_color, default_line_width, default_fill_color)
-			}
+					 "circle" : new Sketcher.ToolsAbstract.circle(default_color, default_line_width, default_fill_color),
+					 "paint_bucket" : new Sketcher.ToolsAbstract.paint_bucket(default_color, default_line_width, default_width, default_height)
+		}
 
-		current = "line";
+		current = "paint_bucket";
 
 	}
 
@@ -323,7 +377,7 @@ Sketcher.Tools = (function() {
 		Sketcher.ToolsAbstract.fromJSON(json, ctx);
 	}
 
-	initialization("#000000", 5, "#000000");
+	
 
 	return {
 		init : initialization,
@@ -333,3 +387,12 @@ Sketcher.Tools = (function() {
 	}
 
 }());
+
+//A mettre dans Color
+function hex2Rgb(hex) {
+hex = hex.replace(/[^0-9A-F]/gi, '');
+return {r : (bigint = parseInt(hex, 16)) >> 16 & 255, g: bigint >> 8 & 255,b : bigint & 255};
+}
+
+
+//console.log(hex2Rgb("#FF00FF"));
