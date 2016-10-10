@@ -10,7 +10,7 @@ Sketcher.UI = (function(document, window){
 	this.toolButtons = new Sketcher.Toolbox(this.buttons);
 	this.toolButtons.appendChild(
 		new Sketcher.Button(
-			'square',
+			'Square',
 			function(e) {
 				Sketcher.Core.setTool('rectangle');
 			},
@@ -20,12 +20,32 @@ Sketcher.UI = (function(document, window){
 	);
 	this.toolButtons.appendChild(
 		new Sketcher.Button(
-			'circle',
+			'Circle',
 			function(e) {
 				Sketcher.Core.setTool('circle');
 			},
 			null,
 			'circle'
+		).node
+	);
+	this.toolButtons.appendChild(
+		new Sketcher.Button(
+			'Pencil',
+			function(e) {
+				Sketcher.Core.setTool('pencil');
+			},
+			null,
+			'pencil'
+		).node
+	);
+	this.toolButtons.appendChild(
+		new Sketcher.Button(
+			'Line',
+			function(e) {
+				Sketcher.Core.setTool('line');
+			},
+			null,
+			'minus'
 		).node
 	);
 	this.palette = document.createElement('div');
@@ -104,10 +124,6 @@ Sketcher.UI = (function(document, window){
 	}
 
 	this.updateLayers = _updateLayers.bind(this);
-
-	// Add native components to containers
-	// addButton('circle', function(e){ Sketcher.Tools.setTool('circle'); console.log('circle'); }, this.buttons, 'circle');
-	// addButton('square', function(e){ Sketcher.Tools.setTool('rectangle'); console.log('square'); }, this.buttons, 'square');
 
 	updateFrame();
 	updatePalette();

@@ -10,6 +10,10 @@ Sketcher.Color = function(r, g, b, a) {
 	this.getHex = function(){
 		return '#'+this.r.toString(16)+this.g.toString(16)+this.b.toString(16)+(this.a*255).toString(16);
 	}
+
+	this.getRGBA = function() {
+		return 'rgba('+this.r+', '+this.g+', '+this.b+', '+this.a+')';
+	}
 };
 
 Sketcher.ColorFromString = function(raw) {

@@ -269,6 +269,7 @@ Sketcher.Button = function(title, action, parent, icon) {
 	this.icon = icon || '';
 	this.node = document.createElement('a');
 	this.node.setAttribute('class', 'sk_button');
+	this.node.setAttribute('title', title);
 	this.node.innerHTML = this.icon == '' ? this.title : '<i class="fa fa-'+this.icon+'"></i>';
 	this.node.addEventListener('click', this.action);
 
@@ -285,10 +286,6 @@ Sketcher.Palette = function(parent) {
 
 		this.buttons = new Sketcher.Toolbox(this);
 		this.colors = [];
-		console.log(new Sketcher.ColorFromString("rgba(255, 100, 0, 1)"));
-		console.log(new Sketcher.ColorFromString("rgba(255, 100, 0, .9)"));
-		console.log(new Sketcher.ColorFromString("rgba(255, 100, 0, 0.9)"));
-		console.log(new Sketcher.ColorFromString("rgb(0, 100, 255)"));
 	}
 
 	var instance = instance || new PaletteSingleton(parent);

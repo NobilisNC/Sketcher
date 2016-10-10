@@ -34,6 +34,8 @@ Sketcher.ToolsAbstract = ( function() {
 	_Tool.prototype.config_context = function (ctx) {
 		ctx.strokeStyle = this.color;
 		ctx.lineWidth = this.line_width;
+		ctx.lineCap = 'round';
+		ctx.lineJoin = 'round';
 	};
 
 
@@ -260,25 +262,25 @@ Sketcher.ToolsAbstract = ( function() {
 
 	PaintBucket.prototype.draw = function (ctx) {
 		var img = ctx.getImageData(0,0,this.width, this.height);
-		var pos =  (this.p.y * this.width + this.p.x) * 4; 
+		var pos =  (this.p.y * this.width + this.p.x) * 4;
 		var targetColor = {r : img.data[pos], g : img.data[pos +1 ], b : img.data[pos +2],a: img.data[pos +3]};
 		console.log(targetColor);
-		
+
 		//var P = [];
-		//P.push 
+		//P.push
 
 
 
-		
 
-		
 
-	
+
+
+
 
 	}
 
 	PaintBucket.prototype.onMouseDown = function (e, ctx) {
-		
+
 	}
 
 	PaintBucket.prototype.onMouseMove = function (e, ctx) {
@@ -294,7 +296,7 @@ Sketcher.ToolsAbstract = ( function() {
 	}
 
 
-	/* Function factory 
+	/* Function factory
 	* Allow to parse JSON to _Tool
 	*/
 	function factory(json_str) {
@@ -363,7 +365,6 @@ Sketcher.Tools = (function() {
 
 
 	function setCurrentTool(name) {
-		console.log(name);
 		if ( name in tools) {
 				current = name;
 		} else {
@@ -377,7 +378,7 @@ Sketcher.Tools = (function() {
 		Sketcher.ToolsAbstract.fromJSON(json, ctx);
 	}
 
-	
+
 
 	return {
 		init : initialization,
