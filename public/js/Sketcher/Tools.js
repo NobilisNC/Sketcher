@@ -1,4 +1,4 @@
-var _Tools = ( function() {
+Sketcher.ToolsAbstract = ( function() {
 
 	/* Abstract Class _Tool
 	*
@@ -139,46 +139,44 @@ var _Tools = ( function() {
 	*
 	*
 	*/
-   function Pencil( c, lw, cf ) {
-	_Tool.call(this, c, lw);
-	this.p0;
-	this.points = [];
-   }
+	function Pencil( c, lw, cf ) {
+		_Tool.call(this, c, lw);
+		this.p0;
+		this.points = [];
+		}
 
-   Pencil.prototype = Object.create(_Tool.prototype);
-   Pencil.prototype.constructor = Pencil;
+		Pencil.prototype = Object.create(_Tool.prototype);
+		Pencil.prototype.constructor = Pencil;
 
-   Pencil.prototype.draw = function (ctx) {
-	ctx.beginPath();
-	ctx.moveTo(this.p0.x, this.p0.y);
-	for (var point of this.points) {
-			ctx.lineTo(point.x, point.y);
+		Pencil.prototype.draw = function (ctx) {
+		ctx.beginPath();
+		ctx.moveTo(this.p0.x, this.p0.y);
+		for (var point of this.points) {
+				ctx.lineTo(point.x, point.y);
+		}
+		ctx.stroke();
+		ctx.closePath();
+
 	}
-	ctx.stroke();
-	ctx.closePath();
 
-   }
-
-   Pencil.prototype.onMouseDown = function (e, ctx) {
+	Pencil.prototype.onMouseDown = function (e, ctx) {
 		this.p0 =  {x : e.offsetX, y : e.offsetY };
 		this.points = [];
+	}
 
+	Pencil.prototype.onMouseMove = function (e, ctx) {
+		this.points.push ( {x : e.offsetX, y : e.offsetY } );
+		this.config_context(ctx);
+		this.draw(ctx);
+	}
 
-   }
+	Pencil.prototype.onMouseUp = function (e, ctx) {
+		this.points.push ( {x : e.offsetX, y : e.offsetY } );
+		this.config_context(ctx);
+		this.draw(ctx);
+	}
 
-   Pencil.prototype.onMouseMove = function (e, ctx) {
-	this.points.push ( {x : e.offsetX, y : e.offsetY } );
-	this.config_context(ctx);
-	this.draw(ctx);
-   }
-
-   Pencil.prototype.onMouseUp = function (e, ctx) {
-	this.points.push ( {x : e.offsetX, y : e.offsetY } );
-	this.config_context(ctx);
-	this.draw(ctx);
-   }
-
-   /* Class Circle extends _Tool
+	/* Class Circle extends _Tool
 	*
 	*
 	*
@@ -247,47 +245,46 @@ var _Tools = ( function() {
 }());
 
 
-var Tools = (function(t) {
+Sketcher.Tools = (function() {
 
-  var tools;
-  var current;
+	var tools;
+	var current;
 
 
-  function initalization(default_color, default_line_width, default_fill_color) {
+	function initialization(default_color, default_line_width, default_fill_color) {
 	tools = {
-					 "line" : new t.line(default_color, default_line_width),
-					 "rectangle" : new t.rectangle(default_color, default_line_width, default_fill_color),
-					 "pencil" : new t.pencil(default_color, default_line_width),
-					 "circle" : new t.circle(default_color, default_line_width, default_fill_color)
+					 "line" : new Sketcher.ToolsAbstract.line(default_color, default_line_width),
+					 "rectangle" : new Sketcher.ToolsAbstract.rectangle(default_color, default_line_width, default_fill_color),
+					 "pencil" : new Sketcher.ToolsAbstract.pencil(default_color, default_line_width),
+					 "circle" : new Sketcher.ToolsAbstract.circle(default_color, default_line_width, default_fill_color)
 			}
 
+		current = "pencil";
 
-
-    current = "pencil";
-
-  }
-
-  function getCurrentTool() {
-		return tools[current];
-  }
-
-
-  function setCurrentTool(name) {
-	if ( name in tools) {
-			current = name;
-	} else {
-		console.log(name+' is not a tool');
 	}
 
 
-  }
+  function getCurrentTool() {
+		return tools[current];
+	}
 
-  return {
-	init : initalization,
-	getTool : getCurrentTool,
-	setTool : setCurrentTool
-  }
 
-}(_Tools));
+	function setCurrentTool(name) {
+		if ( name in tools) {
+				current = name;
+		} else {
+			console.log(name+' is not a tool');
+		}
 
-Tools.init("#000000", 1, "#000000");
+
+	}
+
+	initialization("#000000", 5, "#000000");
+
+	return {
+		init : initialization,
+		getTool : getCurrentTool,
+		setTool : setCurrentTool
+	}
+
+}());
