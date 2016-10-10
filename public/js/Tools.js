@@ -263,7 +263,7 @@ var Tools = (function(t) {
 
 
 
-    current = "rectangle";
+    current = "pencil";
 
   }
 
