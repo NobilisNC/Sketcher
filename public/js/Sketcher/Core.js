@@ -40,7 +40,8 @@ Sketcher.Core = (function(document, window) {
 
 			if(this.clicked) {
 				var ctx = this.selectedLayer.getContext();
-				this.tool.onMouseUp(e, ctx);
+				this.selectedLayer.object.push(this.tool.onMouseUp(e, ctx));
+				console.log(this.selectedLayer.object);
 				this.selectedLayer.updateThumbnail();
 			}
 

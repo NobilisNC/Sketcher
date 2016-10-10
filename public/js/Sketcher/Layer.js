@@ -13,6 +13,9 @@ var Layer = function(name, zIndex, width, height, frame) {
 	this.width = width;
 	this.height = height;
 	this.opacity = 1;
+	
+	//Beta
+	this.object = [];
 
 	this.createMenuItem = function(container) {
 		this.menuItem = document.createElement('li');
