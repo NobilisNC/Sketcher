@@ -41,7 +41,7 @@ Sketcher.Core = (function(document, window) {
 			if(this.clicked) {
 				var ctx = this.selectedLayer.getContext();
 				this.tool.onMouseUp(e, ctx);
-				this.selectedLayer.updateThumbnail();
+				this.selectedLayer.menuItem.updateThumbnail();
 			}
 
 			if(!e.shiftKey) {
@@ -290,7 +290,9 @@ Sketcher.Core = (function(document, window) {
 			setLayerVisibility: this.setLayerVisibility.bind(this),
 			toggleLayerVisibility: this.toggleLayerVisibility.bind(this),
 			selectColor: this.selectColor.bind(this),
-			getSelectedColor: (function() { return this.color; }).bind(this)
+			getSelectedColor: (function() { return this.color; }).bind(this),
+			getWidth: (function() { return this.width }).bind(this),
+			getHeight: (function() { return this.height }).bind(this)
 		};
 	}
 

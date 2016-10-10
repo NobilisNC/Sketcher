@@ -1,9 +1,7 @@
 Sketcher.ToolsAbstract = ( function() {
 
-	/* Abstract Class _Tool
-	*
-	*
-	*
+	/*
+	*	Abstract Tools
 	*/
 	function _Tool( c, lw) {
 		this.color = c;

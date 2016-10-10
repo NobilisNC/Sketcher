@@ -24,9 +24,9 @@ var Sketcher = Sketcher || (function(document, window) {
 			this.libs[name].node = document.createElement('script');
 			this.libs[name].node.src = this.basedir+this.libs[name].filename;
 			this.libs[name].node.onload = (function(e) {
-				var nextId = Object.keys(this.libs).indexOf(name)+1;
-				if(nextId < Object.keys(this.libs).length) {
-					load(Object.keys(this.libs)[nextId]);
+				var next = Object.keys(this.libs).indexOf(name)+1;
+				if(next < Object.keys(this.libs).length) {
+					load(Object.keys(this.libs)[next]);
 				}
 			}).bind(this);
 			document.body.appendChild(this.libs[name].node);

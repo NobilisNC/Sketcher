@@ -69,7 +69,7 @@ body {
 		#sk_layers_list {
 			font-size: 0px;
 			padding: 0;
-			width: 250px;
+			width: 248px;
 			list-style: none;
 		}
 
@@ -86,7 +86,7 @@ body {
 				line-height: 30px;
 				background: #ccc;
 				display: inline-block;
-				width: 220px;
+				width: 218px;
 				height: 40px;
 				cursor: pointer;
 			}
@@ -165,6 +165,7 @@ body {
 		height: 27px;
 		text-align: center;
 		box-shadow: inset -2px -2px 4px #aaa, inset 2px 2px 4px #fff;
+		cursor: pointer;
 	}
 
 		a.sk_button:hover {
@@ -180,17 +181,26 @@ body {
 div.sk_window {
 	position: absolute;
 	top: 10px; left: 10px;
-	border: 1px solid red;
+	border: 1px solid #545454;
+	border-radius: 3px;
 	z-index: 999;
 	min-width: 150px;
 	max-width: 250px;
+	background: #dbdbdb;
 }
+
+	div.sk_window[data-folded="true"] {
+		height: 25px;
+		overflow: hidden;
+	}
 
 	h1.sk_window_title {
 		font-size: 16px;
 		font-weight: 200;
 		padding: 3px 5px;
 		cursor: move;
+		height: 25px;
+		border-bottom: 1px solid #999;
 	}
 
 		a[data-action="fold"] {
@@ -208,12 +218,6 @@ div.sk_window {
 		max-width: 167px;
 		border-top: 1px solid red;
 	}
-
-		div.sk_window[data-folded="true"] div.sk_toolbox {
-			height: 0;
-			overflow: hidden;
-			border: none;
-		}
 
 		div.sk_toolbox a.sk_button {
 			margin: 5px 0 0 2px;

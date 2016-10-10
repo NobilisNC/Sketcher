@@ -8,26 +8,27 @@ Sketcher.UI = (function(document, window){
 	// Create UI components containers
 	this.buttons = document.createElement('div');
 	this.palette = document.createElement('div');
-	this.layers = document.createElement('div');
-	this.layersButtons = document.createElement('div');
-	this.layersList = document.createElement('ul');
-
-	this.buttons.addEventListener('mousedown', function(e) { e.preventDefault(); e.stopPropagation(); });
-	this.palette.addEventListener('mousedown', function(e) { e.preventDefault(); e.stopPropagation(); });
-	this.layers.addEventListener('mousedown', function(e) { e.preventDefault(); e.stopPropagation(); });
+	this.layer = new Sketcher.Window('Layers', this.frame, Sketcher.Core.getWidth()-260, 10);
+	console.log(Sketcher.Core.width);
+	this.layerList = new Sketcher.LayerList(this.layer);
+	this.layerButtons = new Sketcher.Toolbox(this.layer);
+	this.layerButtons.appendChild(
+		new Sketcher.Button(
+			'addLayer',
+			function(e) {
+				Sketcher.Core.addLayer();
+				updateLayers();
+			},
+			null,
+			'plus'
+		).node
+	);
 
 	this.buttons.setAttribute('id', 'sk_buttons');
 	this.palette.setAttribute('id', 'sk_palette');
-	this.layers.setAttribute('id', 'sk_layers_widget');
-	this.layersButtons.setAttribute('id', 'sk_layers_buttons');
-	this.layersList.setAttribute('id', 'sk_layers_list');
 
 	this.frame.appendChild(this.buttons);
 	this.frame.appendChild(this.palette);
-
-	this.layers.appendChild(this.layersList);
-	this.layers.appendChild(this.layersButtons);
-	this.frame.appendChild(this.layers);
 
 	function updateFrame() {
 		this.frame.width = window.innerWidth;
@@ -57,12 +58,11 @@ Sketcher.UI = (function(document, window){
 	}
 
 	function _updateLayers() {
-		while (this.layersList.firstChild) {
-			this.layersList.removeChild(this.layersList.firstChild);
-		}
+		this.layerList.empty();
+
 
 		Sketcher.Core.getLayers().forEach(function(layer) {
-			layer.createMenuItem(this.layersList);
+			layer.createMenuItem(this.layerList);
 		});
 
 	}
@@ -86,34 +86,10 @@ Sketcher.UI = (function(document, window){
 
 	// Add native components to containers
 	addButton('square', function(e){ console.log('select square'); }, this.buttons, 'square');
-	addButton('addLayer', function(e){ Sketcher.Core.addLayer(); updateLayers(); }, this.layersButtons, 'plus');
 
 	updateFrame();
 	updatePalette();
 	updateLayers();
-
-	Array.prototype.forEach.call(
-		this.frame.querySelectorAll('.sk_window_title'),
-		function(win) {
-			var foldBtn = document.createElement('a');
-			foldBtn.innerHTML = '<i class="fa fa-minus-square-o"></i>';
-			foldBtn.setAttribute('data-action', 'fold');
-			win.appendChild(foldBtn);
-
-			foldBtn.addEventListener('click', function(e) {
-				var win = foldBtn.parentNode.parentNode;
-				if(win.getAttribute('data-folded') == 'true') {
-					win.setAttribute('data-folded', 'false');
-					win.querySelector('a[data-action="fold"] i').setAttribute('class', 'fa fa-minus-square-o');
-				} else {
-					win.setAttribute('data-folded', 'true');
-					win.querySelector('a[data-action="fold"] i').setAttribute('class', 'fa fa-plus-square-o');
-				}
-			});
-		}
-	);
-
-	var a = new Sketcher.Window('Lol', this.frame);
 
 	window.addEventListener('resize', function(e) { updateFrame(); });
 
