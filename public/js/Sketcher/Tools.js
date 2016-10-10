@@ -32,6 +32,7 @@ Sketcher.ToolsAbstract = ( function() {
 	_Tool.prototype.onMouseMove;
 	_Tool.prototype.onMouseUp;
 
+
 	_Tool.prototype.config_context = function (ctx) {
 		ctx.strokeStyle = this.color;
 		ctx.lineWidth = this.line_width;
@@ -81,7 +82,10 @@ Sketcher.ToolsAbstract = ( function() {
 		this.p2 = { x :e.offsetX, y : e.offsetY};
 		this.config_context(ctx);
 		this.draw(ctx);
+
+		return '{ "type":"Line","data":' + JSON.stringify(this) + '}';
 	}
+
 
 	/* Class Rect extends _Tool
 		*
@@ -132,6 +136,8 @@ Sketcher.ToolsAbstract = ( function() {
 		this.p2 = { x :e.offsetX, y : e.offsetY};
 		this.config_context(ctx);
 		this.draw(ctx);
+
+		return '{ "type":"Rect","data":' + JSON.stringify(this) + '}';
 	}
 
 	/* Class Pencil extends _Tool
@@ -174,6 +180,8 @@ Sketcher.ToolsAbstract = ( function() {
 		this.points.push ( {x : e.offsetX, y : e.offsetY } );
 		this.config_context(ctx);
 		this.draw(ctx);
+
+		return '{ "type":"Pencil","data":' + JSON.stringify(this) + '}';
 	}
 
 	/* Class Circle extends _Tool
@@ -232,14 +240,47 @@ Sketcher.ToolsAbstract = ( function() {
 		this.p2 = { x :e.offsetX, y : e.offsetY};
 		this.config_context(ctx);
 		this.draw(ctx);
+
+		return '{ "type":"Circle","data":' + JSON.stringify(this) + '}';
 	}
+
+
+
+
+	function factory(json_str) {
+
+		rawObject = JSON.parse(json_str, ctx);
+
+		if (rawObject.type === "Line") 
+			c = Line;
+		else if (rawObject.type === "Rect")
+			c = Rect;
+		else if (rawObject.type === "Pencil")
+			c = Pencil;
+		else if (rawObject.type === "Circle")
+			c = Circle;
+
+		obj = cast(rawObject.data, c)
+		obj.draw(ctx);	
+	};
+
+	function cast(rawObj, constructor)
+	{
+		var obj = new constructor();
+		for(var i in rawObj)
+			obj[i] = rawObj[i];
+		return obj;
+	}
+
 
 
 	return {
 		line : Line,
 		rectangle : Rect,
 		pencil : Pencil,
-		circle : Circle
+		circle : Circle,
+
+		fromJSON : factory
 	}
 
 }());
@@ -259,7 +300,7 @@ Sketcher.Tools = (function() {
 					 "circle" : new Sketcher.ToolsAbstract.circle(default_color, default_line_width, default_fill_color)
 			}
 
-		current = "pencil";
+		current = "line";
 
 	}
 
@@ -279,12 +320,17 @@ Sketcher.Tools = (function() {
 
 	}
 
+	function fromJSON(json, ctx) {
+		Sketcher.ToolsAbstract.fromJSON(json, ctx);
+	}
+
 	initialization("#000000", 5, "#000000");
 
 	return {
 		init : initialization,
 		getTool : getCurrentTool,
-		setTool : setCurrentTool
+		setTool : setCurrentTool,
+		drawFromJSON : fromJSON
 	}
 
 }());
