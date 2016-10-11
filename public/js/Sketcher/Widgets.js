@@ -142,6 +142,10 @@ Sketcher.Window = function Window(title, parent, x = 0, y = 0) {
 	this.parent.appendChild(this.node);
 }
 
+/*
+/	Toolbox widget
+/	 An invisible block that contains other widgets
+*/
 Sketcher.Toolbox = function Toolbox(parent) {
 	Sketcher.AbstractWidget.call(this, parent);
 
@@ -152,6 +156,22 @@ Sketcher.Toolbox = function Toolbox(parent) {
 	this.parent.appendChild(this.node);
 }
 
+/*
+/	Layer list window
+/	 A window that permits layers control
+*/
+Sketcher.LayerList = function(parent) {
+	Sketcher.AbstractWidget.call(this, parent);
+
+	this.node = document.createElement('ul');
+	this.node.setAttribute('id', 'sk_layers_list');
+	this.parent.appendChild(this.node);
+}
+
+/*
+/	Layer list item
+/	 A link to select a layer, make it invisible, delete it, raise it up or drop it down.
+*/
 Sketcher.LayerItem = function(layer, parent) {
 	Sketcher.AbstractWidget.call(this, parent);
 
@@ -202,16 +222,16 @@ Sketcher.LayerItem = function(layer, parent) {
 	this.btnDelete.innerHTML = '<i class="fa fa-trash"></i>';
 	this.commands.appendChild(this.btnDelete);
 
-	this.btnDemote = document.createElement('a');
-	this.btnDemote.setAttribute('data-action', 'demoteLayer');
-	this.btnDemote.setAttribute('class', 'sk_check');
-	this.btnDemote.innerHTML = '<i class="fa fa-arrow-down"></i>';
-	this.commands.appendChild(this.btnDemote);
+	this.btnDrop = document.createElement('a');
+	this.btnDrop.setAttribute('data-action', 'dropLayer');
+	this.btnDrop.setAttribute('class', 'sk_check');
+	this.btnDrop.innerHTML = '<i class="fa fa-arrow-down"></i>';
+	this.commands.appendChild(this.btnDrop);
 
 	this.node.appendChild(this.commands);
 
 	Array.prototype.forEach.call(
-		this.node.querySelectorAll('a[data-action="selectLayer"], a[data-action="toggleLayerVisibility"], a[data-action="deleteLayer"], a[data-action="raiseLayer"], a[data-action="demoteLayer"]'),
+		this.node.querySelectorAll('a[data-action="selectLayer"], a[data-action="toggleLayerVisibility"], a[data-action="deleteLayer"], a[data-action="raiseLayer"], a[data-action="dropLayer"]'),
 		function(btn){
 			if(btn.parentNode.tagName == "LI") {
 				var id = btn.parentNode.getAttribute("data-id");
@@ -248,14 +268,6 @@ Sketcher.LayerItem = function(layer, parent) {
 	}
 }
 
-Sketcher.LayerList = function(parent) {
-	Sketcher.AbstractWidget.call(this, parent);
-
-	this.node = document.createElement('ul');
-	this.node.setAttribute('id', 'sk_layers_list');
-	this.parent.appendChild(this.node);
-}
-
 /*
 /	Button widget
 /	 A button that triggers an action.
@@ -273,7 +285,7 @@ Sketcher.Button = function Button(title, action, parent, icon, bgColor, focus) {
 	this.node.setAttribute('title', title);
 
 	this.update = function() {
-		this.node.style.opacity = (this.focus ? .5 : 1);
+		this.node.className += (this.focus ? ' active' : '');
 	}
 
 	if(this.bgColor != '') {
@@ -290,18 +302,22 @@ Sketcher.Button = function Button(title, action, parent, icon, bgColor, focus) {
 	}
 }
 
+/*
+/
+*/
 Sketcher.ColorButton = function ColorButton(name, color, parent) {
-	this.color = color;
-	return Sketcher.Button.call(this, ' ', (function(e) {
+	Sketcher.Button.call(this, ' ', (function(e) {
 		Sketcher.Core.selectColor(this.color);
 		Sketcher.UI.updatePalette();
-	}).bind(this), parent, '', this.color.getHex());
+	}).bind(this), parent, '', color.getHex());
+	this.color = color;
+	this.node.className += ' sk_colorbutton';
 }
 
-Sketcher.Palette = function(parent) {
+Sketcher.Palette = function(parent, x, y) {
 
-	function PaletteSingleton(parent) {
-		Sketcher.Window.call(this, 'Palette', parent);
+	function PaletteSingleton(parent, x, y) {
+		Sketcher.Window.call(this, 'Palette', parent, x, y);
 
 		this.buttons = new Sketcher.Toolbox(this);
 		this.colors = [];
@@ -340,7 +356,7 @@ Sketcher.Palette = function(parent) {
 		};
 	}
 
-	var instance = instance || new PaletteSingleton(parent);
+	var instance = instance || new PaletteSingleton(parent, x, y);
 
 	return instance;
 }

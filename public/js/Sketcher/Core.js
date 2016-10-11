@@ -1,6 +1,6 @@
 /*
 /	Core singleton
-/	Main module that controls the drawing frame and holds user's settings
+/	Main module that controls the drawing frame
 */
 Sketcher.Core = (function(document, window) {
 
@@ -46,7 +46,13 @@ Sketcher.Core = (function(document, window) {
 		}
 
 		this._onMouseMove = function(e) {
-			if(e.offsetX < 0 || e.offsetY < 0 ||  e.offsetX > this.width || e.offsetY > this.height || !this.clicked) {
+			if(
+					e.offsetX < 0
+				||	e.offsetY < 0
+				||  e.offsetX > this.width
+				||	e.offsetY > this.height
+				||	!this.clicked
+			) {
 				onMouseUp(e);
 			} else {
 				var ctx = this.layers[0].getContext();
@@ -271,7 +277,7 @@ Sketcher.Core = (function(document, window) {
 			getSelectedColor: (function() { return this.color; }).bind(this),
 			getWidth: (function() { return this.width; }).bind(this),
 			getHeight: (function() { return this.height; }).bind(this),
-			setTool: (function(tool) { Sketcher.Tools.setTool(tool); this.tool = Sketcher.Tools.getTool(); console.log(this.tool); }).bind(this)
+			setTool: (function(tool) { Sketcher.Tools.setTool(tool); this.tool = Sketcher.Tools.getTool(); this.tool.setColor(this.color.getHex()); console.log(this.tool); }).bind(this)
 		};
 	}
 
