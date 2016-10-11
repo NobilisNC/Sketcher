@@ -226,14 +226,9 @@ Sketcher.Core = (function(document, window) {
 			}
 		}
 
-		this.selectColor = function(colorName) {
-			if(colorName in Sketcher.Colors) {
-				this.tool.setColor(Sketcher.Colors[colorName]);
-				return true;
-			} else {
-				console.error(colorName+" is not a color.");
-				return false;
-			}
+		this.selectColor = function(color) {
+			this.color = color;
+			this.tool.setColor(this.color.getHex());
 		}
 
 		this.getSelectedColor = function() {

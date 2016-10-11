@@ -347,14 +347,14 @@ Sketcher.Tools = (function() {
 
 	function initialization(default_color, default_line_width, default_fill_color, default_width, default_height) {
 	tools = {
-					 "line" : new Sketcher.ToolsAbstract.line(default_color, default_line_width),
-					 "rectangle" : new Sketcher.ToolsAbstract.rectangle(default_color, default_line_width, default_fill_color),
-					 "pencil" : new Sketcher.ToolsAbstract.pencil(default_color, default_line_width),
-					 "circle" : new Sketcher.ToolsAbstract.circle(default_color, default_line_width, default_fill_color),
-					 "paint_bucket" : new Sketcher.ToolsAbstract.paint_bucket(default_color, default_line_width, default_width, default_height)
+					 'line' : new Sketcher.ToolsAbstract.line(default_color, default_line_width),
+					 'rectangle' : new Sketcher.ToolsAbstract.rectangle(default_color, default_line_width, default_fill_color),
+					 'pencil' : new Sketcher.ToolsAbstract.pencil(default_color, default_line_width),
+					 'circle' : new Sketcher.ToolsAbstract.circle(default_color, default_line_width, default_fill_color),
+					 'paint_bucket' : new Sketcher.ToolsAbstract.paint_bucket(default_color, default_line_width, default_width, default_height)
 		}
 
-		current = "paint_bucket";
+		current = 'line';
 
 	}
 

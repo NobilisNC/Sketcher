@@ -4,31 +4,23 @@
 */
 Sketcher.AbstractWidget = function Widget(parent) {
 	this.parent = parent || null;
+	this.children = [];
 	this.node = null;
 
-	this.setParent = function(node) {
-		if(typeof node == 'object') {
-			this.parent = node;
-			return true;
-		}
-		else {
+	this.setParent = function(child) {
+		if(child.hasOwnProperty('node')) {
+			this.parent = child;
+		} else {
 			return false;
 		}
 	}
 
-	this.appendChild = function(node) {
-		if((
-			typeof Node === 'object'
-			?	node instanceof Node
-			:	node
-				&& typeof node === 'object'
-				&& typeof node.nodeType === 'number'
-				&& typeof node.nodeName === 'string'
-		)) {
-			this.node.appendChild(node);
-		} else {
-			return false;
+	this.appendChild = function(child) {
+		this.node.appendChild(child.hasOwnProperty('node') ? child.node : child);
+		if(child.hasOwnProperty('node')) {
+			child.setParent(this);
 		}
+		this.children.push(child);
 	}
 
 	this.empty = function() {
@@ -42,7 +34,7 @@ Sketcher.AbstractWidget = function Widget(parent) {
 /	Window widget
 /	 A draggable window that contains other Widgets
 */
-Sketcher.Window = function(title, parent, x = 0, y = 0) {
+Sketcher.Window = function Window(title, parent, x = 0, y = 0) {
 	Sketcher.AbstractWidget.call(this, parent);
 
 	this.titleText = title;
@@ -143,7 +135,7 @@ Sketcher.Window = function(title, parent, x = 0, y = 0) {
 	this.parent.appendChild(this.node);
 }
 
-Sketcher.Toolbox = function(parent) {
+Sketcher.Toolbox = function Toolbox(parent) {
 	Sketcher.AbstractWidget.call(this, parent);
 
 	this.node = document.createElement('div');
@@ -262,21 +254,41 @@ Sketcher.LayerList = function(parent) {
 /	 A button that triggers an action.
 /	Can be filled with an icon or a text (if no icon is specified).
 */
-Sketcher.Button = function(title, action, parent, icon) {
+Sketcher.Button = function Button(title, action, parent, icon, bgColor, focus) {
 	Sketcher.AbstractWidget.call(this, parent);
 	this.title = title;
 	this.action = action;
 	this.icon = icon || '';
+	this.bgColor = bgColor || '';
+	this.focus = focus || false;
 	this.node = document.createElement('a');
 	this.node.setAttribute('class', 'sk_button');
 	this.node.setAttribute('title', title);
-	this.node.innerHTML = this.icon == '' ? this.title : '<i class="fa fa-'+this.icon+'"></i>';
+
+	this.update = function() {
+		this.node.style.opacity = (this.focus ? .5 : 1);
+	}
+
+	if(this.bgColor != '') {
+		this.node.style.backgroundColor = this.bgColor;
+	}
+
+	this.node.innerHTML = (this.icon == '' ? this.title : '<i class="fa fa-'+this.icon+'"></i>');
 	this.node.addEventListener('click', this.action);
+	this.update();
 
 	if(parent && typeof parent == 'object' && parent.hasOwnProperty('appendChild')) {
 		this.parent = parent;
 		this.parent.appendChild(this.node);
 	}
+}
+
+Sketcher.ColorButton = function ColorButton(name, color, parent) {
+	this.color = color;
+	return Sketcher.Button.call(this, ' ', (function(e) {
+		Sketcher.Core.selectColor(this.color);
+		Sketcher.UI.updatePalette();
+	}).bind(this), parent, '', this.color.getHex());
 }
 
 Sketcher.Palette = function(parent) {
@@ -286,6 +298,39 @@ Sketcher.Palette = function(parent) {
 
 		this.buttons = new Sketcher.Toolbox(this);
 		this.colors = [];
+
+		this._update = function() {
+			this.buttons.children.forEach(function(b) {
+				if(Sketcher.Core.getSelectedColor() == b.color) {
+					b.focus = true;
+				} else {
+					b.focus = false;
+				}
+				b.update();
+			});
+		}
+
+		this._addBasicColors = function() {
+			Object.keys(Sketcher.Colors).forEach((function(colorName) {
+				this.buttons.appendChild(
+					new Sketcher.ColorButton(
+						colorName,
+						Sketcher.Colors[colorName],
+						null,
+						null,
+						null,
+						(Sketcher.Core.color === Sketcher.Colors[colorName] ? true : false)
+					)
+				);
+			}).bind(this));
+		}
+
+		this._addBasicColors();
+
+		return {
+			update: this._update.bind(this),
+			addBasicColors: this._addBasicColors.bind(this)
+		};
 	}
 
 	var instance = instance || new PaletteSingleton(parent);
