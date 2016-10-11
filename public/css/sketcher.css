@@ -146,13 +146,6 @@ body {
 						background: #ddd;
 					}
 
-
-	#sk_buttons {
-		z-index: 999;
-		position: absolute;
-		top: 0; left: 0;
-	}
-
 	a.sk_button {
 		color: #000;
 		background: #ccc;

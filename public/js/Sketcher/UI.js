@@ -75,37 +75,11 @@ Sketcher.UI = (function(document, window){
 		).node
 	);
 
-	// this.buttons.setAttribute('id', 'sk_buttons');
-	this.palette.setAttribute('id', 'sk_palette');
-
-	// this.frame.appendChild(this.buttons);
-	this.frame.appendChild(this.palette);
-
 	function updateFrame() {
 		this.frame.width = window.innerWidth;
 		this.frame.height = window.innerHeight;
 		Sketcher.node.style.width = window.innerWidth+'px'
 		Sketcher.node.style.height = window.innerHeight+'px';
-	}
-
-	function updatePalette() {
-		this.palette.innerHTML = '';
-		while (this.palette.firstChild) {
-			this.palette.removeChild(this.palette.firstChild);
-		}
-
-		for(var color in Sketcher.Colors) {
-			this.palette.innerHTML += '<a class="sk_color" style="background-color:' + Sketcher.Colors[color] + ';" alt="' + color + '" href="#"></a>';
-		}
-
-		Array.prototype.forEach.call(
-			this.palette.querySelectorAll('.sk_color'),
-			function(color) {
-				color.addEventListener('click', function(e) {
-					Sketcher.Core.selectColor(this.getAttribute('alt'));
-				});
-			}
-		);
 	}
 
 	function _updateLayers() {
@@ -118,31 +92,16 @@ Sketcher.UI = (function(document, window){
 
 	}
 
-	// function addButton(name, func, container, icon = '') {
-	// 	if(icon == '') {
-	// 		container.innerHTML += '<a class="sk_button" id="sk_button_' + name + '" href="#">' + name + '</a>';
-	// 	} else {
-	// 		container.innerHTML += '<a class="sk_button" id="sk_button_' + name + '" href="#"><i alt="' + name + '" class="fa fa-' + icon + '"></a>';
-	// 	}
-	//
-	// 	var b = container.querySelector('#sk_button_' + name);
-	// 	b.addEventListener('click', func);
-	// }
-
-	function addNormalButton(name, func, icon = '') {
-		addButton(name, func, buttons, icon);
-	}
-
 	this.updateLayers = _updateLayers.bind(this);
 
 	updateFrame();
-	updatePalette();
+	this.caca.update();
 	updateLayers();
 
 	window.addEventListener('resize', function(e) { updateFrame(); });
 
 	return {
-		addButton: addNormalButton,
+		updatePalette: this.caca.update,
 		updateLayers: updateLayers
 	};
 })(document, window);
