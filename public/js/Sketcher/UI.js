@@ -48,6 +48,16 @@ Sketcher.UI = (function(document, window){
 			'minus'
 		).node
 	);
+	this.toolButtons.appendChild(
+		new Sketcher.Button(
+			'Paint_Bucket',
+			function(e) {
+				Sketcher.Core.setTool('paint_bucket');
+			},
+			null,
+			'fire'
+		).node
+	);
 	this.palette = document.createElement('div');
 	this.caca = new Sketcher.Palette(this.frame);
 	this.layer = new Sketcher.Window('Layers', this.frame, Sketcher.Core.getWidth()-260, 10);

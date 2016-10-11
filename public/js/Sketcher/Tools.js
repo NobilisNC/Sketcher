@@ -4,13 +4,13 @@ Sketcher.ToolsAbstract = ( function() {
 	*	Abstract Tools
 	*/
 	function _Tool( c, lw) {
-		this.color = c;
+		this.color = new Sketcher.ColorFromString(c);
 		this.line_width = lw;
 		this._stroke = true;
 	}
 
 	_Tool.prototype.setColor = function (c) {
-		this.color = c;
+		this.color = Sketcher.ColorFromString(c);
 	}
 
 	_Tool.prototype.setLineWidth = function (lw) {
@@ -32,7 +32,7 @@ Sketcher.ToolsAbstract = ( function() {
 
 
 	_Tool.prototype.config_context = function (ctx) {
-		ctx.strokeStyle = this.color;
+		ctx.strokeStyle = this.color.getHex();
 		ctx.lineWidth = this.line_width;
 		ctx.lineCap = 'round';
 		ctx.lineJoin = 'round';
@@ -259,23 +259,71 @@ Sketcher.ToolsAbstract = ( function() {
     PaintBucket.prototype = Object.create(_Tool.prototype);
 	PaintBucket.prototype.constructor = PaintBucket;
 
+	PaintBucket.prototype.getPosInData = function(pos) {
+
+		return (pos.y * this.width + pos.x) * 4;
+	}
+
+	PaintBucket.prototype.isTargetColor = function(pos, img, targetColor) {
+		pos_data = this.getPosInData(pos);
+		if (img.data[pos_data] == targetColor.r && img.data[pos_data+1] == targetColor.g && img.data[pos_data+2] == targetColor.b)
+			return true;
+		else
+			return false;
+	}
+
 
 	PaintBucket.prototype.draw = function (ctx) {
 		var img = ctx.getImageData(0,0,this.width, this.height);
-		var pos =  (this.p.y * this.width + this.p.x) * 4;
-		var targetColor = {r : img.data[pos], g : img.data[pos +1 ], b : img.data[pos +2],a: img.data[pos +3]};
-		console.log(targetColor);
+		var pixel =  this.getPosInData(this.p);
+		var targetColor = {r : img.data[pixel], g : img.data[pixel +1 ], b : img.data[pixel +2],a: img.data[pixel +3]};
+	
+		var P = [];
+		P.push(this.p);
+		
+		while (P.length) {
+			n = P.pop();
 
-		//var P = [];
-		//P.push
-
-
-
-
-
-
+			if( this.isTargetColor(n, img, targetColor) ) {
 
 
+				//On check ouest
+				var w = {'x' : n.x-1, 'y':n.y};
+				//console.log('ouest : ', w);
+				while(this.isTargetColor(w,img,targetColor) && w.x > 0 && w.x < this.width) {
+					w.x--;				
+				}
+				//console.log('+ouest : ', w);
+				
+				
+				//On check est
+				var e = {'x' : n.x+1, 'y':n.y};
+				//console.log('est : ', e);				
+				
+				while(this.isTargetColor(e,img,targetColor) && e.x > 0 && e.x < this.width) {
+					e.x++;
+				}
+				//console.log('+est : ', e);
+				
+
+				for (let pix = w; pix.x < e.x; pix.x++){
+					let pos_data = this.getPosInData(pix);
+					img.data[pos_data] = this.color.r;
+					img.data[pos_data +1] = this.color.g;
+					img.data[pos_data +2] = this.color.b;
+					img.data[pos_data +3] = 255;
+
+					if (this.isTargetColor({x : pix.x , y : pix.y - 1}, img, targetColor))
+						P.push({x : pix.x , y : pix.y - 1});
+
+					if (this.isTargetColor({x : pix.x , y : pix.y + 1}, img, targetColor))
+						P.push({x : pix.x , y : pix.y + 1});		
+
+				}
+			}
+		}
+
+		ctx.putImageData(img, 0,0);
 
 	}
 
@@ -389,11 +437,3 @@ Sketcher.Tools = (function() {
 
 }());
 
-//A mettre dans Color
-function hex2Rgb(hex) {
-hex = hex.replace(/[^0-9A-F]/gi, '');
-return {r : (bigint = parseInt(hex, 16)) >> 16 & 255, g: bigint >> 8 & 255,b : bigint & 255};
-}
-
-
-//console.log(hex2Rgb("#FF00FF"));
