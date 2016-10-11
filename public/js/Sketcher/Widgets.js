@@ -39,6 +39,7 @@ Sketcher.Window = function Window(title, parent, x = 0, y = 0) {
 
 	this.titleText = title;
 	this.dragged = false;
+	this.stuck = {x:true, y:true};
 
 	this.node = document.createElement('div');
 	this.node.setAttribute('class', 'sk_window');
@@ -80,24 +81,30 @@ Sketcher.Window = function Window(title, parent, x = 0, y = 0) {
 			var x = e.clientX - this.node.getAttribute('data-x');
 			var y = e.clientY - this.node.getAttribute('data-y');
 
-			if(x >= 0 && x + this.node.offsetWidth <= Sketcher.node.offsetWidth) {
+			var DEV__stickFeatureEnabled = true;	//!\ DEV Set this as user parameter
+			var stuckDist = 100;					//!\ DEV Set this as user parameter
+			var maxX = Sketcher.node.offsetWidth - this.node.offsetWidth;
+			var maxY = Sketcher.node.offsetHeight - this.node.offsetHeight;
+
+			if(!this.stuck.x)
 				this.node.style.left = x + 'px';
+			if(!this.stuck.y)
+				this.node.style.top = y + 'px';
+
+			if((x < 0 || x > maxX) ||	this.stuck.x && (x < stuckDist ||	x > maxY - stuckDist)) {
+				if(DEV__stickFeatureEnabled)
+				this.stuck.x = true;
+				this.node.style.left = (x < maxX / 2 ? 0 : maxX)+'px';
 			} else {
-				if(x < 0) {
-					this.node.style.left = '0px';
-				} else {
-					this.node.style.left = (Sketcher.node.offsetWidth - this.node.offsetWidth) + 'px';
-				}
+				this.stuck.x = false;
 			}
 
-			if(y >= 0 && y + this.node.offsetHeight <= Sketcher.node.offsetHeight) {
-				this.node.style.top = y + 'px';
-			} else {
-				if(y < 0) {
-					this.node.style.top = '0px';
-				} else {
-					this.node.style.top = (Sketcher.node.offsetHeight - this.node.offsetHeight) + 'px';
-				}
+			if((y < 0 || y > maxY) || this.stuck.y && (y < stuckDist || y > maxY - stuckDist)) {
+				if(DEV__stickFeatureEnabled)
+				this.stuck.y = true;
+				this.node.style.top = (y < maxY / 2 ? 0 : maxY)+'px';
+			} else if(DEV__stickFeatureEnabled) {
+				this.stuck.y = false;
 			}
 		}
 	}

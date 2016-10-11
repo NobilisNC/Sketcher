@@ -14,7 +14,7 @@ Sketcher.Core = (function(document, window) {
 		this.height = window.innerHeight;
 		this.color = Sketcher.Colors.red;
 		//Tools
-		Sketcher.Tools.init("#FF0000", 5, "#000000", this.width, this.height );
+		Sketcher.Tools.init(this.color.getHex(), 5, Sketcher.Colors.black.getHex(), this.width, this.height);
 		this.tool = Sketcher.Tools.getTool();
 
 		/***** EVENTS *****/
