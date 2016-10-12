@@ -204,8 +204,6 @@ Sketcher.ToolsAbstract = ( function() {
 
 	Circle.prototype.fill = function (fill) {
 
-		console.log(fill)
-		console.log(typeof fill);
 		if (typeof fill === 'boolean')
 			this._fill = fill;
 
@@ -254,30 +252,62 @@ Sketcher.ToolsAbstract = ( function() {
 		_Tool.call(this, c, lw);
 		this.width = width;
 		this.height = height;
-		this.precision = 0.9;
+		this.precision = 2550 * 0.2;
 	}
 
     PaintBucket.prototype = Object.create(_Tool.prototype);
 	PaintBucket.prototype.constructor = PaintBucket;
 
-	PaintBucket.prototype.getPosInData = function(pos) {
+	PaintBucket.prototype.precision = function(precision) {
+		if (typeof precision === 'number')
+			if (precision < 0)
+				console.log('La precision doit être un chiffre positif');
+			else if (precision > 1)
+				console.log('La precision doit être comprise entre 0 et 1');
+			else
+				this.precision = 2550 * number;
 
+		return this.precision;
+
+	}
+
+	PaintBucket.prototype.posOk = function(pos) {
+		return pos.x >= 0 && pos.x < this.width && pos.y >= 0 && pos.y < this.height;
+	}
+
+
+	PaintBucket.prototype.getPosInData = function(pos) {
 		return (pos.y * this.width + pos.x) * 4;
 	}
 
 	PaintBucket.prototype.isTargetColor = function(pos, img, targetColor) {
 		pos_data = this.getPosInData(pos);
-		if (Math.abs(img.data[pos_data]-targetColor.r) < 255*this.precision && Math.abs(img.data[pos_data+1] - targetColor.g) < 255*0.02 && Math.abs(img.data[pos_data+2]-targetColor.b) < 255*0.02)
-			return true;
-		else
+		if (!this.posOk(pos)) {
 			return false;
+		}
+
+		var diff = 3 * Math.abs(img.data[pos_data] - targetColor.r) + 4 * Math.abs(img.data[pos_data+1] - targetColor.g) + 3 * Math.abs(img.data[pos_data+2] - targetColor.b);
+
+		var already_colored = img.data[pos_data] -  this.color.r + img.data[pos_data+1] - this.color.g + img.data[pos_data+2] - this.color.b ;
+
+		if (already_colored == 0) {
+			return false;
+		}else if(diff < this.precision) {
+			//alert('ok')
+			return true;
+		
+		}else {
+			//alert('nope')
+			return false;
+		}
+		
 	}
 
 
 	PaintBucket.prototype.draw = function (ctx) {
 		var img = ctx.getImageData(0,0,this.width, this.height);
 		var pixel =  this.getPosInData(this.p);
-		var targetColor = {r : img.data[pixel], g : img.data[pixel +1 ], b : img.data[pixel +2],a: img.data[pixel +3]};
+		var targetColor = {r : img.data[pixel], g : img.data[pixel +1 ], b : img.data[pixel +2],a: img.data[pixel + 3]};
 
 		var P = [];
 		P.push(this.p);
@@ -287,24 +317,15 @@ Sketcher.ToolsAbstract = ( function() {
 
 			if( this.isTargetColor(n, img, targetColor) ) {
 
-
 				//On check ouest
 				var w = {'x' : n.x-1, 'y':n.y};
-				//console.log('ouest : ', w);
-				while(this.isTargetColor(w,img,targetColor) && w.x > 0 && w.x < this.width) {
+				while(this.isTargetColor(w,img,targetColor)) 
 					w.x--;
-				}
-				//console.log('+ouest : ', w);
-
-
+				
 				//On check est
 				var e = {'x' : n.x+1, 'y':n.y};
-				//console.log('est : ', e);
-
-				while(this.isTargetColor(e,img,targetColor) && e.x > 0 && e.x < this.width) {
+				while(this.isTargetColor(e,img,targetColor) ) 
 					e.x++;
-				}
-				//console.log('+est : ', e);
 
 
 				for (let pix = w; pix.x < e.x; pix.x++){
@@ -312,21 +333,24 @@ Sketcher.ToolsAbstract = ( function() {
 					img.data[pos_data] = this.color.r;
 					img.data[pos_data +1] = this.color.g;
 					img.data[pos_data +2] = this.color.b;
-					img.data[pos_data +3] = 255;
+					img.data[pos_data +3] = this.color.a;
+					
+					var south = {x : pix.x , y : pix.y - 1};
+					if (this.isTargetColor(south, img, targetColor))
+						P.push(south);
+					var north = {x : pix.x , y : pix.y + 1};
+					if (this.isTargetColor(north, img, targetColor))
+						P.push(north);
 
-					if (this.isTargetColor({x : pix.x , y : pix.y - 1}, img, targetColor))
-						P.push({x : pix.x , y : pix.y - 1});
-
-					if (this.isTargetColor({x : pix.x , y : pix.y + 1}, img, targetColor))
-						P.push({x : pix.x , y : pix.y + 1});
-
-				}
+				}				
 			}
 		}
-
 		ctx.putImageData(img, 0,0);
-
 	}
+
+	function sleep (time) {
+  return new Promise((resolve) => setTimeout(resolve, time));
+}
 
 	PaintBucket.prototype.onMouseDown = function (e, ctx) {
 
