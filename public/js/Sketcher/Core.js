@@ -145,12 +145,14 @@ Sketcher.Core = (function(document, window) {
 			return ret.reverse();
 		}
 
+		/***** SLOTS *****/
 		this.selectLayer = function(id) {
 			var layer = this.getLayer(id);
 			if(layer != null) {
 				// Blur each layer
 				this.layers.forEach(function(l) {
 					l.blur();
+					l.update();
 				});
 
 				// Select the new one
@@ -193,7 +195,6 @@ Sketcher.Core = (function(document, window) {
 			}
 		}
 
-		/***** SLOTS *****/
 		this.setLayerVisibility = function(id, visibility) {
 			this.getLayer(id).setVisibility(visibility);
 		}
@@ -214,10 +215,11 @@ Sketcher.Core = (function(document, window) {
 
 				prev.zIndex--;
 				prev.update();
+				Sketcher.UI.updateLayers(true);
 			}
 		}
 
-		this.demoteLayer = function(id) {
+		this.dropLayer = function(id) {
 			var layer = this.getLayer(id);
 			var next = this.getLayerOnLevel(layer.zIndex-1);
 
@@ -229,6 +231,7 @@ Sketcher.Core = (function(document, window) {
 
 				next.zIndex++;
 				next.update();
+				Sketcher.UI.updateLayers(true);
 			}
 		}
 
@@ -270,7 +273,7 @@ Sketcher.Core = (function(document, window) {
 			countLayers: this.countLayers.bind(this),
 			deleteLayer: this.deleteLayer.bind(this),
 			raiseLayer: this.raiseLayer.bind(this),
-			demoteLayer: this.demoteLayer.bind(this),
+			dropLayer: this.dropLayer.bind(this),
 			setLayerVisibility: this.setLayerVisibility.bind(this),
 			toggleLayerVisibility: this.toggleLayerVisibility.bind(this),
 			selectColor: this.selectColor.bind(this),

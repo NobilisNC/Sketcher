@@ -27,6 +27,7 @@ Sketcher.AbstractWidget = function Widget(parent) {
 		while (this.node.firstChild) {
 			this.node.removeChild(this.node.firstChild);
 		}
+		this.children = [];
 	}
 };
 
@@ -39,7 +40,7 @@ Sketcher.Window = function Window(title, parent, x = 0, y = 0) {
 
 	this.titleText = title;
 	this.dragged = false;
-	this.stuck = {x:true, y:true};
+	this.stuck = {x:false, y:false};
 
 	this.node = document.createElement('div');
 	this.node.setAttribute('class', 'sk_window');
@@ -81,29 +82,41 @@ Sketcher.Window = function Window(title, parent, x = 0, y = 0) {
 			var x = e.clientX - this.node.getAttribute('data-x');
 			var y = e.clientY - this.node.getAttribute('data-y');
 
-			var DEV__stickFeatureEnabled = true;	//!\ DEV Set this as user parameter
-			var stuckDist = 100;					//!\ DEV Set this as user parameter
+			var unstickDist = Sketcher.settings.unstickDistance;
+			var stickDist = Sketcher.settings.stickDistance;
 			var maxX = Sketcher.node.offsetWidth - this.node.offsetWidth;
 			var maxY = Sketcher.node.offsetHeight - this.node.offsetHeight;
 
-			if(!this.stuck.x)
+			if(!this.stuck.x) {
 				this.node.style.left = x + 'px';
-			if(!this.stuck.y)
+			}
+			if(!this.stuck.y) {
 				this.node.style.top = y + 'px';
+			}
 
-			if((x < 0 || x > maxX) ||	this.stuck.x && (x < stuckDist ||	x > maxY - stuckDist)) {
-				if(DEV__stickFeatureEnabled)
-				this.stuck.x = true;
+			if(
+					(x < 0 || x > maxX)											// Limit to workspace boundaries
+				||	!this.stuck.x && (x < stickDist ||	x > maxY - stickDist)	// Stick it if it's close
+				||	this.stuck.x && (x < unstickDist ||	x > maxY - unstickDist)	// Keep it stuck if still close
+			) {
+				if(Sketcher.settings.stickingWindows) {
+					this.stuck.x = true;
+				}
 				this.node.style.left = (x < maxX / 2 ? 0 : maxX)+'px';
 			} else {
 				this.stuck.x = false;
 			}
 
-			if((y < 0 || y > maxY) || this.stuck.y && (y < stuckDist || y > maxY - stuckDist)) {
-				if(DEV__stickFeatureEnabled)
-				this.stuck.y = true;
+			if(																	// Same as above for y coordinate
+					(y < 0 || y > maxY)
+				||	!this.stuck.y && (y < stickDist || y > maxY - stickDist)
+				||	this.stuck.y && (y < unstickDist || y > maxY - unstickDist)
+			) {
+				if(Sketcher.settings.stickingWindows) {
+					this.stuck.y = true;
+				}
 				this.node.style.top = (y < maxY / 2 ? 0 : maxY)+'px';
-			} else if(DEV__stickFeatureEnabled) {
+			} else if(Sketcher.settings.stickingWindows) {
 				this.stuck.y = false;
 			}
 		}
@@ -166,6 +179,27 @@ Sketcher.LayerList = function(parent) {
 	this.node = document.createElement('ul');
 	this.node.setAttribute('id', 'sk_layers_list');
 	this.parent.appendChild(this.node);
+
+	this._update = function(force = false) {
+		if(force || this.children.length != Sketcher.Core.getLayers().length) {
+			console.log(this);
+			this.empty();
+
+			Sketcher.Core.getLayers().forEach((function(layer) {
+				layer.createMenuItem(this);
+			}).bind(this));
+		} else {
+			Array.prototype.forEach.call(
+				this.children,
+				function(item) {
+					console.log('update each', item);
+					item.update();
+				}
+			);
+		}
+	}
+
+	this.update = this._update.bind(this);
 }
 
 /*
@@ -182,9 +216,6 @@ Sketcher.LayerItem = function(layer, parent) {
 	this.node.setAttribute('data-id', this.layer.id);
 	this.node.setAttribute('data-name', this.layer.name);
 
-	if(this.layer.focus)
-		this.node.setAttribute('class', 'active');
-
 	// Create a container for layer commands
 	this.commands = document.createElement('div');
 	this.commands.setAttribute('class', 'sk_layer_commands');
@@ -200,14 +231,13 @@ Sketcher.LayerItem = function(layer, parent) {
 	this.thumbnail.setAttribute('data-id', this.id);
 	this.thumbnail.setAttribute('class', 'sk_layer_thumbnail');
 	this.thumbnailImg = document.createElement('img');
-	this.thumbnailImg.src = this.thumbnailData == undefined ? '' : this.thumbnailData;
+	this.thumbnailImg.src = (this.thumbnailData == undefined ? '' : this.thumbnailData);
 	this.thumbnail.appendChild(this.thumbnailImg);
 	this.btnSelect.appendChild(this.thumbnail);
 
 	this.btnVisibility = document.createElement('a');
 	this.btnVisibility.setAttribute('data-action', 'toggleLayerVisibility');
 	this.btnVisibility.setAttribute('class', 'sk_check');
-	this.btnVisibility.innerHTML = '<i class="fa fa-eye' + (this.layer.isVisible() ? '' : '-slash') + '"></i>';
 	this.commands.appendChild(this.btnVisibility);
 
 	this.btnRaise = document.createElement('a');
@@ -232,21 +262,21 @@ Sketcher.LayerItem = function(layer, parent) {
 
 	Array.prototype.forEach.call(
 		this.node.querySelectorAll('a[data-action="selectLayer"], a[data-action="toggleLayerVisibility"], a[data-action="deleteLayer"], a[data-action="raiseLayer"], a[data-action="dropLayer"]'),
-		function(btn){
+		(function(btn){
 			if(btn.parentNode.tagName == "LI") {
 				var id = btn.parentNode.getAttribute("data-id");
 			} else {
 				var id = btn.parentNode.parentNode.getAttribute("data-id");
 			}
 			var action = btn.getAttribute("data-action");
-			btn.addEventListener('click', function(e) {
+			btn.addEventListener('click', (function(e) {
 				Sketcher.Core[action](id);
-				Sketcher.UI.updateLayers();
-			});
-		}
+				this.update();
+			}).bind(this));
+		}).bind(this)
 	);
 
-	this.updateThumbnail = function() {
+	this._updateThumbnail = function() {
 		var ctx = this.layer.getContext();
 		var before = new Image();
 		var scale = 200/this.width;
@@ -266,6 +296,18 @@ Sketcher.LayerItem = function(layer, parent) {
 			this.thumbnailImg.src = this.thumbnailData;
 		}).bind(this);
 	}
+
+	this._update = function() {
+		this.node.setAttribute('class', (this.layer.focus ? 'active' : '' ));
+		this.btnVisibility.innerHTML = '<i class="fa fa-eye' + (this.layer.isVisible() ? '' : '-slash') + '"></i>';
+		this._updateThumbnail();
+	}
+
+	this._update();
+
+	this.update = this._update.bind(this);
+	this.updateThumbnail = this._updateThumbnail.bind(this);
+
 }
 
 /*

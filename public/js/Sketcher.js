@@ -4,7 +4,12 @@
 /	 This is the only script to be included in the HTML document
 /	 you want Sketcher to spawn in.
 */
-var Sketcher = Sketcher || (function(document, window) {
+var Sketcher = Sketcher || (function(document, window, settings = {}) {
+	this.settings = {
+		stickingWindows: settings.stickingWindows || true,
+		stickDistance: settings.stickDistance || 10,
+		unstickDistance: settings.unstickDistance || 100
+	};
 	this.basedir = 'js/Sketcher/';
 	this.libs = {
 		'Color': {filename: 'Color.js'},
@@ -57,6 +62,7 @@ var Sketcher = Sketcher || (function(document, window) {
 
 	return {
 		node: this.node,
-		createElement: this.createElement
+		createElement: this.createElement,
+		settings: this.settings
 	};
 })(document, window);

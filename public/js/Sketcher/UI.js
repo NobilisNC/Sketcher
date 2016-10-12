@@ -33,10 +33,10 @@ Sketcher.UI = (function(document, window){
 	this.layerButtons.appendChild(
 		new Sketcher.Button(
 			'addLayer',
-			function(e) {
+			(function(e) {
 				Sketcher.Core.addLayer();
-				updateLayers();
-			},
+				this.layerList.update();
+			}).bind(this),
 			null,
 			'plus'
 		).node
@@ -49,26 +49,14 @@ Sketcher.UI = (function(document, window){
 		Sketcher.node.style.height = window.innerHeight+'px';
 	}
 
-	function _updateLayers() {
-		this.layerList.empty();
-
-
-		Sketcher.Core.getLayers().forEach(function(layer) {
-			layer.createMenuItem(this.layerList);
-		});
-
-	}
-
-	this.updateLayers = _updateLayers.bind(this);
-
 	updateFrame();
 	this.palette.update();
-	updateLayers();
+	this.layerList.update();
 
 	window.addEventListener('resize', function(e) { updateFrame(); });
 
 	return {
 		updatePalette: this.palette.update,
-		updateLayers: updateLayers
+		updateLayers: this.layerList.update
 	};
 })(document, window);

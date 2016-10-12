@@ -19,17 +19,15 @@ var Layer = function(name, zIndex, width, height, frame) {
 
 	this.createMenuItem = function(container) {
 		this.menuItem = new Sketcher.LayerItem(this, container);
-		container.appendChild(this.menuItem.node);
-
-		this.menuItem.updateThumbnail();
+		container.appendChild(this.menuItem);
 	}
 
-	this.update = function(updateThumb = false) {
+	this.update = function() {
 		this.node.style.display = this.visible ? 'block' : 'none';
 		this.node.style.zIndex = this.zIndex;
 
-		if(this.menuItem != undefined && updateThumb) {
-			this.menuItem.updateThumbnail();
+		if(this.menuItem != undefined) {
+			this.menuItem.update();
 		}
 	}
 

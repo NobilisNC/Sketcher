@@ -168,7 +168,8 @@ body {
 
 		a.sk_button:active, a.sk_button.active {
 			background: #ccc;
-			padding: 5px 0px 0px 5px;
+			padding: 3px 0px 0px 3px;
+			margin: 0 0 0 2px;
 			box-shadow: inset 2px 2px 4px #aaa, inset -2px -2px 4px #fff;
 		}
 
