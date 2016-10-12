@@ -427,7 +427,7 @@ Sketcher.Tools = (function() {
 					 'paint_bucket' : new Sketcher.ToolsAbstract.paint_bucket(default_color, default_line_width, default_width, default_height)
 		}
 
-		current = 'line';
+		current = 'pencil';
 
 	}
 

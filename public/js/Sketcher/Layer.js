@@ -3,7 +3,7 @@
 /	 Basically a <canvas> handle
 /	 Also manages its own item in the layers list
 */
-var Layer = function(name, zIndex, width, height, frame) {
+Sketcher.Layer = function(name, zIndex, width, height, frame) {
 	this.id = Math.round(Math.random()*1000000)%1000000;
 	this.name = name;
 	this.zIndex = zIndex;
@@ -25,6 +25,7 @@ var Layer = function(name, zIndex, width, height, frame) {
 	this.update = function() {
 		this.node.style.display = this.visible ? 'block' : 'none';
 		this.node.style.zIndex = this.zIndex;
+		this.node.style.opacity = this.opacity;
 
 		if(this.menuItem != undefined) {
 			this.menuItem.update();
@@ -33,6 +34,15 @@ var Layer = function(name, zIndex, width, height, frame) {
 
 	this.toggleVisibility = function() {
 		this.visible = this.visible ? false : true;
+		this.update();
+	}
+
+	this.setOpacity = function(opacity) {
+		if(opacity > 100 || opacity < 0) {
+			return false;
+		}
+
+		this.opacity = opacity/100;
 		this.update();
 	}
 

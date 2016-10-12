@@ -80,7 +80,7 @@ Sketcher.Core = (function(document, window) {
 
 		this.addLayer = function(name, zIndex = 0) {
 			var i = this.layers.push(
-				new Layer(
+				new Sketcher.Layer(
 					name,
 					zIndex == 0 ? this.countLayers() : zIndex,
 					this.width,
@@ -158,6 +158,9 @@ Sketcher.Core = (function(document, window) {
 				// Select the new one
 				this.selectedLayer = layer;
 				layer.select();
+				if(Sketcher.UI) {
+					Sketcher.UI.updateOpacitySlider();
+				}
 				return true;
 			} else {
 				console.error('No layer with id "'+id+'".');
@@ -186,6 +189,7 @@ Sketcher.Core = (function(document, window) {
 
 				// Forget the removed layer
 				delete this.layers[index];
+				Sketcher.UI.updateLayers(true);
 
 				return true;
 			} else {
@@ -193,6 +197,10 @@ Sketcher.Core = (function(document, window) {
 
 				return false;
 			}
+		}
+
+		this.setLayerOpacity = function(opacity) {
+			Sketcher.Core.getSelectedLayer().setOpacity(opacity);
 		}
 
 		this.setLayerVisibility = function(id, visibility) {
@@ -274,13 +282,14 @@ Sketcher.Core = (function(document, window) {
 			deleteLayer: this.deleteLayer.bind(this),
 			raiseLayer: this.raiseLayer.bind(this),
 			dropLayer: this.dropLayer.bind(this),
+			setLayerOpacity: this.setLayerOpacity.bind(this),
 			setLayerVisibility: this.setLayerVisibility.bind(this),
 			toggleLayerVisibility: this.toggleLayerVisibility.bind(this),
 			selectColor: this.selectColor.bind(this),
 			getSelectedColor: (function() { return this.color; }).bind(this),
 			getWidth: (function() { return this.width; }).bind(this),
 			getHeight: (function() { return this.height; }).bind(this),
-			setTool: (function(tool) { Sketcher.Tools.setTool(tool); this.tool = Sketcher.Tools.getTool(); this.tool.setColor(this.color.getHex()); console.log(this.tool); }).bind(this)
+			setTool: (function(tool) { Sketcher.Tools.setTool(tool); this.tool = Sketcher.Tools.getTool(); this.tool.setColor(this.color.getHex()); }).bind(this)
 		};
 	}
 

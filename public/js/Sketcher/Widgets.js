@@ -21,6 +21,8 @@ Sketcher.AbstractWidget = function Widget(parent) {
 			child.setParent(this);
 		}
 		this.children.push(child);
+
+		return child;
 	}
 
 	this.empty = function() {
@@ -31,6 +33,7 @@ Sketcher.AbstractWidget = function Widget(parent) {
 	}
 };
 
+/***** Primitive widgets *****/
 /*
 /	Window widget
 /	 A draggable window that contains other Widgets
@@ -151,8 +154,8 @@ Sketcher.Window = function Window(title, parent, x = 0, y = 0) {
 
 	this.addFoldButton();
 
-	this.appendChild(this.title);
-	this.parent.appendChild(this.node);
+	this.node.appendChild(this.title);
+	this.parent.appendChild(this);
 }
 
 /*
@@ -166,11 +169,83 @@ Sketcher.Toolbox = function Toolbox(parent) {
 	this.node.setAttribute('class', 'sk_toolbox');
 
 	this.parent = parent;
-	this.parent.appendChild(this.node);
+	this.parent.appendChild(this);
 }
 
 /*
-/	Layer list window
+/	Button widget
+/	 A button that triggers an action.
+/	Can be filled with an icon or a text (if no icon is specified).
+*/
+Sketcher.Button = function Button(title, action, parent, icon, bgColor, focus) {
+	Sketcher.AbstractWidget.call(this, parent);
+	this.title = title;
+	this.action = action;
+	this.icon = icon || '';
+	this.bgColor = bgColor || '';
+	this.focus = focus || false;
+	this.node = document.createElement('a');
+	this.node.setAttribute('class', 'sk_button');
+	this.node.setAttribute('title', title);
+
+	this.update = function() {
+		this.node.className += (this.focus ? ' active' : '');
+	}
+
+	if(this.bgColor != '') {
+		this.node.style.backgroundColor = this.bgColor;
+	}
+
+	this.node.innerHTML = (this.icon == '' ? this.title : '<i class="fa fa-'+this.icon+'"></i>');
+	this.node.addEventListener('click', this.action);
+	this.update();
+}
+
+/*
+/
+*/
+Sketcher.ColorButton = function ColorButton(name, color, parent) {
+	Sketcher.Button.call(this, ' ', (function(e) {
+		Sketcher.Core.selectColor(this.color);
+		Sketcher.UI.updatePalette();
+	}).bind(this), parent, '', color.getHex());
+	this.color = color;
+	this.node.className += ' sk_colorbutton';
+}
+
+Sketcher.Slider = function Slider(labelText, onInput, parent) {
+	Sketcher.AbstractWidget.call(this, parent);
+	this.labelText = labelText || 'Slider';
+	this.onInput = onInput || null;
+
+	this.node = document.createElement('div');
+	this.node.setAttribute('class', 'sk_slider_container');
+
+	var label = document.createElement('label');
+	label.innerHTML = labelText;
+	label.setAttribute('for', 'sk_slider_'+labelText);
+	this.node.appendChild(label);
+
+	this.slider = document.createElement('input');
+	this.slider.setAttribute('type', 'range');
+	this.slider.setAttribute('class', 'sk_slider');
+	this.slider.setAttribute('id', 'sk_slider_'+labelText);
+	this.slider.setAttribute('min', '0');
+	this.slider.setAttribute('max', '100');
+	this.slider.setAttribute('value', '100');
+	this.slider.addEventListener('input', this.onInput.bind(this));
+	this.node.appendChild(this.slider);
+
+	this.update = function() {
+		this.slider.value = Sketcher.Core.getSelectedLayer().opacity*100;
+	}
+}
+
+
+/***** Complex widgets *****/
+
+/*
+/	Layer list
 /	 A window that permits layers control
 */
 Sketcher.LayerList = function(parent) {
@@ -178,11 +253,10 @@ Sketcher.LayerList = function(parent) {
 
 	this.node = document.createElement('ul');
 	this.node.setAttribute('id', 'sk_layers_list');
-	this.parent.appendChild(this.node);
+	this.parent.appendChild(this);
 
 	this._update = function(force = false) {
 		if(force || this.children.length != Sketcher.Core.getLayers().length) {
-			console.log(this);
 			this.empty();
 
 			Sketcher.Core.getLayers().forEach((function(layer) {
@@ -192,7 +266,6 @@ Sketcher.LayerList = function(parent) {
 			Array.prototype.forEach.call(
 				this.children,
 				function(item) {
-					console.log('update each', item);
 					item.update();
 				}
 			);
@@ -309,53 +382,6 @@ Sketcher.LayerItem = function(layer, parent) {
 	this.updateThumbnail = this._updateThumbnail.bind(this);
 
 }
-
-/*
-/	Button widget
-/	 A button that triggers an action.
-/	Can be filled with an icon or a text (if no icon is specified).
-*/
-Sketcher.Button = function Button(title, action, parent, icon, bgColor, focus) {
-	Sketcher.AbstractWidget.call(this, parent);
-	this.title = title;
-	this.action = action;
-	this.icon = icon || '';
-	this.bgColor = bgColor || '';
-	this.focus = focus || false;
-	this.node = document.createElement('a');
-	this.node.setAttribute('class', 'sk_button');
-	this.node.setAttribute('title', title);
-
-	this.update = function() {
-		this.node.className += (this.focus ? ' active' : '');
-	}
-
-	if(this.bgColor != '') {
-		this.node.style.backgroundColor = this.bgColor;
-	}
-
-	this.node.innerHTML = (this.icon == '' ? this.title : '<i class="fa fa-'+this.icon+'"></i>');
-	this.node.addEventListener('click', this.action);
-	this.update();
-
-	if(parent && typeof parent == 'object' && parent.hasOwnProperty('appendChild')) {
-		this.parent = parent;
-		this.parent.appendChild(this.node);
-	}
-}
-
-/*
-/
-*/
-Sketcher.ColorButton = function ColorButton(name, color, parent) {
-	Sketcher.Button.call(this, ' ', (function(e) {
-		Sketcher.Core.selectColor(this.color);
-		Sketcher.UI.updatePalette();
-	}).bind(this), parent, '', color.getHex());
-	this.color = color;
-	this.node.className += ' sk_colorbutton';
-}
-
 Sketcher.Palette = function(parent, x, y) {
 
 	function PaletteSingleton(parent, x, y) {
@@ -381,7 +407,7 @@ Sketcher.Palette = function(parent, x, y) {
 					new Sketcher.ColorButton(
 						colorName,
 						Sketcher.Colors[colorName],
-						null,
+						this.buttons,
 						null,
 						null,
 						(Sketcher.Core.color === Sketcher.Colors[colorName] ? true : false)
