@@ -288,7 +288,7 @@ Sketcher.ToolsAbstract = ( function() {
 
 
 	PaintBucket.prototype.draw = function (ctx) {
-		var img = ctx.getImageData(0,0,this.width, this.height);
+		var img = ctx.getImageData(0, 0, this.width, this.height);
 		var pixel =  this.getPosInData(this.p);
 		var targetColor = {r : img.data[pixel], g : img.data[pixel +1 ], b : img.data[pixel +2],a: img.data[pixel + 3]};
 
@@ -401,13 +401,13 @@ Sketcher.Tools = (function() {
 	var current;
 
 
-	function initialization() {
+	function initialization(width, height) {
 	tools = {
 					 'line' : new Sketcher.ToolsAbstract.line(),
 					 'rectangle' : new Sketcher.ToolsAbstract.rectangle(),
 					 'pencil' : new Sketcher.ToolsAbstract.pencil(),
 					 'circle' : new Sketcher.ToolsAbstract.circle(),
-					 'paint_bucket' : new Sketcher.ToolsAbstract.paint_bucket()
+					 'paint_bucket' : new Sketcher.ToolsAbstract.paint_bucket(width, height)
 		}
 
 		current = 'rectangle';

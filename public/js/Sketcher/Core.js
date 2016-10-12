@@ -12,14 +12,9 @@ Sketcher.Core = (function(document, window) {
 		this.clicked = false;
 		this.width = window.innerWidth;
 		this.height = window.innerHeight;
-		this.strokeWidth = 2;
+		this.strokeWidth = 5;
 		//Tools
-		Sketcher.Tools.init(
-			// this.color.foreground.getHex(),
-			// this.strokeWidth,
-			// this.color.background.getHex(),
-			// this.width, this.height
-		);
+		Sketcher.Tools.init(this.width, this.height);
 		this.tool = Sketcher.Tools.getTool();
 
 		/***** EVENTS *****/
