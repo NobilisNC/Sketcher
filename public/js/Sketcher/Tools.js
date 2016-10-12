@@ -55,10 +55,7 @@ Sketcher.ToolsAbstract = ( function() {
 	}
 
 	Line.prototype.onMouseDown = function (e) {
-
 		this.p1 = {x : e.offsetX, y : e.offsetY };
-
-
 	}
 
 	Line.prototype.onMouseMove = function (e, ctx) {
@@ -108,7 +105,7 @@ Sketcher.ToolsAbstract = ( function() {
 	}
 
 	Rect.prototype.onMouseDown = function (e, ctx) {
-		this.p1 = {x : e.offsetX, y : e.offsetY };
+		this.p1 = this.p2 = {x : e.offsetX, y : e.offsetY };
 	}
 
 	Rect.prototype.onMouseMove = function (e, ctx) {
@@ -122,8 +119,10 @@ Sketcher.ToolsAbstract = ( function() {
 	}
 
 	Rect.prototype.onMouseUp = function (e, ctx) {
-		this.config_context(ctx);
-		this.draw(ctx);
+		if(Math.abs(this.p1.x-this.p2.x) > 0 || Math.abs(this.p1.y-this.p2.y) > 0) {
+			this.config_context(ctx);
+			this.draw(ctx);
+		}
 
 		return '{ "type":"Rect","data":' + JSON.stringify(this) + '}';
 	}
