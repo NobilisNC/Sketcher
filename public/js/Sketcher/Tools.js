@@ -3,18 +3,8 @@ Sketcher.ToolsAbstract = ( function() {
 	/*
 	*	Abstract Tools
 	*/
-	function _Tool( c, lw) {
-		this.color = new Sketcher.ColorFromString(c);
-		this.line_width = lw;
+	function _Tool() {
 		this._stroke = true;
-	}
-
-	_Tool.prototype.setColor = function (c) {
-		this.color = Sketcher.ColorFromString(c);
-	}
-
-	_Tool.prototype.setLineWidth = function (lw) {
-		this.line_width = lw;
 	}
 
 	_Tool.prototype.stroke = function (stroke) {
@@ -32,8 +22,8 @@ Sketcher.ToolsAbstract = ( function() {
 
 
 	_Tool.prototype.config_context = function (ctx) {
-		ctx.strokeStyle = this.color.getHex();
-		ctx.lineWidth = this.line_width;
+		ctx.strokeStyle = Sketcher.color.foreground.getHex();
+		ctx.lineWidth = Sketcher.Core.strokeWidth;
 		ctx.lineCap = 'round';
 		ctx.lineJoin = 'round';
 	};
@@ -44,8 +34,8 @@ Sketcher.ToolsAbstract = ( function() {
 	*
 	*
 	*/
-	function Line(c, lw) {
-		_Tool.call(this, c, lw)
+	function Line() {
+		_Tool.call(this)
 		this.p1;
 		this.p2;
 	}
@@ -92,18 +82,13 @@ Sketcher.ToolsAbstract = ( function() {
 		*
 		*
 		*/
-	function Rect( c, lw, cf ) {
-		_Tool.call(this, c, lw);
-		this._fill_color =  cf;
+	function Rect() {
+		_Tool.call(this);
 		this._fill = false;
 	}
 
 	Rect.prototype = Object.create(_Tool.prototype);
 	Rect.prototype.constructor = Rect;
-
-	Rect.prototype.setFillColor = function(cf) {
-		this._fill_color = cf;
-	}
 
 	Rect.prototype.fill = function (fill) {
 		if (typeof fill === 'boolean')
@@ -114,7 +99,7 @@ Sketcher.ToolsAbstract = ( function() {
 
 	Rect.prototype.draw = function (ctx) {
 
-		ctx.fillStyle = this.cf;
+		ctx.fillStyle = Sketcher.color.background.getRGBA();
 		if(this._fill)
 			ctx.fillRect(this.p1.x, this.p1.y, this.p2.x - this.p1.x, this.p2.y - this.p1.y);
 		if (this._stroke)
@@ -128,12 +113,15 @@ Sketcher.ToolsAbstract = ( function() {
 
 	Rect.prototype.onMouseMove = function (e, ctx) {
 		this.p2 =  {x : e.offsetX, y : e.offsetY};
+		if(e.ctrlKey) {
+			var dist = Math.min(this.p2.x-this.p1.x, this.p2.y-this.p1.y);
+			this.p2 = {x:this.p1.x+dist, y:this.p1.y+dist};
+		}
 		this.config_context(ctx);
 		this.draw(ctx);
 	}
 
 	Rect.prototype.onMouseUp = function (e, ctx) {
-		this.p2 = { x :e.offsetX, y : e.offsetY};
 		this.config_context(ctx);
 		this.draw(ctx);
 
@@ -145,8 +133,8 @@ Sketcher.ToolsAbstract = ( function() {
 	*
 	*
 	*/
-	function Pencil( c, lw, cf ) {
-		_Tool.call(this, c, lw);
+	function Pencil() {
+		_Tool.call(this);
 		this.p0;
 		this.points = [];
 		}
@@ -189,18 +177,13 @@ Sketcher.ToolsAbstract = ( function() {
 	*
 	*
 	*/
-	function Circle( c, lw, cf ) {
-		_Tool.call(this, c, lw);
-		this._fill_color =  cf;
+	function Circle() {
+		_Tool.call(this);
 		this._fill = false;
 	}
 
 	Circle.prototype = Object.create(_Tool.prototype);
 	Circle.prototype.constructor = Circle;
-
-	Circle.prototype.setFillColor = function(cf) {
-		this._fill_color = cf;
-	}
 
 	Circle.prototype.fill = function (fill) {
 
@@ -212,7 +195,7 @@ Sketcher.ToolsAbstract = ( function() {
 
 	Circle.prototype.draw = function (ctx) {
 
-		ctx.fillStyle = this.cf;
+		ctx.fillStyle = Sketcher.color.background.getRGBA();
 		ctx.beginPath();
 		ctx.arc(this.p1.x,this.p1.y,Math.sqrt( Math.pow(this.p2.x-this.p1.x, 2) + Math.pow(this.p2.y-this.p1.y,2) ),0, 2*Math.PI);
 		if (this._fill)
@@ -248,8 +231,8 @@ Sketcher.ToolsAbstract = ( function() {
 	*
 	*
 	*/
-	function PaintBucket( c, lw, width, height) {
-		_Tool.call(this, c, lw);
+	function PaintBucket( width, height) {
+		_Tool.call(this);
 		this.width = width;
 		this.height = height;
 		this.precision = 2550 * 0.2;
@@ -288,19 +271,19 @@ Sketcher.ToolsAbstract = ( function() {
 
 		var diff = 3 * Math.abs(img.data[pos_data] - targetColor.r) + 4 * Math.abs(img.data[pos_data+1] - targetColor.g) + 3 * Math.abs(img.data[pos_data+2] - targetColor.b);
 
-		var already_colored = img.data[pos_data] -  this.color.r + img.data[pos_data+1] - this.color.g + img.data[pos_data+2] - this.color.b ;
+		var already_colored = img.data[pos_data] -  Sketcher.color.foreground.r + img.data[pos_data+1] - Sketcher.color.foreground.g + img.data[pos_data+2] - Sketcher.color.foreground.b ;
 
 		if (already_colored == 0) {
 			return false;
 		}else if(diff < this.precision) {
 			//alert('ok')
 			return true;
-		
+
 		}else {
 			//alert('nope')
 			return false;
 		}
-		
+
 	}
 
 
@@ -319,22 +302,22 @@ Sketcher.ToolsAbstract = ( function() {
 
 				//On check ouest
 				var w = {'x' : n.x-1, 'y':n.y};
-				while(this.isTargetColor(w,img,targetColor)) 
+				while(this.isTargetColor(w,img,targetColor))
 					w.x--;
-				
+
 				//On check est
 				var e = {'x' : n.x+1, 'y':n.y};
-				while(this.isTargetColor(e,img,targetColor) ) 
+				while(this.isTargetColor(e,img,targetColor) )
 					e.x++;
 
 
 				for (let pix = w; pix.x < e.x; pix.x++){
 					let pos_data = this.getPosInData(pix);
-					img.data[pos_data] = this.color.r;
-					img.data[pos_data +1] = this.color.g;
-					img.data[pos_data +2] = this.color.b;
-					img.data[pos_data +3] = this.color.a;
-					
+					img.data[pos_data] = Sketcher.color.foreground.r;
+					img.data[pos_data +1] = Sketcher.color.foreground.g;
+					img.data[pos_data +2] = Sketcher.color.foreground.b;
+					img.data[pos_data +3] = Sketcher.color.foreground.a;
+
 					var south = {x : pix.x , y : pix.y - 1};
 					if (this.isTargetColor(south, img, targetColor))
 						P.push(south);
@@ -342,7 +325,7 @@ Sketcher.ToolsAbstract = ( function() {
 					if (this.isTargetColor(north, img, targetColor))
 						P.push(north);
 
-				}				
+				}
 			}
 		}
 		ctx.putImageData(img, 0,0);
@@ -418,16 +401,16 @@ Sketcher.Tools = (function() {
 	var current;
 
 
-	function initialization(default_color, default_line_width, default_fill_color, default_width, default_height) {
+	function initialization() {
 	tools = {
-					 'line' : new Sketcher.ToolsAbstract.line(default_color, default_line_width),
-					 'rectangle' : new Sketcher.ToolsAbstract.rectangle(default_color, default_line_width, default_fill_color),
-					 'pencil' : new Sketcher.ToolsAbstract.pencil(default_color, default_line_width),
-					 'circle' : new Sketcher.ToolsAbstract.circle(default_color, default_line_width, default_fill_color),
-					 'paint_bucket' : new Sketcher.ToolsAbstract.paint_bucket(default_color, default_line_width, default_width, default_height)
+					 'line' : new Sketcher.ToolsAbstract.line(),
+					 'rectangle' : new Sketcher.ToolsAbstract.rectangle(),
+					 'pencil' : new Sketcher.ToolsAbstract.pencil(),
+					 'circle' : new Sketcher.ToolsAbstract.circle(),
+					 'paint_bucket' : new Sketcher.ToolsAbstract.paint_bucket()
 		}
 
-		current = 'pencil';
+		current = 'rectangle';
 
 	}
 

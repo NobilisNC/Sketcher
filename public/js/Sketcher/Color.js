@@ -69,5 +69,10 @@ Sketcher.Colors = {
 	lightblue: new Sketcher.ColorFromString('#a6f7ff'),
 	lightgreen: new Sketcher.ColorFromString('#7abf30'),
 	pink: new Sketcher.ColorFromString('#f70e93'),
-	// purple: Sketcher.ColorFromString('#ae22f6')
+	purple: new Sketcher.ColorFromString('#ae22f6')
+};
+
+Sketcher.color = {
+	foreground: Sketcher.Colors.black,
+	background: Sketcher.Colors.white
 };

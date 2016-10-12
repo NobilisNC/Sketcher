@@ -12,9 +12,14 @@ Sketcher.Core = (function(document, window) {
 		this.clicked = false;
 		this.width = window.innerWidth;
 		this.height = window.innerHeight;
-		this.color = Sketcher.Colors.red;
+		this.strokeWidth = 2;
 		//Tools
-		Sketcher.Tools.init(this.color.getHex(), 5, Sketcher.Colors.black.getHex(), this.width, this.height);
+		Sketcher.Tools.init(
+			// this.color.foreground.getHex(),
+			// this.strokeWidth,
+			// this.color.background.getHex(),
+			// this.width, this.height
+		);
 		this.tool = Sketcher.Tools.getTool();
 
 		/***** EVENTS *****/
@@ -80,7 +85,7 @@ Sketcher.Core = (function(document, window) {
 
 		this.addLayer = function(name, zIndex = 0) {
 			var i = this.layers.push(
-				new Sketcher.Layer(
+				new Sketcher.widgets.Layer(
 					name,
 					zIndex == 0 ? this.countLayers() : zIndex,
 					this.width,
@@ -244,8 +249,8 @@ Sketcher.Core = (function(document, window) {
 		}
 
 		this.selectColor = function(color) {
-			this.color = color;
-			this.tool.setColor(this.color.getHex());
+			Sketcher.color.foreground = color;
+			// this.tool.setColor(this.color.getHex());
 		}
 
 		this.getSelectedColor = function() {
@@ -289,7 +294,7 @@ Sketcher.Core = (function(document, window) {
 			getSelectedColor: (function() { return this.color; }).bind(this),
 			getWidth: (function() { return this.width; }).bind(this),
 			getHeight: (function() { return this.height; }).bind(this),
-			setTool: (function(tool) { Sketcher.Tools.setTool(tool); this.tool = Sketcher.Tools.getTool(); this.tool.setColor(this.color.getHex()); }).bind(this)
+			setTool: (function(tool) { Sketcher.Tools.setTool(tool); this.tool = Sketcher.Tools.getTool(); }).bind(this)
 		};
 	}
 

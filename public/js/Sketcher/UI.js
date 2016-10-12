@@ -6,12 +6,14 @@ Sketcher.UI = (function(document, window) {
 
 	// Constructor
 	var UISingleton = function(document, window) {
-		Sketcher.AbstractWidget.call(this, Sketcher.Core.frame);
+		Sketcher.widgets.AbstractWidget.call(this, Sketcher.Core.frame);
 		this.node = Sketcher.createElement('sketcher_ui');
 
 		// Create UI components containers
-		this.buttons = new Sketcher.Window('Tools', this, 10, 85);
-		this.toolButtons = new Sketcher.Toolbox(this.buttons);
+		this.layerControl = new Sketcher.widgets.LayerControl(this, Sketcher.Core.getWidth()-261, 10);
+		this.palette = new Sketcher.widgets.Palette(this, 10, 10);
+		this.tools = new Sketcher.widgets.Window('Tools', this, 10, 85);
+		this.toolButtons = new Sketcher.widgets.Toolbox(this.tools);
 		[	//!\ DEV This hardcoded array looks like shit. Let's generalize it.
 			['Rectangle', 'rectangle', 'square'],
 			['Circle', 'circle', 'circle'],
@@ -20,7 +22,7 @@ Sketcher.UI = (function(document, window) {
 			['Bucket', 'paint_bucket', 'adjust'],
 		].forEach((function(tool){
 			this.toolButtons.appendChild(
-				new Sketcher.Button(
+				new Sketcher.widgets.Button(
 					tool[0],
 					function(e) {
 						Sketcher.Core.setTool(tool[1]);
@@ -30,49 +32,25 @@ Sketcher.UI = (function(document, window) {
 				)
 			);
 		}).bind(this));
-		this.palette = new Sketcher.Palette(this, 10, 10);
-		this.layer = new Sketcher.Window('Layers', this, Sketcher.Core.getWidth()-261, 10);
-		this.layerList = new Sketcher.LayerList(this.layer);
-		this.layerButtons = new Sketcher.Toolbox(this.layer);
-		this.layerButtons.appendChild(
-			new Sketcher.Button(
-				'addLayer',
-				(function(e) {
-					Sketcher.Core.addLayer();
-					this.layerList.update();
-				}).bind(this),
-				this,
-				'plus'
-			)
-		);
-		this.opacitySlider = this.layerButtons.appendChild(
-			new Sketcher.Slider(
-				'Opacity',
-				(function(e) {
-					Sketcher.Core.setLayerOpacity(e.target.value);
-				}).bind(this),
-				this,
-				'low-vision'
-			)
-		);
 
-		function updateFrame() {
+		this.update = function() {
 			this.node.width = window.innerWidth;
 			this.node.height = window.innerHeight;
 			Sketcher.node.style.width = window.innerWidth+'px'
 			Sketcher.node.style.height = window.innerHeight+'px';
 		}
 
-		updateFrame();
+		this.update();
 		this.palette.update();
-		this.layerList.update();
+		// this.layerList.update();
+		this.layerControl.update();
 
-		window.addEventListener('resize', function(e) { updateFrame(); });
+		window.addEventListener('resize', (function(e) { this.update(); }).bind(this));
 
 		return {
 			updatePalette: this.palette.update,
-			updateLayers: this.layerList.update,
-			updateOpacitySlider: this.opacitySlider.update.bind(this.opacitySlider)
+			updateLayers: this.layerControl.update,
+			updateOpacitySlider: this.layerControl.opacitySlider.update.bind(this.layerControl.opacitySlider)
 		};
 	}
 

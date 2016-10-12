@@ -2,7 +2,7 @@
 /	Abstract Widget
 /	 Parent class for every widget
 */
-Sketcher.AbstractWidget = function Widget(parent) {
+Sketcher.widgets.AbstractWidget = function Widget(parent) {
 	this.parent = parent || null;
 	this.children = [];
 	this.node = null;
@@ -38,8 +38,8 @@ Sketcher.AbstractWidget = function Widget(parent) {
 /	Window widget
 /	 A draggable window that contains other Widgets
 */
-Sketcher.Window = function Window(title, parent, x = 0, y = 0) {
-	Sketcher.AbstractWidget.call(this, parent);
+Sketcher.widgets.Window = function Window(title, parent, x = 0, y = 0) {
+	Sketcher.widgets.AbstractWidget.call(this, parent);
 
 	this.titleText = title;
 	this.dragged = false;
@@ -162,8 +162,8 @@ Sketcher.Window = function Window(title, parent, x = 0, y = 0) {
 /	Toolbox widget
 /	 An invisible block that contains other widgets
 */
-Sketcher.Toolbox = function Toolbox(parent) {
-	Sketcher.AbstractWidget.call(this, parent);
+Sketcher.widgets.Toolbox = function Toolbox(parent) {
+	Sketcher.widgets.AbstractWidget.call(this, parent);
 
 	this.node = document.createElement('div');
 	this.node.setAttribute('class', 'sk_toolbox');
@@ -177,8 +177,8 @@ Sketcher.Toolbox = function Toolbox(parent) {
 /	 A button that triggers an action.
 /	Can be filled with an icon or a text (if no icon is specified).
 */
-Sketcher.Button = function Button(title, action, parent, icon, bgColor, focus) {
-	Sketcher.AbstractWidget.call(this, parent);
+Sketcher.widgets.Button = function Button(title, action, parent, icon, bgColor, focus) {
+	Sketcher.widgets.AbstractWidget.call(this, parent);
 	this.title = title;
 	this.action = action;
 	this.icon = icon || '';
@@ -204,8 +204,8 @@ Sketcher.Button = function Button(title, action, parent, icon, bgColor, focus) {
 /*
 /
 */
-Sketcher.ColorButton = function ColorButton(name, color, parent) {
-	Sketcher.Button.call(this, ' ', (function(e) {
+Sketcher.widgets.ColorButton = function ColorButton(name, color, parent) {
+	Sketcher.widgets.Button.call(this, ' ', (function(e) {
 		Sketcher.Core.selectColor(this.color);
 		Sketcher.UI.updatePalette();
 	}).bind(this), parent, '', color.getHex());
@@ -213,8 +213,8 @@ Sketcher.ColorButton = function ColorButton(name, color, parent) {
 	this.node.className += ' sk_colorbutton';
 }
 
-Sketcher.Slider = function Slider(labelText, onInput, parent, icon) {
-	Sketcher.AbstractWidget.call(this, parent);
+Sketcher.widgets.Slider = function Slider(labelText, onInput, parent, icon) {
+	Sketcher.widgets.AbstractWidget.call(this, parent);
 	this.labelText = labelText || 'Slider';
 	this.onInput = onInput || null;
 
@@ -248,39 +248,20 @@ Sketcher.Slider = function Slider(labelText, onInput, parent, icon) {
 /	Layer list
 /	 A window that permits layers control
 */
-Sketcher.LayerList = function(parent) {
-	Sketcher.AbstractWidget.call(this, parent);
+Sketcher.widgets.LayerList = function(parent) {
+	Sketcher.widgets.AbstractWidget.call(this, parent);
 
 	this.node = document.createElement('ul');
 	this.node.setAttribute('id', 'sk_layers_list');
 	this.parent.appendChild(this);
-
-	this._update = function(force = false) {
-		if(force || this.children.length != Sketcher.Core.getLayers().length) {
-			this.empty();
-
-			Sketcher.Core.getLayers().forEach((function(layer) {
-				layer.createMenuItem(this);
-			}).bind(this));
-		} else {
-			Array.prototype.forEach.call(
-				this.children,
-				function(item) {
-					item.update();
-				}
-			);
-		}
-	}
-
-	this.update = this._update.bind(this);
 }
 
 /*
 /	Layer list item
 /	 A link to select a layer, make it invisible, delete it, raise it up or drop it down.
 */
-Sketcher.LayerItem = function(layer, parent) {
-	Sketcher.AbstractWidget.call(this, parent);
+Sketcher.widgets.LayerItem = function(layer, parent) {
+	Sketcher.widgets.AbstractWidget.call(this, parent);
 
 	this.layer = layer;
 	this.thumbnailData = '';
@@ -382,12 +363,12 @@ Sketcher.LayerItem = function(layer, parent) {
 	this.updateThumbnail = this._updateThumbnail.bind(this);
 
 }
-Sketcher.Palette = function(parent, x, y) {
+Sketcher.widgets.Palette = function(parent, x, y) {
 
 	function PaletteSingleton(parent, x, y) {
-		Sketcher.Window.call(this, 'Palette', parent, x, y);
+		Sketcher.widgets.Window.call(this, 'Palette', parent, x, y);
 
-		this.buttons = new Sketcher.Toolbox(this);
+		this.buttons = new Sketcher.widgets.Toolbox(this);
 		this.colors = [];
 
 		this._update = function() {
@@ -404,7 +385,7 @@ Sketcher.Palette = function(parent, x, y) {
 		this._addBasicColors = function() {
 			Object.keys(Sketcher.Colors).forEach((function(colorName) {
 				this.buttons.appendChild(
-					new Sketcher.ColorButton(
+					new Sketcher.widgets.ColorButton(
 						colorName,
 						Sketcher.Colors[colorName],
 						this.buttons,

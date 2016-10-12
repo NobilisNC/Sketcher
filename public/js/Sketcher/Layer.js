@@ -3,7 +3,7 @@
 /	 Basically a <canvas> handle
 /	 Also manages its own item in the layers list
 */
-Sketcher.Layer = function(name, zIndex, width, height, frame) {
+Sketcher.widgets.Layer = function(name, zIndex, width, height, frame) {
 	this.id = Math.round(Math.random()*1000000)%1000000;
 	this.name = name;
 	this.zIndex = zIndex;
@@ -18,7 +18,7 @@ Sketcher.Layer = function(name, zIndex, width, height, frame) {
 	this.object = [];
 
 	this.createMenuItem = function(container) {
-		this.menuItem = new Sketcher.LayerItem(this, container);
+		this.menuItem = new Sketcher.widgets.LayerItem(this, container);
 		container.appendChild(this.menuItem);
 	}
 

@@ -17,6 +17,7 @@ var Sketcher = Sketcher || (function(document, window, settings = {}) {
 		'Layer': {filename: 'Layer.js'},
 		'Core': {filename: 'Core.js'},
 		'Widgets': {filename: 'Widgets.js'},
+		'LayerControl': {filename: 'LayerControl.js'},
 		'UI': {filename: 'UI.js'},
 	};
 
@@ -63,6 +64,7 @@ var Sketcher = Sketcher || (function(document, window, settings = {}) {
 	return {
 		node: this.node,
 		createElement: this.createElement,
-		settings: this.settings
+		settings: this.settings,
+		widgets: {}
 	};
 })(document, window);
