@@ -184,8 +184,12 @@ body {
 
 div.sk_slider_container {
 	display: inline-block;
-	height: 27px;
-	margin: 0 5px;
+	height: 29px;
+	margin: 5px 5px;
+	float: right;
+	border: 1px solid #545454;
+	padding: 0 5px;
+	border-radius: 3px;
 }
 
 div.sk_slider_container label {
@@ -206,18 +210,18 @@ input.sk_slider {
 }
 
 	input.sk_slider::-webkit-slider-runnable-track {
-		background: #000;
+		background: #999;
 		height: 5px;
 	}
 
 	input.sk_slider::-webkit-slider-thumb {
 		-webkit-appearance: none;
 		background: #aaa;
-		border: 1px solid #999;
+		border: 1px solid #888;
 		border-radius: 20px;
-		width: 20px;
-		height: 20px;
-		margin-top: -7px;
+		width: 5px;
+		height: 15px;
+		margin-top: -5px;
 	}
 
 div.sk_window {

@@ -10,7 +10,7 @@ Sketcher.UI = (function(document, window) {
 		this.node = Sketcher.createElement('sketcher_ui');
 
 		// Create UI components containers
-		this.buttons = new Sketcher.Window('Tools', this, 10, 10);
+		this.buttons = new Sketcher.Window('Tools', this, 10, 85);
 		this.toolButtons = new Sketcher.Toolbox(this.buttons);
 		[	//!\ DEV This hardcoded array looks like shit. Let's generalize it.
 			['Rectangle', 'rectangle', 'square'],
@@ -30,8 +30,8 @@ Sketcher.UI = (function(document, window) {
 				)
 			);
 		}).bind(this));
-		this.palette = new Sketcher.Palette(this, 10, 85);
-		this.layer = new Sketcher.Window('Layers', this, Sketcher.Core.getWidth()-260, 10);
+		this.palette = new Sketcher.Palette(this, 10, 10);
+		this.layer = new Sketcher.Window('Layers', this, Sketcher.Core.getWidth()-261, 10);
 		this.layerList = new Sketcher.LayerList(this.layer);
 		this.layerButtons = new Sketcher.Toolbox(this.layer);
 		this.layerButtons.appendChild(
@@ -51,7 +51,8 @@ Sketcher.UI = (function(document, window) {
 				(function(e) {
 					Sketcher.Core.setLayerOpacity(e.target.value);
 				}).bind(this),
-				this
+				this,
+				'low-vision'
 			)
 		);
 

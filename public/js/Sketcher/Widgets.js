@@ -99,8 +99,8 @@ Sketcher.Window = function Window(title, parent, x = 0, y = 0) {
 
 			if(
 					(x < 0 || x > maxX)											// Limit to workspace boundaries
-				||	!this.stuck.x && (x < stickDist ||	x > maxY - stickDist)	// Stick it if it's close
-				||	this.stuck.x && (x < unstickDist ||	x > maxY - unstickDist)	// Keep it stuck if still close
+				||	!this.stuck.x && (x < stickDist ||	x > maxX - stickDist)	// Stick it if it's close
+				||	this.stuck.x && (x < unstickDist ||	x > maxX - unstickDist)	// Keep it stuck if still close
 			) {
 				if(Sketcher.settings.stickingWindows) {
 					this.stuck.x = true;
@@ -213,7 +213,7 @@ Sketcher.ColorButton = function ColorButton(name, color, parent) {
 	this.node.className += ' sk_colorbutton';
 }
 
-Sketcher.Slider = function Slider(labelText, onInput, parent) {
+Sketcher.Slider = function Slider(labelText, onInput, parent, icon) {
 	Sketcher.AbstractWidget.call(this, parent);
 	this.labelText = labelText || 'Slider';
 	this.onInput = onInput || null;
@@ -222,7 +222,7 @@ Sketcher.Slider = function Slider(labelText, onInput, parent) {
 	this.node.setAttribute('class', 'sk_slider_container');
 
 	var label = document.createElement('label');
-	label.innerHTML = labelText;
+	label.innerHTML = (icon ? '<i class="fa fa-'+icon+'"></i>' : labelText);
 	label.setAttribute('for', 'sk_slider_'+labelText);
 	this.node.appendChild(label);
 
@@ -233,7 +233,7 @@ Sketcher.Slider = function Slider(labelText, onInput, parent) {
 	this.slider.setAttribute('min', '0');
 	this.slider.setAttribute('max', '100');
 	this.slider.setAttribute('value', '100');
-	this.slider.addEventListener('input', this.onInput.bind(this));
+	this.slider.addEventListener('change', this.onInput.bind(this));
 	this.node.appendChild(this.slider);
 
 	this.update = function() {
