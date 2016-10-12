@@ -278,10 +278,10 @@ Sketcher.ToolsAbstract = ( function() {
 		var img = ctx.getImageData(0,0,this.width, this.height);
 		var pixel =  this.getPosInData(this.p);
 		var targetColor = {r : img.data[pixel], g : img.data[pixel +1 ], b : img.data[pixel +2],a: img.data[pixel +3]};
-	
+
 		var P = [];
 		P.push(this.p);
-		
+
 		while (P.length) {
 			n = P.pop();
 
@@ -292,20 +292,20 @@ Sketcher.ToolsAbstract = ( function() {
 				var w = {'x' : n.x-1, 'y':n.y};
 				//console.log('ouest : ', w);
 				while(this.isTargetColor(w,img,targetColor) && w.x > 0 && w.x < this.width) {
-					w.x--;				
+					w.x--;
 				}
 				//console.log('+ouest : ', w);
-				
-				
+
+
 				//On check est
 				var e = {'x' : n.x+1, 'y':n.y};
-				//console.log('est : ', e);				
-				
+				//console.log('est : ', e);
+
 				while(this.isTargetColor(e,img,targetColor) && e.x > 0 && e.x < this.width) {
 					e.x++;
 				}
 				//console.log('+est : ', e);
-				
+
 
 				for (let pix = w; pix.x < e.x; pix.x++){
 					let pos_data = this.getPosInData(pix);
@@ -318,7 +318,7 @@ Sketcher.ToolsAbstract = ( function() {
 						P.push({x : pix.x , y : pix.y - 1});
 
 					if (this.isTargetColor({x : pix.x , y : pix.y + 1}, img, targetColor))
-						P.push({x : pix.x , y : pix.y + 1});		
+						P.push({x : pix.x , y : pix.y + 1});
 
 				}
 			}
@@ -437,4 +437,3 @@ Sketcher.Tools = (function() {
 	}
 
 }());
-

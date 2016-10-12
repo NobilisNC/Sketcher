@@ -27,6 +27,7 @@ Sketcher.AbstractWidget = function Widget(parent) {
 		while (this.node.firstChild) {
 			this.node.removeChild(this.node.firstChild);
 		}
+		this.children = [];
 	}
 };
 
@@ -39,6 +40,7 @@ Sketcher.Window = function Window(title, parent, x = 0, y = 0) {
 
 	this.titleText = title;
 	this.dragged = false;
+	this.stuck = {x:false, y:false};
 
 	this.node = document.createElement('div');
 	this.node.setAttribute('class', 'sk_window');
@@ -80,24 +82,42 @@ Sketcher.Window = function Window(title, parent, x = 0, y = 0) {
 			var x = e.clientX - this.node.getAttribute('data-x');
 			var y = e.clientY - this.node.getAttribute('data-y');
 
-			if(x >= 0 && x + this.node.offsetWidth <= Sketcher.node.offsetWidth) {
+			var unstickDist = Sketcher.settings.unstickDistance;
+			var stickDist = Sketcher.settings.stickDistance;
+			var maxX = Sketcher.node.offsetWidth - this.node.offsetWidth;
+			var maxY = Sketcher.node.offsetHeight - this.node.offsetHeight;
+
+			if(!this.stuck.x) {
 				this.node.style.left = x + 'px';
-			} else {
-				if(x < 0) {
-					this.node.style.left = '0px';
-				} else {
-					this.node.style.left = (Sketcher.node.offsetWidth - this.node.offsetWidth) + 'px';
-				}
+			}
+			if(!this.stuck.y) {
+				this.node.style.top = y + 'px';
 			}
 
-			if(y >= 0 && y + this.node.offsetHeight <= Sketcher.node.offsetHeight) {
-				this.node.style.top = y + 'px';
-			} else {
-				if(y < 0) {
-					this.node.style.top = '0px';
-				} else {
-					this.node.style.top = (Sketcher.node.offsetHeight - this.node.offsetHeight) + 'px';
+			if(
+					(x < 0 || x > maxX)											// Limit to workspace boundaries
+				||	!this.stuck.x && (x < stickDist ||	x > maxY - stickDist)	// Stick it if it's close
+				||	this.stuck.x && (x < unstickDist ||	x > maxY - unstickDist)	// Keep it stuck if still close
+			) {
+				if(Sketcher.settings.stickingWindows) {
+					this.stuck.x = true;
 				}
+				this.node.style.left = (x < maxX / 2 ? 0 : maxX)+'px';
+			} else {
+				this.stuck.x = false;
+			}
+
+			if(																	// Same as above for y coordinate
+					(y < 0 || y > maxY)
+				||	!this.stuck.y && (y < stickDist || y > maxY - stickDist)
+				||	this.stuck.y && (y < unstickDist || y > maxY - unstickDist)
+			) {
+				if(Sketcher.settings.stickingWindows) {
+					this.stuck.y = true;
+				}
+				this.node.style.top = (y < maxY / 2 ? 0 : maxY)+'px';
+			} else if(Sketcher.settings.stickingWindows) {
+				this.stuck.y = false;
 			}
 		}
 	}
@@ -135,6 +155,10 @@ Sketcher.Window = function Window(title, parent, x = 0, y = 0) {
 	this.parent.appendChild(this.node);
 }
 
+/*
+/	Toolbox widget
+/	 An invisible block that contains other widgets
+*/
 Sketcher.Toolbox = function Toolbox(parent) {
 	Sketcher.AbstractWidget.call(this, parent);
 
@@ -145,6 +169,43 @@ Sketcher.Toolbox = function Toolbox(parent) {
 	this.parent.appendChild(this.node);
 }
 
+/*
+/	Layer list window
+/	 A window that permits layers control
+*/
+Sketcher.LayerList = function(parent) {
+	Sketcher.AbstractWidget.call(this, parent);
+
+	this.node = document.createElement('ul');
+	this.node.setAttribute('id', 'sk_layers_list');
+	this.parent.appendChild(this.node);
+
+	this._update = function(force = false) {
+		if(force || this.children.length != Sketcher.Core.getLayers().length) {
+			console.log(this);
+			this.empty();
+
+			Sketcher.Core.getLayers().forEach((function(layer) {
+				layer.createMenuItem(this);
+			}).bind(this));
+		} else {
+			Array.prototype.forEach.call(
+				this.children,
+				function(item) {
+					console.log('update each', item);
+					item.update();
+				}
+			);
+		}
+	}
+
+	this.update = this._update.bind(this);
+}
+
+/*
+/	Layer list item
+/	 A link to select a layer, make it invisible, delete it, raise it up or drop it down.
+*/
 Sketcher.LayerItem = function(layer, parent) {
 	Sketcher.AbstractWidget.call(this, parent);
 
@@ -154,9 +215,6 @@ Sketcher.LayerItem = function(layer, parent) {
 	this.node = document.createElement('li');
 	this.node.setAttribute('data-id', this.layer.id);
 	this.node.setAttribute('data-name', this.layer.name);
-
-	if(this.layer.focus)
-		this.node.setAttribute('class', 'active');
 
 	// Create a container for layer commands
 	this.commands = document.createElement('div');
@@ -173,14 +231,13 @@ Sketcher.LayerItem = function(layer, parent) {
 	this.thumbnail.setAttribute('data-id', this.id);
 	this.thumbnail.setAttribute('class', 'sk_layer_thumbnail');
 	this.thumbnailImg = document.createElement('img');
-	this.thumbnailImg.src = this.thumbnailData == undefined ? '' : this.thumbnailData;
+	this.thumbnailImg.src = (this.thumbnailData == undefined ? '' : this.thumbnailData);
 	this.thumbnail.appendChild(this.thumbnailImg);
 	this.btnSelect.appendChild(this.thumbnail);
 
 	this.btnVisibility = document.createElement('a');
 	this.btnVisibility.setAttribute('data-action', 'toggleLayerVisibility');
 	this.btnVisibility.setAttribute('class', 'sk_check');
-	this.btnVisibility.innerHTML = '<i class="fa fa-eye' + (this.layer.isVisible() ? '' : '-slash') + '"></i>';
 	this.commands.appendChild(this.btnVisibility);
 
 	this.btnRaise = document.createElement('a');
@@ -195,31 +252,31 @@ Sketcher.LayerItem = function(layer, parent) {
 	this.btnDelete.innerHTML = '<i class="fa fa-trash"></i>';
 	this.commands.appendChild(this.btnDelete);
 
-	this.btnDemote = document.createElement('a');
-	this.btnDemote.setAttribute('data-action', 'demoteLayer');
-	this.btnDemote.setAttribute('class', 'sk_check');
-	this.btnDemote.innerHTML = '<i class="fa fa-arrow-down"></i>';
-	this.commands.appendChild(this.btnDemote);
+	this.btnDrop = document.createElement('a');
+	this.btnDrop.setAttribute('data-action', 'dropLayer');
+	this.btnDrop.setAttribute('class', 'sk_check');
+	this.btnDrop.innerHTML = '<i class="fa fa-arrow-down"></i>';
+	this.commands.appendChild(this.btnDrop);
 
 	this.node.appendChild(this.commands);
 
 	Array.prototype.forEach.call(
-		this.node.querySelectorAll('a[data-action="selectLayer"], a[data-action="toggleLayerVisibility"], a[data-action="deleteLayer"], a[data-action="raiseLayer"], a[data-action="demoteLayer"]'),
-		function(btn){
+		this.node.querySelectorAll('a[data-action="selectLayer"], a[data-action="toggleLayerVisibility"], a[data-action="deleteLayer"], a[data-action="raiseLayer"], a[data-action="dropLayer"]'),
+		(function(btn){
 			if(btn.parentNode.tagName == "LI") {
 				var id = btn.parentNode.getAttribute("data-id");
 			} else {
 				var id = btn.parentNode.parentNode.getAttribute("data-id");
 			}
 			var action = btn.getAttribute("data-action");
-			btn.addEventListener('click', function(e) {
+			btn.addEventListener('click', (function(e) {
 				Sketcher.Core[action](id);
-				Sketcher.UI.updateLayers();
-			});
-		}
+				this.update();
+			}).bind(this));
+		}).bind(this)
 	);
 
-	this.updateThumbnail = function() {
+	this._updateThumbnail = function() {
 		var ctx = this.layer.getContext();
 		var before = new Image();
 		var scale = 200/this.width;
@@ -239,14 +296,18 @@ Sketcher.LayerItem = function(layer, parent) {
 			this.thumbnailImg.src = this.thumbnailData;
 		}).bind(this);
 	}
-}
 
-Sketcher.LayerList = function(parent) {
-	Sketcher.AbstractWidget.call(this, parent);
+	this._update = function() {
+		this.node.setAttribute('class', (this.layer.focus ? 'active' : '' ));
+		this.btnVisibility.innerHTML = '<i class="fa fa-eye' + (this.layer.isVisible() ? '' : '-slash') + '"></i>';
+		this._updateThumbnail();
+	}
 
-	this.node = document.createElement('ul');
-	this.node.setAttribute('id', 'sk_layers_list');
-	this.parent.appendChild(this.node);
+	this._update();
+
+	this.update = this._update.bind(this);
+	this.updateThumbnail = this._updateThumbnail.bind(this);
+
 }
 
 /*
@@ -266,7 +327,7 @@ Sketcher.Button = function Button(title, action, parent, icon, bgColor, focus) {
 	this.node.setAttribute('title', title);
 
 	this.update = function() {
-		this.node.style.opacity = (this.focus ? .5 : 1);
+		this.node.className += (this.focus ? ' active' : '');
 	}
 
 	if(this.bgColor != '') {
@@ -283,18 +344,22 @@ Sketcher.Button = function Button(title, action, parent, icon, bgColor, focus) {
 	}
 }
 
+/*
+/
+*/
 Sketcher.ColorButton = function ColorButton(name, color, parent) {
-	this.color = color;
-	return Sketcher.Button.call(this, ' ', (function(e) {
+	Sketcher.Button.call(this, ' ', (function(e) {
 		Sketcher.Core.selectColor(this.color);
 		Sketcher.UI.updatePalette();
-	}).bind(this), parent, '', this.color.getHex());
+	}).bind(this), parent, '', color.getHex());
+	this.color = color;
+	this.node.className += ' sk_colorbutton';
 }
 
-Sketcher.Palette = function(parent) {
+Sketcher.Palette = function(parent, x, y) {
 
-	function PaletteSingleton(parent) {
-		Sketcher.Window.call(this, 'Palette', parent);
+	function PaletteSingleton(parent, x, y) {
+		Sketcher.Window.call(this, 'Palette', parent, x, y);
 
 		this.buttons = new Sketcher.Toolbox(this);
 		this.colors = [];
@@ -333,7 +398,7 @@ Sketcher.Palette = function(parent) {
 		};
 	}
 
-	var instance = instance || new PaletteSingleton(parent);
+	var instance = instance || new PaletteSingleton(parent, x, y);
 
 	return instance;
 }

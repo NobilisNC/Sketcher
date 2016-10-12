@@ -1,6 +1,6 @@
 /*
 /	Core singleton
-/	Main module that controls the drawing frame and holds user's settings
+/	Main module that controls the drawing frame
 */
 Sketcher.Core = (function(document, window) {
 
@@ -14,7 +14,7 @@ Sketcher.Core = (function(document, window) {
 		this.height = window.innerHeight;
 		this.color = Sketcher.Colors.red;
 		//Tools
-		Sketcher.Tools.init("#FF0000", 5, "#000000", this.width, this.height );
+		Sketcher.Tools.init(this.color.getHex(), 5, Sketcher.Colors.black.getHex(), this.width, this.height);
 		this.tool = Sketcher.Tools.getTool();
 
 		/***** EVENTS *****/
@@ -46,7 +46,13 @@ Sketcher.Core = (function(document, window) {
 		}
 
 		this._onMouseMove = function(e) {
-			if(e.offsetX < 0 || e.offsetY < 0 ||  e.offsetX > this.width || e.offsetY > this.height || !this.clicked) {
+			if(
+					e.offsetX < 0
+				||	e.offsetY < 0
+				||  e.offsetX > this.width
+				||	e.offsetY > this.height
+				||	!this.clicked
+			) {
 				onMouseUp(e);
 			} else {
 				var ctx = this.layers[0].getContext();
@@ -139,12 +145,14 @@ Sketcher.Core = (function(document, window) {
 			return ret.reverse();
 		}
 
+		/***** SLOTS *****/
 		this.selectLayer = function(id) {
 			var layer = this.getLayer(id);
 			if(layer != null) {
 				// Blur each layer
 				this.layers.forEach(function(l) {
 					l.blur();
+					l.update();
 				});
 
 				// Select the new one
@@ -187,7 +195,6 @@ Sketcher.Core = (function(document, window) {
 			}
 		}
 
-		/***** SLOTS *****/
 		this.setLayerVisibility = function(id, visibility) {
 			this.getLayer(id).setVisibility(visibility);
 		}
@@ -208,10 +215,11 @@ Sketcher.Core = (function(document, window) {
 
 				prev.zIndex--;
 				prev.update();
+				Sketcher.UI.updateLayers(true);
 			}
 		}
 
-		this.demoteLayer = function(id) {
+		this.dropLayer = function(id) {
 			var layer = this.getLayer(id);
 			var next = this.getLayerOnLevel(layer.zIndex-1);
 
@@ -223,6 +231,7 @@ Sketcher.Core = (function(document, window) {
 
 				next.zIndex++;
 				next.update();
+				Sketcher.UI.updateLayers(true);
 			}
 		}
 
@@ -264,14 +273,14 @@ Sketcher.Core = (function(document, window) {
 			countLayers: this.countLayers.bind(this),
 			deleteLayer: this.deleteLayer.bind(this),
 			raiseLayer: this.raiseLayer.bind(this),
-			demoteLayer: this.demoteLayer.bind(this),
+			dropLayer: this.dropLayer.bind(this),
 			setLayerVisibility: this.setLayerVisibility.bind(this),
 			toggleLayerVisibility: this.toggleLayerVisibility.bind(this),
 			selectColor: this.selectColor.bind(this),
 			getSelectedColor: (function() { return this.color; }).bind(this),
 			getWidth: (function() { return this.width; }).bind(this),
 			getHeight: (function() { return this.height; }).bind(this),
-			setTool: (function(tool) { Sketcher.Tools.setTool(tool); this.tool = Sketcher.Tools.getTool(); console.log(this.tool); }).bind(this)
+			setTool: (function(tool) { Sketcher.Tools.setTool(tool); this.tool = Sketcher.Tools.getTool(); this.tool.setColor(this.color.getHex()); console.log(this.tool); }).bind(this)
 		};
 	}
 

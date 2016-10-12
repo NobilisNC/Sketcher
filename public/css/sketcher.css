@@ -149,7 +149,7 @@ body {
 	a.sk_button {
 		color: #000;
 		background: #ccc;
-		margin: 5px;
+		margin: 5px 0 0 2px;
 		padding: 3px 4px 4px 4px;
 		display: inline-block;
 		border: 1px solid #999;
@@ -159,17 +159,28 @@ body {
 		text-align: center;
 		box-shadow: inset -2px -2px 4px #aaa, inset 2px 2px 4px #fff;
 		cursor: pointer;
+		font-size: 16px;
 	}
 
 		a.sk_button:hover {
 			background: #ddd;
 		}
 
-		a.sk_button:active {
+		a.sk_button:active, a.sk_button.active {
 			background: #ccc;
-			padding: 5px 0px 0px 5px;
+			padding: 3px 0px 0px 3px;
+			margin: 0 0 0 2px;
 			box-shadow: inset 2px 2px 4px #aaa, inset -2px -2px 4px #fff;
 		}
+
+	a.sk_button.sk_colorbutton {
+		box-shadow: none;
+		margin: 0;
+		border: none;
+		border-radius: 0;
+		width: 20px;
+		height: 20px;
+	}
 
 div.sk_window {
 	position: absolute;
@@ -207,11 +218,13 @@ div.sk_window {
 		}
 
 	div.sk_toolbox {
-		padding: 0 3px 3px 1px;
+		padding: 0 0 3px 1px;
 		min-height: 25px;
-		max-width: 167px;
+		max-width: 161px;
+		line-height: 0;
+		font-size: 0;
 	}
 
-		div.sk_toolbox a.sk_button {
-			margin: 5px 0 0 2px;
+		div.sk_toolbox a.sk_button:not(.sk_colorbutton) {
+			margin-right: 3px;
 		}

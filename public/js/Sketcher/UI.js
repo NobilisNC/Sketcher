@@ -6,70 +6,37 @@ Sketcher.UI = (function(document, window){
 	this.frame = Sketcher.createElement('sketcher_ui');
 
 	// Create UI components containers
-	this.buttons = new Sketcher.Window('Tools', this.frame);
+	this.buttons = new Sketcher.Window('Tools', this.frame, 10, 10);
 	this.toolButtons = new Sketcher.Toolbox(this.buttons);
-	this.toolButtons.appendChild(
-		new Sketcher.Button(
-			'Square',
-			function(e) {
-				Sketcher.Core.setTool('rectangle');
-			},
-			null,
-			'square'
-		).node
-	);
-	this.toolButtons.appendChild(
-		new Sketcher.Button(
-			'Circle',
-			function(e) {
-				Sketcher.Core.setTool('circle');
-			},
-			null,
-			'circle'
-		).node
-	);
-	this.toolButtons.appendChild(
-		new Sketcher.Button(
-			'Pencil',
-			function(e) {
-				Sketcher.Core.setTool('pencil');
-			},
-			null,
-			'pencil'
-		).node
-	);
-	this.toolButtons.appendChild(
-		new Sketcher.Button(
-			'Line',
-			function(e) {
-				Sketcher.Core.setTool('line');
-			},
-			null,
-			'minus'
-		).node
-	);
-	this.toolButtons.appendChild(
-		new Sketcher.Button(
-			'Paint_Bucket',
-			function(e) {
-				Sketcher.Core.setTool('paint_bucket');
-			},
-			null,
-			'fire'
-		).node
-	);
-	this.palette = document.createElement('div');
-	this.caca = new Sketcher.Palette(this.frame);
+	[	//!\ DEV This hardcoded array looks like shit. Let's generalize it.
+		['Rectangle', 'rectangle', 'square'],
+		['Circle', 'circle', 'circle'],
+		['Pencil', 'pencil', 'pencil'],
+		['Line', 'line', 'minus'],
+		['Bucket', 'paint_bucket', 'adjust'],
+	].forEach((function(tool){
+		this.toolButtons.appendChild(
+			new Sketcher.Button(
+				tool[0],
+				function(e) {
+					Sketcher.Core.setTool(tool[1]);
+				},
+				null,
+				tool[2]
+			).node
+		);
+	}).bind(this));
+	this.palette = new Sketcher.Palette(this.frame, 10, 85);
 	this.layer = new Sketcher.Window('Layers', this.frame, Sketcher.Core.getWidth()-260, 10);
 	this.layerList = new Sketcher.LayerList(this.layer);
 	this.layerButtons = new Sketcher.Toolbox(this.layer);
 	this.layerButtons.appendChild(
 		new Sketcher.Button(
 			'addLayer',
-			function(e) {
+			(function(e) {
 				Sketcher.Core.addLayer();
-				updateLayers();
-			},
+				this.layerList.update();
+			}).bind(this),
 			null,
 			'plus'
 		).node
@@ -82,26 +49,14 @@ Sketcher.UI = (function(document, window){
 		Sketcher.node.style.height = window.innerHeight+'px';
 	}
 
-	function _updateLayers() {
-		this.layerList.empty();
-
-
-		Sketcher.Core.getLayers().forEach(function(layer) {
-			layer.createMenuItem(this.layerList);
-		});
-
-	}
-
-	this.updateLayers = _updateLayers.bind(this);
-
 	updateFrame();
-	this.caca.update();
-	updateLayers();
+	this.palette.update();
+	this.layerList.update();
 
 	window.addEventListener('resize', function(e) { updateFrame(); });
 
 	return {
-		updatePalette: this.caca.update,
-		updateLayers: updateLayers
+		updatePalette: this.palette.update,
+		updateLayers: this.layerList.update
 	};
 })(document, window);
