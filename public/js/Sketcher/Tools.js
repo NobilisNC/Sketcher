@@ -254,7 +254,7 @@ Sketcher.ToolsAbstract = ( function() {
 		_Tool.call(this, c, lw);
 		this.width = width;
 		this.height = height;
-		this.precision = 0.9;
+		this.precision = 1;
 	}
 
     PaintBucket.prototype = Object.create(_Tool.prototype);
@@ -267,7 +267,7 @@ Sketcher.ToolsAbstract = ( function() {
 
 	PaintBucket.prototype.isTargetColor = function(pos, img, targetColor) {
 		pos_data = this.getPosInData(pos);
-		if (Math.abs(img.data[pos_data]-targetColor.r) < 255*this.precision && Math.abs(img.data[pos_data+1] - targetColor.g) < 255*0.02 && Math.abs(img.data[pos_data+2]-targetColor.b) < 255*0.02)
+		if (Math.abs(img.data[pos_data]-targetColor.r) <= 256*this.precision && Math.abs(img.data[pos_data+1] - targetColor.g) <= 256*this.precision && Math.abs(img.data[pos_data+2]-targetColor.b) < 256*this.precision)
 			return true;
 		else
 			return false;
