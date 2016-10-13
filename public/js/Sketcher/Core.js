@@ -12,7 +12,7 @@ Sketcher.Core = (function(document, window) {
 		this.clicked = false;
 		this.width = window.innerWidth;
 		this.height = window.innerHeight;
-		this.strokeWidth = 5;
+		this.lineWidth = 5;
 		//Tools
 		Sketcher.Tools.init(this.width, this.height);
 		this.tool = Sketcher.Tools.getTool();
@@ -289,7 +289,8 @@ Sketcher.Core = (function(document, window) {
 			getSelectedColor: (function() { return this.color; }).bind(this),
 			getWidth: (function() { return this.width; }).bind(this),
 			getHeight: (function() { return this.height; }).bind(this),
-			setTool: (function(tool) { Sketcher.Tools.setTool(tool); this.tool = Sketcher.Tools.getTool(); }).bind(this)
+			setTool: (function(tool) { Sketcher.Tools.setTool(tool); this.tool = Sketcher.Tools.getTool(); }).bind(this),
+			lineWidth: this.lineWidth
 		};
 	}
 
