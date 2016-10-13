@@ -204,11 +204,18 @@ Sketcher.widgets.Button = function Button(title, action, parent, icon, bgColor, 
 /*
 /
 */
-Sketcher.widgets.ColorButton = function ColorButton(name, color, parent) {
-	Sketcher.widgets.Button.call(this, ' ', (function(e) {
-		Sketcher.Core.selectColor(this.color);
-		Sketcher.UI.updatePalette();
-	}).bind(this), parent, '', color.getHex());
+Sketcher.widgets.ColorButton = function ColorButton(name, color, parent, action) {
+	Sketcher.widgets.Button.call(
+		this,
+		' ',
+		(action || (function(e) {
+			Sketcher.Core.selectColor(this.color);
+			Sketcher.UI.updatePalette();
+		}).bind(this)),
+		parent,
+		'',
+		color.getHex()
+	);
 	this.name = name;
 	this.color = color;
 	this.node.className += ' sk_colorbutton';
@@ -261,6 +268,9 @@ Sketcher.widgets.ColorSelection = function(parent) {
 				Sketcher.color.foreground = Sketcher.color.background;
 				Sketcher.color.background = tmp;
 				Sketcher.UI.updatePalette();
+
+				window.localStorage.setItem("foreground", Sketcher.color.foreground.getHex());
+				window.localStorage.setItem("background", Sketcher.color.background.getHex());
 			},
 			this,
 			'reply'
@@ -272,7 +282,10 @@ Sketcher.widgets.ColorSelection = function(parent) {
 		new Sketcher.widgets.ColorButton(
 			'Foreground',
 			Sketcher.color.foreground,
-			this
+			this,
+			function(e) {
+				console.log('DEV Color picker has to be implemented');
+			}
 		)
 	);
 	this.foreground.node.className += ' sk_color_foreground';
@@ -281,7 +294,10 @@ Sketcher.widgets.ColorSelection = function(parent) {
 		new Sketcher.widgets.ColorButton(
 			'Background',
 			Sketcher.color.background,
-			this
+			this,
+			function(e) {
+				console.log('DEV Color picker has to be implemented');
+			}
 		)
 	);
 	this.background.node.className += ' sk_color_background';

@@ -36,6 +36,10 @@ Sketcher.Color = function(r, g, b, a) {
 };
 
 Sketcher.ColorFromString = function(raw) {
+	if(raw == null) {
+		return undefined;
+	}
+
 	var r, g, b, a;
 	if(raw.match(/#([0-9a-f]{6}|[\da-f]{8})/i)) { // #RRGGBB[AA]
 		r = parseInt(raw.slice(1,3), 16);
@@ -74,5 +78,12 @@ Sketcher.Colors = {
 
 Sketcher.color = {
 	foreground: Sketcher.Colors.black,
-	background: Sketcher.Colors.white
+	background: Sketcher.Colors.white,
 };
+
+if(window.localStorage.getItem('foreground')) {
+	Sketcher.color.foreground = new Sketcher.ColorFromString(window.localStorage.getItem('foreground'));
+}
+if(window.localStorage.getItem('background')) {
+	Sketcher.color.background = new Sketcher.ColorFromString(window.localStorage.getItem('background'));
+}

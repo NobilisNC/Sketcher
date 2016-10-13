@@ -245,7 +245,7 @@ Sketcher.Core = (function(document, window) {
 
 		this.selectColor = function(color) {
 			Sketcher.color.foreground = color;
-			// this.tool.setColor(this.color.getHex());
+			window.localStorage.setItem("foreground", Sketcher.color.foreground.getHex());
 		}
 
 		// Initialize singleton

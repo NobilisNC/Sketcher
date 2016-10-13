@@ -270,7 +270,7 @@ Sketcher.ToolsAbstract = ( function() {
 
 		var diff = 3 * Math.abs(img.data[pos_data] - targetColor.r) + 4 * Math.abs(img.data[pos_data+1] - targetColor.g) + 3 * Math.abs(img.data[pos_data+2] - targetColor.b);
 
-		var already_colored = img.data[pos_data] -  Sketcher.color.foreground.r + img.data[pos_data+1] - Sketcher.color.foreground.g + img.data[pos_data+2] - Sketcher.color.foreground.b ;
+		var already_colored = img.data[pos_data] -  Sketcher.color.background.r + img.data[pos_data+1] - Sketcher.color.background.g + img.data[pos_data+2] - Sketcher.color.background.b ;
 
 		if (already_colored == 0) {
 			return false;
@@ -312,10 +312,10 @@ Sketcher.ToolsAbstract = ( function() {
 
 				for (let pix = w; pix.x < e.x; pix.x++){
 					let pos_data = this.getPosInData(pix);
-					img.data[pos_data] = Sketcher.color.foreground.r;
-					img.data[pos_data +1] = Sketcher.color.foreground.g;
-					img.data[pos_data +2] = Sketcher.color.foreground.b;
-					img.data[pos_data +3] = Sketcher.color.foreground.a;
+					img.data[pos_data] = Sketcher.color.background.r;
+					img.data[pos_data +1] = Sketcher.color.background.g;
+					img.data[pos_data +2] = Sketcher.color.background.b;
+					img.data[pos_data +3] = Sketcher.color.background.a;
 
 					var south = {x : pix.x , y : pix.y - 1};
 					if (this.isTargetColor(south, img, targetColor))
@@ -331,8 +331,8 @@ Sketcher.ToolsAbstract = ( function() {
 	}
 
 	function sleep (time) {
-  return new Promise((resolve) => setTimeout(resolve, time));
-}
+		return new Promise((resolve) => setTimeout(resolve, time));
+	}
 
 	PaintBucket.prototype.onMouseDown = function (e, ctx) {
 
