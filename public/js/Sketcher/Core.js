@@ -248,10 +248,6 @@ Sketcher.Core = (function(document, window) {
 			// this.tool.setColor(this.color.getHex());
 		}
 
-		this.getSelectedColor = function() {
-			return this.color;
-		}
-
 		// Initialize singleton
 		this.frame.style.width = this.width+"px";
 		this.frame.style.height = this.height+"px";

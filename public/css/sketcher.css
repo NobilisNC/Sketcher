@@ -182,6 +182,47 @@ body {
 		height: 20px;
 	}
 
+div.sk_color_selection {
+	text-align: center;
+	position: relative;
+	height: 70px;
+}
+
+	div.sk_color_selection a.sk_colorbutton {
+		width: 40px;
+		height: 40px;
+		position: absolute;
+	}
+
+	div.sk_color_selection a.sk_color_switch {
+		position: absolute;
+		width: 18px;
+		height: 18px;
+		top: 0;
+		left: 50%;
+		margin: -2px 0 0 8px;
+		padding: 0;
+		line-height: 13px;
+	}
+		div.sk_color_selection a.sk_color_switch i {
+			font-size: 10px;
+		}
+
+	a.sk_button.sk_colorbutton.sk_color_foreground {
+		margin: 0 0 0 -35px;
+		top: 0;
+		left: 50%;
+		z-index: 2;
+		display: block;
+	}
+
+	a.sk_button.sk_colorbutton.sk_color_background {
+		margin: 0 0 0 -15px;
+		top: 20px;
+		left: 50%;
+		z-index: 1;
+	}
+
 div.sk_slider_container {
 	display: inline-block;
 	height: 29px;

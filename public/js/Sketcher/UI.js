@@ -12,7 +12,7 @@ Sketcher.UI = (function(document, window) {
 		// Create UI components containers
 		this.layerControl = new Sketcher.widgets.LayerControl(this, Sketcher.Core.getWidth()-261, 10);
 		this.palette = new Sketcher.widgets.Palette(this, 10, 10);
-		this.tools = new Sketcher.widgets.Window('Tools', this, 10, 85);
+		this.tools = new Sketcher.widgets.Window('Tools', this, 10, 155);
 		this.toolButtons = new Sketcher.widgets.Toolbox(this.tools);
 		[	//!\ DEV This hardcoded array looks like shit. Let's generalize it.
 			['Rectangle', 'rectangle', 'square'],

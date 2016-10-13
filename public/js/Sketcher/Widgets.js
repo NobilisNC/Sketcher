@@ -209,8 +209,14 @@ Sketcher.widgets.ColorButton = function ColorButton(name, color, parent) {
 		Sketcher.Core.selectColor(this.color);
 		Sketcher.UI.updatePalette();
 	}).bind(this), parent, '', color.getHex());
+	this.name = name;
 	this.color = color;
 	this.node.className += ' sk_colorbutton';
+
+	this.update = function() {
+		this.bgColor = this.color.getHex();
+		this.node.style.backgroundColor = this.bgColor;
+	}
 }
 
 Sketcher.widgets.Slider = function Slider(labelText, onInput, parent, icon) {
@@ -244,6 +250,54 @@ Sketcher.widgets.Slider = function Slider(labelText, onInput, parent, icon) {
 
 /***** Complex widgets *****/
 
+Sketcher.widgets.ColorSelection = function(parent) {
+	Sketcher.widgets.Toolbox.call(this, parent);
+	this.node.className += ' sk_color_selection';
+	this.switchButton = this.appendChild(
+		new Sketcher.widgets.Button(
+			'Switch colors',
+			function(e) {
+				var tmp = Sketcher.color.foreground;
+				Sketcher.color.foreground = Sketcher.color.background;
+				Sketcher.color.background = tmp;
+				Sketcher.UI.updatePalette();
+			},
+			this,
+			'reply'
+		)
+	);
+	this.switchButton.node.className += ' sk_color_switch';
+
+	this.foreground = this.appendChild(
+		new Sketcher.widgets.ColorButton(
+			'Foreground',
+			Sketcher.color.foreground,
+			this
+		)
+	);
+	this.foreground.node.className += ' sk_color_foreground';
+
+	this.background = this.appendChild(
+		new Sketcher.widgets.ColorButton(
+			'Background',
+			Sketcher.color.background,
+			this
+		)
+	);
+	this.background.node.className += ' sk_color_background';
+
+	this.update = function() {
+		this.children.forEach((function(b) {
+			if(b.name == this.foreground.name && Sketcher.color.foreground != b.color) {
+				b.color = Sketcher.color.foreground;
+			} else if(b.name == this.background.name && Sketcher.color.background != b.color) {
+				b.color = Sketcher.color.background;
+			}
+			b.update();
+		}).bind(this));
+	}
+}
+
 Sketcher.widgets.Palette = function(parent, x, y) {
 
 	function PaletteSingleton(parent, x, y) {
@@ -252,15 +306,10 @@ Sketcher.widgets.Palette = function(parent, x, y) {
 		this.buttons = new Sketcher.widgets.Toolbox(this);
 		this.colors = [];
 
+		this.selectedColors = new Sketcher.widgets.ColorSelection(this);
+
 		this._update = function() {
-			this.buttons.children.forEach(function(b) {
-				if(Sketcher.Core.getSelectedColor() == b.color) {
-					b.focus = true;
-				} else {
-					b.focus = false;
-				}
-				b.update();
-			});
+			this.selectedColors.update();
 		}
 
 		this._addBasicColors = function() {
@@ -269,10 +318,7 @@ Sketcher.widgets.Palette = function(parent, x, y) {
 					new Sketcher.widgets.ColorButton(
 						colorName,
 						Sketcher.Colors[colorName],
-						this.buttons,
-						null,
-						null,
-						(Sketcher.Core.color === Sketcher.Colors[colorName] ? true : false)
+						this.buttons
 					)
 				);
 			}).bind(this));
