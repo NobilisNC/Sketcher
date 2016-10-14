@@ -269,9 +269,6 @@ Sketcher.widgets.ColorPicker = function(name, color, parent, action) {
 
 	this.field = document.createElement('input');
 	this.field.setAttribute('class', 'sk_color_picker');
-	// this.field.value = this.color.getRGBA();
-	this.field.style.backgroundColor = this.color.getRGBA();
-	this.field.style.opacity = this.color.getAlpha();
 	this.node.appendChild(this.field);
 
 	this.parent.appendChild(this, function() {
@@ -284,7 +281,6 @@ Sketcher.widgets.ColorPicker = function(name, color, parent, action) {
 					rgba.a = this.jscolor.current.color.colors.alpha;
 
 					var color = new Sketcher.Color(rgba.r*255, rgba.g*255, rgba.b*255, rgba.a*255);
-					console.log('ok', this.name);
 					this.color = color;
 					if(this.name == 'Foreground') {
 						Sketcher.color.foreground = this.color;
@@ -298,6 +294,14 @@ Sketcher.widgets.ColorPicker = function(name, color, parent, action) {
 			}).bind(this)
 		});
 	});
+
+	this.update = function() {
+		this.color = Sketcher.color[this.name.toLowerCase()];
+		this.field.style.backgroundColor = this.color.getRGBA();
+		this.field.style.opacity = this.color.getAlpha();
+	}
+
+	this.update();
 }
 
 Sketcher.widgets.ColorSelection = function(parent) {
@@ -339,7 +343,10 @@ Sketcher.widgets.ColorSelection = function(parent) {
 		}
 	);
 
-	this.update = function() { }
+	this.update = function() {
+		this.foreground.update();
+		this.background.update();
+	}
 }
 
 Sketcher.widgets.Palette = function(parent, x, y) {
@@ -352,7 +359,9 @@ Sketcher.widgets.Palette = function(parent, x, y) {
 
 		this.selectedColors = new Sketcher.widgets.ColorSelection(this);
 
-		this._update = function() { }
+		this._update = function() {
+			this.selectedColors.update();
+		}
 
 		this._addBasicColors = function() {
 			Object.keys(Sketcher.Colors).forEach((function(colorName) {

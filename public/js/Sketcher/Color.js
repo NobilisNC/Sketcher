@@ -97,5 +97,3 @@ if(window.localStorage.getItem('foreground')) {
 if(window.localStorage.getItem('background')) {
 	Sketcher.color.background = new Sketcher.ColorFromString(window.localStorage.getItem('background'));
 }
-
-console.log('Color.js', Sketcher.color.foreground.getRGBA());
