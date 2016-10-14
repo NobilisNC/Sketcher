@@ -274,7 +274,7 @@ Sketcher.widgets.ColorPicker = function(name, color, parent, action) {
 	this.parent.appendChild(this, function() {
 		this.jscolor = jsColorPicker('input.sk_color_picker', {
 			size: 3,
-			color: this.color.getRGBA(),
+			color: this.color.getRGBa(),
 			actionCallback: (function(e, action) {
 				if(this.jscolor.hasOwnProperty('current')) {
 					var rgba = this.jscolor.current.color.colors.rgb;

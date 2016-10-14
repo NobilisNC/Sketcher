@@ -215,6 +215,7 @@ div.sk_color_selection {
 		height: 40px;
 		position: absolute;
 		border-radius: 0;
+		background: url(data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAoAAAAKCAYAAACNMs+9AAAAJUlEQVQYV2OcOXPmfwY0kJ6ezoguxjgUFKI7GsTH5m4M3w1ChQB3lyH9kh+YfQAAAABJRU5ErkJggg==) repeat;
 	}
 
 	.sk_color_selection .sk_color_picker_container.sk_color_picker_container_foreground {
