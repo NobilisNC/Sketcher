@@ -22,7 +22,7 @@ Sketcher.ToolsAbstract = ( function() {
 
 
 	_Tool.prototype.config_context = function (ctx) {
-		ctx.strokeStyle = Sketcher.color.foreground.getHex();
+		ctx.strokeStyle = Sketcher.color.foreground.getRGBa();
 		ctx.lineWidth = Sketcher.Core.lineWidth;
 		ctx.lineCap = 'round';
 		ctx.lineJoin = 'round';

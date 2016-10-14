@@ -15,12 +15,14 @@ Sketcher.widgets.AbstractWidget = function Widget(parent) {
 		}
 	}
 
-	this.appendChild = function(child) {
+	this.appendChild = function(child, callback = function() { }) {
 		this.node.appendChild(child.hasOwnProperty('node') ? child.node : child);
 		if(child.hasOwnProperty('node')) {
 			child.setParent(this);
 		}
 		this.children.push(child);
+
+		callback.bind(child)();
 
 		return child;
 	}
@@ -214,14 +216,14 @@ Sketcher.widgets.ColorButton = function ColorButton(name, color, parent, action)
 		}).bind(this)),
 		parent,
 		'',
-		color.getHex()
+		color.getRGBA()
 	);
 	this.name = name;
 	this.color = color;
 	this.node.className += ' sk_colorbutton';
 
 	this.update = function() {
-		this.bgColor = this.color.getHex();
+		this.bgColor = this.color.getRGBA();
 		this.node.style.backgroundColor = this.bgColor;
 	}
 }
@@ -257,6 +259,47 @@ Sketcher.widgets.Slider = function Slider(labelText, onInput, parent, icon) {
 
 /***** Complex widgets *****/
 
+Sketcher.widgets.ColorPicker = function(name, color, parent, action) {
+	Sketcher.widgets.AbstractWidget.call(this, parent);
+	this.name = name;
+	this.color = color;
+
+	this.node = document.createElement('div');
+	this.node.setAttribute('class', 'sk_color_picker_container sk_color_picker_container_'+this.name.toLowerCase());
+
+	this.field = document.createElement('input');
+	this.field.setAttribute('class', 'sk_color_picker');
+	// this.field.value = this.color.getRGBA();
+	this.field.style.backgroundColor = this.color.getRGBA();
+	this.field.style.opacity = this.color.getAlpha();
+	this.node.appendChild(this.field);
+
+	this.parent.appendChild(this, function() {
+		this.jscolor = jsColorPicker('input.sk_color_picker', {
+			size: 3,
+			color: this.color.getRGBA(),
+			actionCallback: (function(e, action) {
+				if(this.jscolor.hasOwnProperty('current')) {
+					var rgba = this.jscolor.current.color.colors.rgb;
+					rgba.a = this.jscolor.current.color.colors.alpha;
+
+					var color = new Sketcher.Color(rgba.r*255, rgba.g*255, rgba.b*255, rgba.a*255);
+					console.log('ok', this.name);
+					this.color = color;
+					if(this.name == 'Foreground') {
+						Sketcher.color.foreground = this.color;
+						window.localStorage.setItem("foreground", Sketcher.color.foreground.getRGBA());
+					} else {
+						Sketcher.color.background = this.color;
+						window.localStorage.setItem("background", Sketcher.color.background.getRGBA());
+					}
+					Sketcher.UI.updatePalette();
+				}
+			}).bind(this)
+		});
+	});
+}
+
 Sketcher.widgets.ColorSelection = function(parent) {
 	Sketcher.widgets.Toolbox.call(this, parent);
 	this.node.className += ' sk_color_selection';
@@ -269,8 +312,8 @@ Sketcher.widgets.ColorSelection = function(parent) {
 				Sketcher.color.background = tmp;
 				Sketcher.UI.updatePalette();
 
-				window.localStorage.setItem("foreground", Sketcher.color.foreground.getHex());
-				window.localStorage.setItem("background", Sketcher.color.background.getHex());
+				window.localStorage.setItem("foreground", Sketcher.color.foreground.getRGBA());
+				window.localStorage.setItem("background", Sketcher.color.background.getRGBA());
 			},
 			this,
 			'reply'
@@ -278,40 +321,25 @@ Sketcher.widgets.ColorSelection = function(parent) {
 	);
 	this.switchButton.node.className += ' sk_color_switch';
 
-	this.foreground = this.appendChild(
-		new Sketcher.widgets.ColorButton(
-			'Foreground',
-			Sketcher.color.foreground,
-			this,
-			function(e) {
-				console.log('DEV Color picker has to be implemented');
-			}
-		)
+	this.foreground = new Sketcher.widgets.ColorPicker(
+		'Foreground',
+		Sketcher.color.foreground,
+		this,
+		function(e) {
+			console.log('DEV Color picker has to be implemented');
+		}
 	);
-	this.foreground.node.className += ' sk_color_foreground';
 
-	this.background = this.appendChild(
-		new Sketcher.widgets.ColorButton(
-			'Background',
-			Sketcher.color.background,
-			this,
-			function(e) {
-				console.log('DEV Color picker has to be implemented');
-			}
-		)
+	this.background = new Sketcher.widgets.ColorPicker(
+		'Background',
+		Sketcher.color.background,
+		this,
+		function(e) {
+			console.log('DEV Color picker has to be implemented');
+		}
 	);
-	this.background.node.className += ' sk_color_background';
 
-	this.update = function() {
-		this.children.forEach((function(b) {
-			if(b.name == this.foreground.name && Sketcher.color.foreground != b.color) {
-				b.color = Sketcher.color.foreground;
-			} else if(b.name == this.background.name && Sketcher.color.background != b.color) {
-				b.color = Sketcher.color.background;
-			}
-			b.update();
-		}).bind(this));
-	}
+	this.update = function() { }
 }
 
 Sketcher.widgets.Palette = function(parent, x, y) {
@@ -324,9 +352,7 @@ Sketcher.widgets.Palette = function(parent, x, y) {
 
 		this.selectedColors = new Sketcher.widgets.ColorSelection(this);
 
-		this._update = function() {
-			this.selectedColors.update();
-		}
+		this._update = function() { }
 
 		this._addBasicColors = function() {
 			Object.keys(Sketcher.Colors).forEach((function(colorName) {

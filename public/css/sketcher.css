@@ -188,10 +188,12 @@ div.sk_color_selection {
 	height: 70px;
 }
 
-	div.sk_color_selection a.sk_colorbutton {
-		width: 40px;
+	div.sk_color_selection input.sk_color_picker {
+		border: none;
+		text-align: center;
+		width: 100px;
 		height: 40px;
-		position: absolute;
+		cursor: pointer;
 	}
 
 	div.sk_color_selection a.sk_color_switch {
@@ -200,7 +202,7 @@ div.sk_color_selection {
 		height: 18px;
 		top: 0;
 		left: 50%;
-		margin: -2px 0 0 8px;
+		margin: -2px 0 0 19px;
 		padding: 0;
 		line-height: 13px;
 	}
@@ -208,15 +210,21 @@ div.sk_color_selection {
 			font-size: 10px;
 		}
 
-	a.sk_button.sk_colorbutton.sk_color_foreground {
-		margin: 0 0 0 -35px;
+	.sk_color_selection .sk_color_picker_container {
+		width: 100px;
+		height: 40px;
+		position: absolute;
+		border-radius: 0;
+	}
+
+	.sk_color_selection .sk_color_picker_container.sk_color_picker_container_foreground {
+		margin: 0 0 0 -85px;
 		top: 0;
 		left: 50%;
 		z-index: 2;
-		display: block;
 	}
 
-	a.sk_button.sk_colorbutton.sk_color_background {
+	.sk_color_selection .sk_color_picker_container.sk_color_picker_container_background {
 		margin: 0 0 0 -15px;
 		top: 20px;
 		left: 50%;
@@ -286,6 +294,7 @@ div.sk_window {
 		font-weight: 200;
 		padding: 3px 5px;
 		cursor: move;
+		color: #000;
 		height: 25px;
 		border-bottom: 1px solid #999;
 	}

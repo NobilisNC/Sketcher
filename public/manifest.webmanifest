@@ -1,0 +1,12 @@
+{
+  "name": "Sketcher",
+  "short_name": "Sketcher",
+  "start_url": "/Sketcher/public",
+  "display": "standalone",
+  "background_color": "#fff",
+  "description": "A collaborative drawing web application.",
+  "related_applications": [{
+    "platform": "web",
+	"url": "http://localhost/Sketcher"
+  }]
+}
