@@ -20,6 +20,7 @@ Sketcher.UI = (function(document, window) {
 			['Pencil', 'pencil', 'pencil'],
 			['Line', 'line', 'minus'],
 			['Bucket', 'paint_bucket', 'adjust'],
+			['Text', 'text', 'font']
 		].forEach((function(tool){
 			this.toolButtons.appendChild(
 				new Sketcher.widgets.Button(
