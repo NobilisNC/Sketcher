@@ -364,9 +364,12 @@ Sketcher.widgets.Palette = function(parent, x, y) {
 		this.buttons.node.className += ' sk_colorbox';
 		this.colors = [];
 
-		JSON.parse(window.localStorage.getItem('palette')).forEach((function(c) {
-			this.colors.push(new Sketcher.ColorFromString(c));
-		}).bind(this));
+		var c = window.localStorage.getItem('palette');
+		if(c != null) {
+			JSON.parse().forEach((function(c) {
+				this.colors.push(new Sketcher.ColorFromString(c));
+			}).bind(this));
+		}
 
 		this.selectedColors = new Sketcher.widgets.ColorSelection(this);
 
