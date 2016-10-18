@@ -221,6 +221,11 @@ Sketcher.widgets.ColorButton = function ColorButton(name, color, parent, action)
 	this.name = name;
 	this.color = color;
 	this.node.className += ' sk_colorbutton';
+	this.node.addEventListener('contextmenu', (function(e) {
+		e.preventDefault();
+		e.stopPropagation();
+		Sketcher.UI.deleteColor(this.color);
+	}).bind(this));
 
 	this.update = function() {
 		this.bgColor = this.color.getRGBA();
@@ -373,6 +378,14 @@ Sketcher.widgets.Palette = function(parent, x, y) {
 
 		this.selectedColors = new Sketcher.widgets.ColorSelection(this);
 
+		this._updateLocalStorage = function() {
+			var colors = [];
+			this.colors.forEach(function(c) {
+				colors.push(c.getRGBA());
+			});
+			window.localStorage.setItem('palette', JSON.stringify(colors));
+		}
+
 		this._update = function() {
 			this.selectedColors.update();
 
@@ -387,6 +400,7 @@ Sketcher.widgets.Palette = function(parent, x, y) {
 					)
 				);
 			}).bind(this));
+			this._updateLocalStorage();
 		}
 
 		this._colorExists = function(color) {
@@ -409,16 +423,16 @@ Sketcher.widgets.Palette = function(parent, x, y) {
 			if(!this._colorExists(color)) {
 				this.colors.push(color);
 				this._update();
-				var colors = [];
-				this.colors.forEach(function(c) {
-					colors.push(c.getRGBA());
-				});
-				window.localStorage.setItem('palette', JSON.stringify(colors));
 
 				return true;
 			}
 
 			return false;
+		}
+
+		this._deleteColor = function(color) {
+			this.colors.splice(this.colors.indexOf(color), 1);
+			this._update();
 		}
 
 		this._addBasicColors = function() {
@@ -438,7 +452,8 @@ Sketcher.widgets.Palette = function(parent, x, y) {
 		return {
 			update: this._update.bind(this),
 			addBasicColors: this._addBasicColors.bind(this),
-			addColor: this._addColor.bind(this)
+			addColor: this._addColor.bind(this),
+			deleteColor: this._deleteColor.bind(this)
 		};
 	}
 
