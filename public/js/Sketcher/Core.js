@@ -23,15 +23,17 @@ Sketcher.Core = (function(document, window) {
 
 			if(this.clicked) {
 				var ctx = this.selectedLayer.getContext();
-				this.selectedLayer.objects.push(this.tool.onMouseUp(e, ctx));
-				console.log(this.selectedLayer.objects);
-				this.selectedLayer.clear();
-				this.selectedLayer.draw();
-				this.selectedLayer.menuItem.updateThumbnail();
+				var obj = this.tool.onMouseUp(e, ctx);
+				if(obj != null) {
+					this.selectedLayer.objects.push(obj);
+					this.selectedLayer.clear();
+					this.selectedLayer.draw();
+					this.selectedLayer.menuItem.updateThumbnail();
+				}
 			}
 
 			if(!e.shiftKey) {
-				this.frame.removeEventListener("mousemove", this.onMouseMove);
+				// this.frame.removeEventListener("mousemove", this.onMouseMove);
 				this.clicked = false;
 			}
 		};
@@ -40,7 +42,7 @@ Sketcher.Core = (function(document, window) {
 			if(e.button == 0 && !this.clicked) {
 				this.clicked = true;
 				this.tool.onMouseDown(e, this.selectedLayer.getContext());
-				this.frame.addEventListener("mousemove", this.onMouseMove);
+				// this.frame.addEventListener("mousemove", this.onMouseMove);
 			}else if(e.button == 2 && this.clicked) {
 				e.preventDefault();
 				e.stopPropagation();
@@ -50,13 +52,14 @@ Sketcher.Core = (function(document, window) {
 
 		this._onMouseMove = function(e) {
 			if(
-					e.offsetX < 0
-				||	e.offsetY < 0
-				||  e.offsetX > this.width
-				||	e.offsetY > this.height
-				||	!this.clicked
+					e.offsetX <= 0
+				||	e.offsetY <= 0
+				||  e.offsetX >= this.width
+				||	e.offsetY >= this.height
+				||	e.buttons == 0
 			) {
-				onMouseUp(e);
+				this.clicked = false;
+				this._onMouseUp(e);
 			} else {
 				var ctx = this.layers[0].getContext();
 				this.clear(ctx);
@@ -268,6 +271,7 @@ Sketcher.Core = (function(document, window) {
 		this.frame.addEventListener("contextmenu", function(e) { e.preventDefault(); });
 		this.frame.addEventListener("mouseup", this.onMouseUp);
 		this.frame.addEventListener("mousedown", this.onMouseDown);
+		this.frame.addEventListener("mousemove", this.onMouseMove);
 
 		// Return public methods
 		return {
