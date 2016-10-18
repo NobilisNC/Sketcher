@@ -318,6 +318,12 @@ div.sk_window {
 		font-size: 0;
 	}
 
+		div.sk_toolbox.sk_colorbox {
+			line-height: 0;
+			padding: 0;
+			max-width: 240px;
+		}
+
 		div.sk_toolbox * {
 			font-size: 15px;
 		}

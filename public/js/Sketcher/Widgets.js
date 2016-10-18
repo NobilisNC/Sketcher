@@ -360,6 +360,7 @@ Sketcher.widgets.Palette = function(parent, x, y) {
 		Sketcher.widgets.Window.call(this, 'Palette', parent, x, y);
 
 		this.buttons = new Sketcher.widgets.Toolbox(this);
+		this.buttons.node.className += ' sk_colorbox';
 		this.colors = [];
 
 		JSON.parse(window.localStorage.getItem('palette')).forEach((function(c) {
