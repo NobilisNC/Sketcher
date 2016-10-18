@@ -48,6 +48,7 @@ Sketcher.UI = (function(document, window) {
 		window.addEventListener('resize', (function(e) { this.update(); }).bind(this));
 
 		return {
+			addColor: this.palette.addColor,
 			updatePalette: this.palette.update,
 			updateLayers: this.layerControl.update,
 			updateOpacitySlider: this.layerControl.opacitySlider.update.bind(this.layerControl.opacitySlider)
