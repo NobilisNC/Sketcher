@@ -12,7 +12,7 @@ Sketcher.Core = (function(document, window) {
 		this.clicked = false;
 		this.width = window.innerWidth;
 		this.height = window.innerHeight;
-		this.lineWidth = 5;
+		this.lineWidth = 1;
 		//Tools
 		Sketcher.Tools.init(this.width, this.height);
 		this.tool = Sketcher.Tools.getTool();

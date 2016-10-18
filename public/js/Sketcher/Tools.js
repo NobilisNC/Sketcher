@@ -330,10 +330,6 @@ Sketcher.ToolsAbstract = ( function() {
 		ctx.putImageData(img, 0,0);
 	}
 
-	function sleep (time) {
-		return new Promise((resolve) => setTimeout(resolve, time));
-	}
-
 	PaintBucket.prototype.onMouseDown = function (e, ctx) {
 
 	}
@@ -348,6 +344,100 @@ Sketcher.ToolsAbstract = ( function() {
 		this.draw(ctx);
 
 		return '{ "type":"PaintBucket","data":' + JSON.stringify(this) + '}';
+	}
+
+
+	/* Class Text extends _Tool
+	*
+	*
+	*
+	*/
+	function Text() {
+		_Tool.call(this);
+		this._fill = false;
+		this.text = 'caca';
+		this.font = 'Calibri';
+		this.size = '50px';
+		this.bold = false;
+		this.italic = false;
+
+		this.stroke(true);
+		this.fill(true);
+	}
+
+	Text.prototype = Object.create(_Tool.prototype);
+	Text.prototype.constructor = Text;
+
+	Text.prototype.fill = function (fill) {
+		if (typeof fill === 'boolean')
+			this._fill = fill;
+
+		return this._fill;
+	}
+
+	Text.prototype.font = function(font) {
+		if (typeof font === 'string')
+			this.font = font;
+
+		return this.font;
+	}
+
+	Text.prototype.size = function(size) {
+		if (typeof size === 'string')
+			this.size = size;
+
+		return this.size;
+	}
+
+	Text.prototype.bold = function(bold) {
+		if (typeof bold === 'boolean')
+			this.bold = bold;
+
+		return this.bold;
+	}
+
+	Text.prototype.italic = function(italic) {
+		if (typeof italic === 'boolean')
+			this.italic = italic;
+
+		return this.italic;
+	}
+
+	Text.prototype.text = function(text) {
+		if (typeof text === 'string')
+			this.text = text;
+
+		return this.text;
+
+	}
+
+
+	Text.prototype.draw = function (ctx) {
+
+		ctx.fillStyle = Sketcher.color.background.getRGBA();
+		ctx.font = (this.bold ? 'bold ' : '') + (this.italic ? 'italic ' : '') + this.size + ' ' + this.font;
+		
+		if (this._fill) 
+			ctx.fillText(this.text,this.p.x,this.p.y);
+		
+
+		if (this._stroke) 
+			ctx.strokeText(this.text,this.p.x,this.p.y);
+		
+	}
+
+	Text.prototype.onMouseDown = function (e, ctx) {
+	}
+
+	Text.prototype.onMouseMove = function (e, ctx) {
+	}
+
+	Text.prototype.onMouseUp = function (e, ctx) {
+		this.p = { x :e.offsetX, y : e.offsetY};
+		this.config_context(ctx);
+		this.draw(ctx);
+
+		return '{ "type":"Text","data":' + JSON.stringify(this) + '}';
 	}
 
 
@@ -387,6 +477,7 @@ Sketcher.ToolsAbstract = ( function() {
 		pencil : Pencil,
 		circle : Circle,
 		paint_bucket : PaintBucket,
+		text : Text,
 
 		fromJSON : factory
 	}
@@ -406,7 +497,8 @@ Sketcher.Tools = (function() {
 					 'rectangle' : new Sketcher.ToolsAbstract.rectangle(),
 					 'pencil' : new Sketcher.ToolsAbstract.pencil(),
 					 'circle' : new Sketcher.ToolsAbstract.circle(),
-					 'paint_bucket' : new Sketcher.ToolsAbstract.paint_bucket(width, height)
+					 'paint_bucket' : new Sketcher.ToolsAbstract.paint_bucket(width, height),
+					 'text' : new Sketcher.ToolsAbstract.text()
 		}
 
 		current = 'rectangle';
