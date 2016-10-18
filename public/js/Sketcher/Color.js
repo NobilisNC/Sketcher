@@ -1,53 +1,39 @@
-/*
-/	A color ...
-*/
+function pad(n, w) {
+	w = w || 2;
+	return (w <= n.length ? n : '0'.repeat(w-n.length)+n);
+}
+
 Sketcher.Color = function(r, g, b, a) {
 	this.r = parseInt(r);
 	this.g = parseInt(g);
 	this.b = parseInt(b);
 	this.a = parseInt(a);
+}
 
-	function pad(n, w) {
-		w = w || 2;
-		return (w <= n.length ? n : '0'.repeat(w-n.length)+n);
-	}
+Sketcher.Color.prototype.getHex = function(alpha = false) {
+	return '#'
+		+pad(this.r.toString(16))
+		+pad(this.g.toString(16))
+		+pad(this.b.toString(16))
+		+(alpha ? pad((this.a*255).toString(16)) : '');
+}
 
-	this.getHex = function(alpha = false) {
-		return '#'
-			+pad(this.r.toString(16))
-			+pad(this.g.toString(16))
-			+pad(this.b.toString(16))
-			+(alpha ? pad((this.a*255).toString(16)) : '');
-	}
+Sketcher.Color.prototype.getRGBA = function() {
+	return 'rgba('+this.r+', '+this.g+', '+this.b+', '+this.a+')';
+}
 
-	this.getRGBA = function() {
-		return 'rgba('+this.r+', '+this.g+', '+this.b+', '+this.a+')';
-	}
+Sketcher.Color.prototype.getRGBa = function() {
+	return 'rgba('+this.r+', '+this.g+', '+this.b+', '+this.a/255+')';
+}
 
-	this.getRGBa = function() {
-		return 'rgba('+this.r+', '+this.g+', '+this.b+', '+this.a/255+')';
-	}
+Sketcher.Color.prototype.getAlpha = function() {
+	return this.a/255;
+}
 
-	this.getAlpha = function() {
-		return this.a/255;
-	}
-
-	return {
-		r: this.r,
-		g: this.g,
-		b: this.b,
-		a: this.a,
-		hex: this.getHex(),
-		getHex: this.getHex.bind(this),
-		getRGBA: this.getRGBA.bind(this),
-		getRGBa: this.getRGBa.bind(this),
-		getAlpha: this.getAlpha.bind(this)
-	}
-};
 
 Sketcher.ColorFromString = function(raw) {
 	if(raw == null) {
-		return undefined;
+		return null;
 	}
 
 	var r, g, b, a;
@@ -70,8 +56,11 @@ Sketcher.ColorFromString = function(raw) {
 		return null;
 	}
 
-	return Sketcher.Color.call(this, r, g, b, a);
+	Sketcher.Color.call(this, r, g, b, a);
 };
+
+Sketcher.ColorFromString.prototype = Object.create(Sketcher.Color.prototype);
+Sketcher.ColorFromString.constructor = Sketcher.ColorFromString;
 
 Sketcher.Colors = {
 	white: new Sketcher.ColorFromString('#ffffff'),

@@ -21,9 +21,6 @@ Sketcher.ToolsAbstract = ( function() {
 
 
 	_Tool.prototype.config_context = function (ctx) {
-		this.line_width = Sketcher.Core.lineWidth;
-		this.stroke_color = Sketcher.color.foreground.getRGBa();
-		this.fill_color = Sketcher.color.background.getRGBa();
 		ctx.strokeStyle = this.stroke_color;
 		ctx.lineWidth = Sketcher.Core.lineWidth;
 		ctx.lineCap = 'round';
@@ -57,13 +54,14 @@ Sketcher.ToolsAbstract = ( function() {
 
 	Line.prototype.onMouseDown = function (e) {
 		this.p1 = {x : e.offsetX, y : e.offsetY };
-		this.stroke_color = Sketcher.color.foreground.getRGBA();
+		this.line_width = Sketcher.Core.lineWidth;
+		this.stroke_color = Sketcher.color.foreground.getRGBa();
+		this.fill_color = Sketcher.color.background.getRGBa();
 	}
 
 	Line.prototype.onMouseMove = function (e, ctx) {
 		this.p2 =  {x : e.offsetX, y : e.offsetY};
 		this.draw(ctx);
-
 	}
 
 	Line.prototype.onMouseUp = function (e, ctx) {
@@ -105,7 +103,9 @@ Sketcher.ToolsAbstract = ( function() {
 
 	Rect.prototype.onMouseDown = function (e, ctx) {
 		this.p1 = this.p2 = {x : e.offsetX, y : e.offsetY };
-		this.stroke_color = Sketcher.color.foreground.getRGBA();
+		this.line_width = Sketcher.Core.lineWidth;
+		this.stroke_color = Sketcher.color.foreground.getRGBa();
+		this.fill_color = Sketcher.color.background.getRGBa();
 	}
 
 	Rect.prototype.onMouseMove = function (e, ctx) {
@@ -153,7 +153,9 @@ Sketcher.ToolsAbstract = ( function() {
 	Pencil.prototype.onMouseDown = function (e, ctx) {
 		this.p0 =  {x : e.offsetX, y : e.offsetY };
 		this.points = [];
-		this.stroke_color = Sketcher.color.foreground.getRGBA();
+		this.line_width = Sketcher.Core.lineWidth;
+		this.stroke_color = Sketcher.color.foreground.getRGBa();
+		this.fill_color = Sketcher.color.background.getRGBa();
 	}
 
 	Pencil.prototype.onMouseMove = function (e, ctx) {
@@ -203,7 +205,9 @@ Sketcher.ToolsAbstract = ( function() {
 
 	Circle.prototype.onMouseDown = function (e, ctx) {
 		this.p1 = {x : e.offsetX, y : e.offsetY };
-		this.stroke_color = Sketcher.color.foreground.getRGBA();
+		this.line_width = Sketcher.Core.lineWidth;
+		this.stroke_color = Sketcher.color.foreground.getRGBa();
+		this.fill_color = Sketcher.color.background.getRGBa();
 	}
 
 	Circle.prototype.onMouseMove = function (e, ctx) {
@@ -236,9 +240,9 @@ Sketcher.ToolsAbstract = ( function() {
 	PaintBucket.prototype.precision = function(precision) {
 		if (typeof precision === 'number')
 			if (precision < 0)
-				console.log('La precision doit être un chiffre positif');
+				console.error('La precision doit être un chiffre positif');
 			else if (precision > 1)
-				console.log('La precision doit être comprise entre 0 et 1');
+				console.error('La precision doit être comprise entre 0 et 1');
 			else
 				this.precision = 2550 * number;
 
@@ -508,7 +512,7 @@ Sketcher.Tools = (function() {
 		if ( name in tools) {
 				current = name;
 		} else {
-			console.log(name+' is not a tool');
+			console.error(name+' is not a tool');
 		}
 
 
