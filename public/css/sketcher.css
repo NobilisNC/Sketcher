@@ -6,6 +6,7 @@
 body {
 	font-family: "Tahoma", sans-serif;
 	overflow: hidden;
+	background: url(data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAoAAAAKCAYAAACNMs+9AAAAN0lEQVQYV2P8///TfwYkcOo5L4OZ5GdkITCbEV0hhgqoAIZCyk08+ez/f5CbYCbhogfSjVQPRwBHlEBhYkNWOwAAAABJRU5ErkJggg==) repeat;
 }
 
 	a {
@@ -26,6 +27,10 @@ body {
 		top: 0; left: 0;
 		cursor: default;
 	}
+
+		#sketcher_layers {
+			background: #fff;
+		}
 
 	#sketcher_ui {
 		float: left;
@@ -320,7 +325,7 @@ div.sk_window {
 
 		div.sk_toolbox.sk_colorbox {
 			line-height: 0;
-			padding: 0;
+			padding: 0 0 20px 0;
 			max-width: 240px;
 		}
 

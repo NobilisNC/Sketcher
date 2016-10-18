@@ -277,6 +277,7 @@ Sketcher.widgets.ColorPicker = function(name, color, parent) {
 	this.update = function() {
 		this.color = Sketcher.color[this.name.toLowerCase()];
 		this.field.style.backgroundColor = this.color.getHex();
+		this.field.style.color = this.color.getHex();
 		this.field.style.opacity = this.color.getAlpha();
 		this.field.value = this.color.getRGBA();
 	}
