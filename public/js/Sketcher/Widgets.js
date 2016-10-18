@@ -334,7 +334,6 @@ Sketcher.widgets.ColorSelection = function(parent) {
 			) {
 				var rgba = this.jscolor.current.color.colors.rgb;
 				rgba.a = this.jscolor.current.color.colors.alpha;
-				// console.log(this.jscolor.current.color.colors.rgb, this.jscolor[0].color.colors.rgb);
 
 				var color = new Sketcher.Color(rgba.r*255, rgba.g*255, rgba.b*255, rgba.a*255);
 				if(this.jscolor[0] === this.jscolor.current) {
@@ -362,6 +361,10 @@ Sketcher.widgets.Palette = function(parent, x, y) {
 
 		this.buttons = new Sketcher.widgets.Toolbox(this);
 		this.colors = [];
+
+		JSON.parse(window.localStorage.getItem('palette')).forEach((function(c) {
+			this.colors.push(new Sketcher.ColorFromString(c));
+		}).bind(this));
 
 		this.selectedColors = new Sketcher.widgets.ColorSelection(this);
 
@@ -401,6 +404,11 @@ Sketcher.widgets.Palette = function(parent, x, y) {
 			if(!this._colorExists(color)) {
 				this.colors.push(color);
 				this._update();
+				var colors = [];
+				this.colors.forEach(function(c) {
+					colors.push(c.getRGBA());
+				});
+				window.localStorage.setItem('palette', JSON.stringify(colors));
 
 				return true;
 			}
