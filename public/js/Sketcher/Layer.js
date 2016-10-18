@@ -13,9 +13,7 @@ Sketcher.widgets.Layer = function(name, zIndex, width, height, frame) {
 	this.width = width;
 	this.height = height;
 	this.opacity = 1;
-
-	//Beta
-	this.object = [];
+	this.objects = [];
 
 	this.createMenuItem = function(container) {
 		this.menuItem = new Sketcher.widgets.LayerItem(this, container);
@@ -61,6 +59,18 @@ Sketcher.widgets.Layer = function(name, zIndex, width, height, frame) {
 
 	this.select = function() { this.focus = true; }
 	this.blur = function() { this.focus = false; }
+
+	this.clear = function() {
+		var ctx = this.getContext();
+		ctx.clearRect(0, 0, this.width, this.height);
+	}
+
+	this.draw = function() {
+		var ctx = this.getContext();
+		this.objects.forEach(function(o) {
+			Sketcher.Tools.drawFromJSON(o, ctx);
+		});
+	}
 
 	this.node.width = this.width;
 	this.node.height = this.height;

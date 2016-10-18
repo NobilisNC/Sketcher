@@ -366,7 +366,7 @@ Sketcher.widgets.Palette = function(parent, x, y) {
 
 		var c = window.localStorage.getItem('palette');
 		if(c != null) {
-			JSON.parse().forEach((function(c) {
+			JSON.parse(c).forEach((function(c) {
 				this.colors.push(new Sketcher.ColorFromString(c));
 			}).bind(this));
 		}
