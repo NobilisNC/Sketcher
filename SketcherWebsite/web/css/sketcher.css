@@ -1,0 +1,339 @@
+* {
+	box-sizing: border-box;
+	margin: 0;
+}
+
+body {
+	font-family: "Tahoma", sans-serif;
+	overflow: hidden;
+	background: url(data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAoAAAAKCAYAAACNMs+9AAAAN0lEQVQYV2P8///TfwYkcOo5L4OZ5GdkITCbEV0hhgqoAIZCyk08+ez/f5CbYCbhogfSjVQPRwBHlEBhYkNWOwAAAABJRU5ErkJggg==) repeat;
+}
+
+	a {
+		color: #3a2;
+		text-decoration: none;
+	}
+
+	#sk_container {
+		position: relative;
+	}
+
+	#sketcher {
+		position: absolute;
+	}
+
+	#sketcher canvas {
+		position: absolute;
+		top: 0; left: 0;
+		cursor: default;
+	}
+
+		#sketcher_layers {
+			background: #fff;
+		}
+
+	#sketcher_ui {
+		float: left;
+	}
+
+	#sk_palette {
+		z-index: 999;
+		position: absolute;
+		border: 1px solid #999;
+		border-radius: 3px;
+		width: 106px;
+		padding: 2px;
+		top: 100px; left: 0;
+		font-size: 0px;
+	}
+
+		#sk_palette a.sk_color {
+			width: 20px;
+			height: 20px;
+			display: inline-block;
+			border: 1px solid transparent;
+		}
+
+			#sk_palette a.sk_color:hover {
+				opacity: .5;
+			}
+
+	#sk_layers_widget {
+		position: absolute;
+		top: 10px; right: 10px;
+		z-index: 999;
+		border: 1px solid #999;
+		border-radius: 3px;
+	}
+
+		#sk_layers_buttons {
+			background: #fff;
+			padding: 0;
+		}
+
+		#sk_layers_list {
+			font-size: 0px;
+			padding: 0;
+			width: 248px;
+			list-style: none;
+		}
+
+			#sk_layers_list li {
+				height: 41px;
+				border-bottom: 1px solid #999;
+			}
+
+			#sk_layers_list li a.sk_layer_link {
+				position: relative;
+				color: #000;
+				padding: 5px 10px 5px 60px;
+				font-size: 15px;
+				line-height: 30px;
+				background: #ccc;
+				display: inline-block;
+				width: 218px;
+				height: 40px;
+				cursor: pointer;
+			}
+
+				#sk_layers_list li a.sk_layer_link:hover {
+					background: #ddd;
+				}
+
+				#sk_layers_list li.active a.sk_layer_link {
+					background: #aaa;
+				}
+
+				#sk_layers_list li a.sk_layer_link div.sk_layer_thumbnail {
+					width: 50px;
+					height: 40px;
+					position: absolute;
+					left: 2px;
+					top: 0;
+					line-height: 38px;
+				}
+
+				#sk_layers_list li a.sk_layer_link div.sk_layer_thumbnail img {
+					background: #fff;
+					border-radius: 3px;
+					max-width: 50px;
+					max-height: 40px;
+					vertical-align: middle;
+				}
+
+			#sk_layers_list li div.sk_layer_commands {
+				float: right;
+				width: 30px;
+				height: 40px;
+			}
+
+			#sk_layers_list li a.sk_check {
+				background: #ccc;
+				font-size: 14px;
+				line-height: 20px;
+				color: #000;
+				padding: 0;
+				width: 15px;
+				height: 20px;
+				text-align: center;
+				display: inline-block;
+				cursor: pointer;
+			}
+				#sk_layers_list li a.sk_check:hover{
+					background: #ddd;
+				}
+
+				#sk_layers_list li.active a.sk_check{
+					background: #aaa;
+				}
+
+					#sk_layers_list li.active a.sk_check:hover{
+						background: #ddd;
+					}
+
+	a.sk_button {
+		color: #000;
+		background: #ccc;
+		margin: 5px 0 0 2px;
+		padding: 3px 4px 4px 4px;
+		display: inline-block;
+		border: 1px solid #999;
+		border-radius: 3px;
+		width: 27px;
+		height: 27px;
+		text-align: center;
+		box-shadow: inset -2px -2px 4px #aaa, inset 2px 2px 4px #fff;
+		cursor: pointer;
+		font-size: 16px;
+	}
+
+		a.sk_button:hover {
+			background: #ddd;
+		}
+
+		a.sk_button:active, a.sk_button.active {
+			background: #ccc;
+			padding: 3px 0px 0px 3px;
+			margin: 0 0 0 2px;
+			box-shadow: inset 2px 2px 4px #aaa, inset -2px -2px 4px #fff;
+		}
+
+	a.sk_button.sk_colorbutton {
+		box-shadow: none;
+		margin: 0;
+		border: none;
+		border-radius: 0;
+		width: 20px;
+		height: 20px;
+	}
+
+div.sk_color_selection {
+	text-align: center;
+	position: relative;
+	height: 70px;
+}
+
+	div.sk_color_selection input.sk_color_picker {
+		border: none;
+		text-align: center;
+		width: 100px;
+		height: 40px;
+		cursor: pointer;
+	}
+
+	div.sk_color_selection a.sk_color_switch {
+		position: absolute;
+		width: 18px;
+		height: 18px;
+		top: 0;
+		left: 50%;
+		margin: -2px 0 0 19px;
+		padding: 0;
+		line-height: 13px;
+	}
+		div.sk_color_selection a.sk_color_switch i {
+			font-size: 10px;
+		}
+
+	.sk_color_selection .sk_color_picker_container {
+		width: 100px;
+		height: 40px;
+		position: absolute;
+		border-radius: 0;
+		background: url(data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAoAAAAKCAYAAACNMs+9AAAAJUlEQVQYV2OcOXPmfwY0kJ6ezoguxjgUFKI7GsTH5m4M3w1ChQB3lyH9kh+YfQAAAABJRU5ErkJggg==) repeat;
+	}
+
+	.sk_color_selection .sk_color_picker_container.sk_color_picker_container_foreground {
+		margin: 0 0 0 -85px;
+		top: 0;
+		left: 50%;
+		z-index: 2;
+	}
+
+	.sk_color_selection .sk_color_picker_container.sk_color_picker_container_background {
+		margin: 0 0 0 -15px;
+		top: 20px;
+		left: 50%;
+		z-index: 1;
+	}
+
+div.sk_slider_container {
+	display: inline-block;
+	height: 29px;
+	margin: 5px 5px;
+	float: right;
+	border: 1px solid #545454;
+	padding: 0 5px;
+	border-radius: 3px;
+}
+
+div.sk_slider_container label {
+	display: inline-block;
+	color: #000;
+	line-height: 27px;
+}
+
+input.sk_slider {
+	display: inline-block;
+	-webkit-appearance: none;
+	background: transparent;
+	margin: 0 0 0 10px;
+	vertical-align: top;
+	height: 27px;
+	width: 100px;
+	outline: none;
+}
+
+	input.sk_slider::-webkit-slider-runnable-track {
+		background: #999;
+		height: 5px;
+	}
+
+	input.sk_slider::-webkit-slider-thumb {
+		-webkit-appearance: none;
+		background: #aaa;
+		border: 1px solid #888;
+		border-radius: 20px;
+		width: 5px;
+		height: 15px;
+		margin-top: -5px;
+	}
+
+div.sk_window {
+	position: absolute;
+	top: 10px; left: 10px;
+	border: 1px solid #545454;
+	border-radius: 3px;
+	z-index: 999;
+	min-width: 150px;
+	max-width: 250px;
+	background: #dbdbdb;
+}
+
+	div.sk_window[data-folded="true"] {
+		height: 25px;
+		overflow: hidden;
+	}
+
+	h1.sk_window_title {
+		font-size: 16px;
+		font-weight: 200;
+		padding: 3px 5px;
+		cursor: move;
+		color: #000;
+		height: 25px;
+		border-bottom: 1px solid #999;
+	}
+
+		a[data-action="fold"] {
+			color: #999;
+			float: right;
+			cursor: n-resize;
+		}
+
+		div.sk_window[data-folded="true"] a[data-action="fold"] {
+			cursor: s-resize;
+		}
+
+	div.sk_toolbox {
+		padding: 0 0 3px 1px;
+		min-height: 25px;
+		max-width: 250px;
+		line-height: 20px;
+		font-size: 0;
+	}
+
+		div.sk_toolbox.sk_colorbox {
+			line-height: 0;
+			padding: 0 0 20px 0;
+			max-width: 240px;
+			min-width: 180px;
+		}
+
+		div.sk_toolbox * {
+			font-size: 15px;
+		}
+
+		div.sk_toolbox a.sk_button:not(.sk_colorbutton) {
+			margin-right: 3px;
+		}

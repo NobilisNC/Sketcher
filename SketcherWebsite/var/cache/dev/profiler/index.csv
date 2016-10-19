@@ -1,0 +1,6 @@
+fde431,127.0.0.1,GET,http://localhost:8000/,1476915688,,200
+f53041,127.0.0.1,GET,http://localhost:8000/images/blue-arrow.png,1476915751,d1b2f2,200
+d1b2f2,127.0.0.1,GET,http://localhost:8000/images/blue-arrow.png,1476915751,,404
+033fb9,127.0.0.1,GET,http://localhost:8000/images/blue-arrow.png,1476915901,6f9dfa,200
+6f9dfa,127.0.0.1,GET,http://localhost:8000/images/blue-arrow.png,1476915901,,404
+9f44e1,127.0.0.1,GET,http://localhost:8000/,1476915991,,200
