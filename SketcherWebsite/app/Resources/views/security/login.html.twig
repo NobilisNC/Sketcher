@@ -1,0 +1,27 @@
+{% extends 'base.html.twig' %}
+
+{% block body %}
+<div class="container col-left-4 col-4">
+	<header>Login</header>
+	<main>
+		<form class="form form-left" action="{{ path('login') }}" method="post">
+			<div class="form_group row">
+				<label for="username" class="col-third">Username</label>
+				<div class="input">
+					<input type="text" name="_username" id="username" />
+				</div>
+			</div>
+			<div class="form_group row">
+				<label for="password" class="col-third">Password</label>
+				<div class="twothirds">
+					<input type="password" name="_password" id="password" />
+				{% if error %}
+					<p class="error">{{ error.messageKey|trans(error.messageData, 'security') }}</p>
+				{% endif %}
+				</div>
+			</div>
+			<input type="submit" role="button" value="Login" class="col-12 button button-primary" />
+		</form>
+	</main>
+</div>
+{% endblock %}

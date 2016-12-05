@@ -1,0 +1,52 @@
+{% extends 'base.html.twig' %}
+
+{% block body %}
+{#{% if error %}
+    <div>{{ error.messageKey|trans(error.messageData, 'security') }}</div>
+{% endif %}
+#}
+<div class="container col-left-4 col-4">
+	<header>Sign up</header>
+	<main>
+	{{ form_start(form, {'attr': {'class': 'form form-left'}}) }}
+			{% for f in form %}
+				{% if not f.vars.compound and "hidden" not in f.vars.block_prefixes %}
+					<div class="form_group row">
+						{{ form_label(f, null, {'label': f.vars.label, 'label_attr': {'class': 'col-third'}}) }}
+						<div class="input">
+							{% set class = 'twothirds' %}
+							{% if f.vars.value|length > 0 %}
+								{% set class = class ~ (f.vars.valid ? ' success' : ' error')  %}
+							{% endif %}
+							{{ form_widget(f, {'attr': {'class': class}}) }}
+							{% if not f.vars.valid %}
+								<p class="error">{{ f.vars.errors }}</p>
+							{% endif %}
+						</div>
+					</div>
+				{% endif %}
+			{% endfor %}
+			<div class="form_group row">
+				{{ form_label(form.plainPassword.first, null, {'label': form.plainPassword.first.vars.label, 'label_attr': {'class': 'col-third'}}) }}
+				<div class="input">
+					{% set class = 'twothirds' %}
+					{% if form.plainPassword.first.vars.value|length > 0 %}
+						{% set class = class ~ (form.plainPassword.first.vars.valid ? ' success' : ' error')  %}
+					{% endif %}
+					{{ form_widget(form.plainPassword.first, {'attr': {'class': class}}) }}
+					{% if not form.plainPassword.first.vars.valid %}
+						<p class="error">{{ form.plainPassword.first.vars.errors }}</p>
+					{% endif %}
+				</div>
+			</div>
+			<div class="form_group row">
+				{{ form_label(form.plainPassword.second, null, {'label': 'Confirm password', 'label_attr': {'class': 'col-third'}}) }}
+				<div class="input">
+					{{ form_widget(form.plainPassword.second, {'attr': {'class': 'twothirds'}}) }}
+				</div>
+			</div>
+			<input type="submit" role="button" name="register" value="Sign up" class="col-12 button button-primary" />
+		{{ form_end(form) }}
+	</main>
+</div>
+{% endblock %}
