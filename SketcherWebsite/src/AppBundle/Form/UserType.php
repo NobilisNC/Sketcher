@@ -6,6 +6,7 @@ use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
 use Symfony\Component\Form\Extension\Core\Type\EmailType;
+use AppBundle\Form\Type\AvailableLocaleType;
 use Symfony\Component\Form\Extension\Core\Type\TextType;
 use Symfony\Component\Form\Extension\Core\Type\RepeatedType;
 use Symfony\Component\Form\Extension\Core\Type\PasswordType;
@@ -23,6 +24,9 @@ class UserType extends AbstractType
 			))
 			->add('email', EmailType::class, array(
 				'label' => 'E-mail'
+			))
+			->add('locale', AvailableLocaleType::class, array(
+				'label' => 'Language'
 			))
 			->add('plainPassword', RepeatedType::class, array(
 				'type'	=> PasswordType::class,

@@ -1,0 +1,51 @@
+<?xml version="1.0"?>
+<xliff version="1.2" xmlns="urn:oasis:names:tc:xliff:document:1.2">
+    <file source-language="en" datatype="plaintext" original="file.ext">
+        <body>
+            <trans-unit id="username">
+                <source>Username</source>
+                <target>Nom d'utilisateur</target>
+            </trans-unit>
+            <trans-unit id="password">
+                <source>Password</source>
+                <target>Mot de passe</target>
+            </trans-unit>
+            <trans-unit id="confirm_password">
+                <source>Confirm password</source>
+                <target>Mot de passe (répétez)</target>
+            </trans-unit>
+            <trans-unit id="language">
+                <source>Language</source>
+                <target>Langue</target>
+            </trans-unit>
+            <trans-unit id="signup">
+                <source>Sign up</source>
+                <target>Envoyer</target>
+            </trans-unit>
+            <trans-unit id="register">
+                <source>Register</source>
+                <target>S'enregistrer</target>
+            </trans-unit>
+            <trans-unit id="login">
+                <source>Login</source>
+                <target>Se connecter</target>
+            </trans-unit>
+            <trans-unit id="french">
+                <source>French</source>
+                <target>Français</target>
+            </trans-unit>
+            <trans-unit id="gallery">
+                <source>Gallery</source>
+                <target>Gallerie</target>
+            </trans-unit>
+            <trans-unit id="invalid_credentials">
+                <source>Invalid credentials.</source>
+                <target>Identifiants invalides.</target>
+            </trans-unit>
+            <trans-unit id="username_taken">
+                <source>Username %name% is already taken</source>
+                <target>Le nom %name% est déjà pris</target>
+            </trans-unit>
+        </body>
+    </file>
+</xliff>

@@ -48,6 +48,13 @@ class User implements UserInterface, \Serializable
      * @Assert\Email()
 	 */
 	private $email;
+	
+	/**
+	 * @ORM\Column(type="string", length=5)
+	 * @Assert\NotBlank()
+     * @Assert\Locale()
+	 */
+	private $locale;
 
 	/**
 	 * @ORM\Column(name="is_active", type="boolean")
@@ -193,5 +200,29 @@ class User implements UserInterface, \Serializable
     public function setPlainPassword($password)
     {
         $this->plainPassword = $password;
+    }
+
+    /**
+     * Set locale
+     *
+     * @param string $locale
+     *
+     * @return User
+     */
+    public function setLocale($locale)
+    {
+        $this->locale = $locale;
+
+        return $this;
+    }
+
+    /**
+     * Get locale
+     *
+     * @return string
+     */
+    public function getLocale()
+    {
+        return $this->locale;
     }
 }

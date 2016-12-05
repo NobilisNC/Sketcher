@@ -17,10 +17,10 @@
 				</ul>
 				<ul>
 				{% if not is_granted('IS_AUTHENTICATED_REMEMBERED') %}
-					<li><a href="{{ path('signup') }}"><i class="fa fa-pencil"></i> Sign up</a></li>
-					<li><a href="{{ path('login') }}"><i class="fa fa-sign-in"></i> Login</a></li>
+					<li><a href="{{ path('signup') }}"><i class="fa fa-pencil"></i> {{ 'Register'|trans }}</a></li>
+					<li><a href="{{ path('login') }}"><i class="fa fa-sign-in"></i> {{ 'Login'|trans }}</a></li>
 				{% else %}
-					<li><a {% if app.request.getPathInfo() == path('gallery') %}class="active"{% endif %} href="{{ path('gallery') }}"><i class="fa fa-image"></i> Gallery</a></li>
+					<li><a {% if app.request.getPathInfo() == path('gallery') %}class="active"{% endif %} href="{{ path('gallery') }}"><i class="fa fa-image"></i> {{ 'Gallery'|trans }}</a></li>
 					<li><a href="{{ path('logout') }}" title="Logout"><i style="color:#C82829;" class="fa fa-sign-out"></i></a></li>
 				{% endif %}
 				</ul>

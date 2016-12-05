@@ -6,21 +6,21 @@
 {% endif %}
 #}
 <div class="container col-left-4 col-4">
-	<header>Sign up</header>
+	<header>{{ 'Register'|trans }}</header>
 	<main>
 	{{ form_start(form, {'attr': {'class': 'form form-left'}}) }}
 			{% for f in form %}
 				{% if not f.vars.compound and "hidden" not in f.vars.block_prefixes %}
 					<div class="form_group row">
-						{{ form_label(f, null, {'label': f.vars.label, 'label_attr': {'class': 'col-third'}}) }}
+						{{ form_label(f, null, {'label': (f.vars.label|trans), 'label_attr': {'class': 'col-third'}}) }}
 						<div class="input">
 							{% set class = 'twothirds' %}
 							{% if f.vars.value|length > 0 %}
 								{% set class = class ~ (f.vars.valid ? ' success' : ' error')  %}
 							{% endif %}
-							{{ form_widget(f, {'attr': {'class': class}}) }}
+							{{ form_widget(f, {'attr': {'class': class} })|trans|raw }}
 							{% if not f.vars.valid %}
-								<p class="error">{{ f.vars.errors }}</p>
+								<p class="error">{{ f.vars.errors|trans }}</p>
 							{% endif %}
 						</div>
 					</div>
@@ -45,7 +45,7 @@
 					{{ form_widget(form.plainPassword.second, {'attr': {'class': 'twothirds'}}) }}
 				</div>
 			</div>
-			<input type="submit" role="button" name="register" value="Sign up" class="col-12 button button-primary" />
+			<input type="submit" role="button" name="register" value="{{ 'Sign up'|trans }}" class="col-12 button button-primary" />
 		{{ form_end(form) }}
 	</main>
 </div>

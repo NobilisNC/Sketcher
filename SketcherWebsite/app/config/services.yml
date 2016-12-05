@@ -4,6 +4,12 @@ parameters:
 #    parameter_name: value
 
 services:
+    available_locale:
+        class: AppBundle\Form\Type\AvailableLocaleType
+        arguments:
+            - '@translator.default'
+        tags:
+            - { name: form.type, alias: available_locale }
 #    service_name:
 #        class: AppBundle\Directory\ClassName
 #        arguments: ["@another_service_name", "plain_value", "%parameter_name%"]
