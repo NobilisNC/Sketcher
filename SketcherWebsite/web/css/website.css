@@ -1,0 +1,11 @@
+.form {
+	margin-bottom: 0;
+}
+
+input[type="submit"] {
+	text-align: center;
+}
+
+input[type="text"], input[type="password"], input[type="email"], select {
+	width: 100%;
+}

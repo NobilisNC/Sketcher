@@ -6,14 +6,14 @@
 	<main>
 		<form class="form form-left" action="{{ path('login') }}" method="post">
 			<div class="form_group row">
-				<label for="username" class="col-third">{{ 'Username'|trans }}</label>
-				<div class="input">
+				<label for="username" class="col-4">{{ 'Username'|trans }}</label>
+				<div class="input col-7">
 					<input type="text" name="_username" id="username" />
 				</div>
 			</div>
 			<div class="form_group row">
-				<label for="password" class="col-third">{{ 'Password'|trans }}</label>
-				<div class="twothirds">
+				<label for="password" class="col-4">{{ 'Password'|trans }}</label>
+				<div class="col-7">
 					<input type="password" name="_password" id="password" />
 				{% if error %}
 					<p class="error">{{ error.messageKey|trans }}</p>

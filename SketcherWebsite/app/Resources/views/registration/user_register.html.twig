@@ -12,8 +12,8 @@
 			{% for f in form %}
 				{% if not f.vars.compound and "hidden" not in f.vars.block_prefixes %}
 					<div class="form_group row">
-						{{ form_label(f, null, {'label': (f.vars.label|trans), 'label_attr': {'class': 'col-third'}}) }}
-						<div class="input">
+						{{ form_label(f, null, {'label': (f.vars.label|trans), 'label_attr': {'class': 'col-4'}}) }}
+						<div class="input col-7">
 							{% set class = 'twothirds' %}
 							{% if f.vars.value|length > 0 %}
 								{% set class = class ~ (f.vars.valid ? ' success' : ' error')  %}
@@ -28,7 +28,7 @@
 			{% endfor %}
 			<div class="form_group row">
 				{{ form_label(form.plainPassword.first, null, {'label': form.plainPassword.first.vars.label, 'label_attr': {'class': 'col-third'}}) }}
-				<div class="input">
+				<div class="input col-7">
 					{% set class = 'twothirds' %}
 					{% if form.plainPassword.first.vars.value|length > 0 %}
 						{% set class = class ~ (form.plainPassword.first.vars.valid ? ' success' : ' error')  %}
@@ -41,7 +41,7 @@
 			</div>
 			<div class="form_group row">
 				{{ form_label(form.plainPassword.second, null, {'label': 'Confirm password', 'label_attr': {'class': 'col-third'}}) }}
-				<div class="input">
+				<div class="input col-7">
 					{{ form_widget(form.plainPassword.second, {'attr': {'class': 'twothirds'}}) }}
 				</div>
 			</div>
