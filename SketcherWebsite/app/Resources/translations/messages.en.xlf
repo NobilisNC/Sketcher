@@ -1,10 +1,58 @@
 <?xml version="1.0"?>
 <xliff version="1.2" xmlns="urn:oasis:names:tc:xliff:document:1.2">
-    <file source-language="en" target-language="en" datatype="plaintext" original="file.ext">
+    <file source-language="en" datatype="plaintext" original="file.ext">
         <body>
-            <trans-unit id="title_post_list">
-                <source>title.post_list</source>
-                <target>Post List</target>
+            <trans-unit id="username">
+                <source>Username</source>
+                <target>Username</target>
+            </trans-unit>
+            <trans-unit id="password">
+                <source>Password</source>
+                <target>Password</target>
+            </trans-unit>
+            <trans-unit id="confirm_password">
+                <source>Confirm password</source>
+                <target>Confirm password</target>
+            </trans-unit>
+            <trans-unit id="language">
+                <source>Language</source>
+                <target>Language</target>
+            </trans-unit>
+            <trans-unit id="signup">
+                <source>Sign up</source>
+                <target>Sign up</target>
+            </trans-unit>
+            <trans-unit id="register">
+                <source>Register</source>
+                <target>Register</target>
+            </trans-unit>
+            <trans-unit id="login">
+                <source>Login</source>
+                <target>Login</target>
+            </trans-unit>
+            <trans-unit id="french">
+                <source>French</source>
+                <target>French</target>
+            </trans-unit>
+            <trans-unit id="english">
+                <source>English</source>
+                <target>English</target>
+            </trans-unit>
+            <trans-unit id="gallery">
+                <source>Gallery</source>
+                <target>Gallery</target>
+            </trans-unit>
+            <trans-unit id="invalid_credentials">
+                <source>Invalid credentials.</source>
+                <target>Invalid credentials.</target>
+            </trans-unit>
+            <trans-unit id="username_taken">
+                <source>Username %name% is already taken</source>
+                <target>Username %name% is already taken</target>
+            </trans-unit>
+            <trans-unit id="most_liked_drawings">
+                <source>Most liked drawings</source>
+                <target>Most liked drawings</target>
             </trans-unit>
         </body>
     </file>

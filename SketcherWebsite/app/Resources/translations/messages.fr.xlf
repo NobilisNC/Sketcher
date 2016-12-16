@@ -46,6 +46,10 @@
                 <source>Username %name% is already taken</source>
                 <target>Le nom %name% est déjà pris</target>
             </trans-unit>
+            <trans-unit id="most_liked_drawings">
+                <source>Most liked drawings</source>
+                <target>Dessins les plus appréciés</target>
+            </trans-unit>
         </body>
     </file>
 </xliff>

@@ -1,11 +1,36 @@
 {% extends 'base.html.twig' %}
 
 {% block body %}
-{#<div id="sketcher"></div>
-<script src="js/Sketcher.js"></script>#}
+	<div class="col-left-1 col-10">
+		<h1>{{ 'Most liked drawings'|trans }}</h1>
+		<div id="top" class="alert col-12">
+			<div id="topSlide">
+				<a href="#" class="sketch">
+					<img src="{{ asset('symfony-logo.png') }}">
+					<span class="author">Author</span>
+				</a>
+				<a href="#" class="sketch">
+					<img src="{{ asset('symfony-logo.png') }}">
+					<span class="author">Author</span>
+				</a>
+				<a href="#" class="sketch">
+					<img src="{{ asset('symfony-logo.png') }}">
+					<span class="author">Author</span>
+				</a>
+				<a href="#" class="sketch">
+					<img src="{{ asset('symfony-logo.png') }}">
+					<span class="author">Author</span>
+				</a>
+				<a href="#" class="sketch">
+					<img src="{{ asset('symfony-logo.png') }}">
+					<span class="author">Author</span>
+				</a>
+			</div>
+		</div>
+	</div>
 {% endblock %}
 
-{% block sketcher_stylesheets %}
+{#{% block sketcher_stylesheets %}
 <link rel="stylesheet" href="css/jsColor.css">
 <link rel="stylesheet" href="css/sketcher.css">
 <link rel="manifest" href="manifest.webmanifest">
@@ -14,4 +39,4 @@
 {% block sketcher_javascripts %}
 <script src="https://cdn.socket.io/socket.io-1.4.5.js"></script>
 <script src="js/jsColor.js"></script>
-{% endblock %}
+{% endblock %}#}

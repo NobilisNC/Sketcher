@@ -2,6 +2,10 @@
 	margin-bottom: 0;
 }
 
+section.row {
+	width: 100%;
+}
+
 input[type="submit"] {
 	text-align: center;
 }
@@ -9,3 +13,49 @@ input[type="submit"] {
 input[type="text"], input[type="password"], input[type="email"], select {
 	width: 100%;
 }
+
+div#top {
+	padding: 10px 10px 5px 10px;
+	overflow-x: hidden;
+}
+
+div#topSlide {
+	height: 205px;
+	overflow: hidden;
+}
+
+div#top a.sketch {
+	border-radius: 3px;
+	border: 1px solid #fff;
+	background: #fff;
+	display: inline-block;
+	width: 200px;
+	height: 200px;
+	margin-right: 10px;
+	position: relative;
+	overflow: hidden;
+	transition: opacity .3s;
+}
+
+	a.sketch:hover {
+		opacity: .9;
+	}
+
+	a.sketch img {
+		width: 100%;
+		max-height: 100%;
+	}
+
+	a.sketch span.author {
+		text-align: center;
+		color: #333;
+		background: rgba(255,255,255,.9);
+		display: block;
+		padding: 0 5px;
+		position: absolute;
+		bottom: 15px;
+		width: 100%;
+		height: 13px;
+		line-height: 10px;
+		box-shadow: 0 0 4px 4px rgba(255,255,255,.9);
+		}

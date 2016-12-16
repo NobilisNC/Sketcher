@@ -3,9 +3,9 @@
 	<head>
 		<meta charset="UTF-8" />
 		<title>{% block title %}Sketcher{% endblock %}</title>
-{#		{% block sketcher_stylesheets %}{% endblock %}#}
-{#		{% block sketcher_javascripts %}{% endblock %}#}
-		<link rel="stylesheet" href="//cdn.everything.io/kickstart/3.x/css/kickstart.min.css" />
+		{% block sketcher_stylesheets %}{% endblock %}
+		{% block sketcher_javascripts %}{% endblock %}
+		<link rel="stylesheet" href="{{ asset('css/kickstart.css') }}" />
 		<link rel="stylesheet" href="{{ asset('css/fontawesome.min.css') }}">
 		<link rel="stylesheet" href="{{ asset('css/website.css') }}">
 		<link rel="icon" type="image/x-icon" href="{{ asset('favicon.ico') }}" />

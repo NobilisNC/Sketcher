@@ -30,9 +30,6 @@ class RegistrationController extends Controller
 
 			return $this->redirectToRoute('homepage');
 		}
-		
-		$translator = $this->get('translator');
-		$translator->addResource('xlf', 'messages.fr.xlf', 'fr_FR');
 
 		return $this->render('registration/user_register.html.twig', array(
 			'form' => $form->createView()
