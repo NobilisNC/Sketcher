@@ -84,8 +84,8 @@ Sketcher.widgets.Window = function Window(title, parent, x = 0, y = 0) {
 			e.preventDefault();
 			e.stopPropagation();
 
-			var x = e.clientX - this.node.getAttribute('data-x');
-			var y = e.clientY - this.node.getAttribute('data-y');
+			var x = e.clientX - Sketcher.node.offsetLeft - this.node.getAttribute('data-x');
+			var y = e.clientY - Sketcher.node.offsetTop - this.node.getAttribute('data-y');
 
 			var unstickDist = Sketcher.settings.unstickDistance;
 			var stickDist = Sketcher.settings.stickDistance;

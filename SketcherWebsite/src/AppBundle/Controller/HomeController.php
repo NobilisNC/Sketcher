@@ -71,6 +71,15 @@ class HomeController extends Controller
 
 	/**
 	 *
+	 * @Route("/sketch", name="newSketch")
+	 */
+	public function newSketchAction(Request $request)
+	{
+		return $this->render('home/sketch.html.twig');
+	}
+
+	/**
+	 *
 	 * @Route("/me", name="editProfile")
 	 */
 	public function editProfileAction(Request $request)
