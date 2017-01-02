@@ -6,8 +6,6 @@ use Doctrine\ORM\Mapping as ORM;
 use Symfony\Component\Validator\Constraints as Assert;
 use Doctrine\Common\Collections\ArrayCollection;
 
-//use use AppBundle\Entity\User;
-
 /**
  * Sketch
  *
@@ -42,10 +40,20 @@ class Sketch
 
     /**
     *
-    * @ORM\ManyToMany(targetEntity="User", cascade={"persist"})
+    * @ORM\ManyToMany(targetEntity="User", inversedBy="sketches")
+    * @ORM\JoinColumn(name="user", referencedColumnName="id")
     *
     */
     private $authors;
+
+    /**
+    *
+    * @ORM\ManyToMany(targetEntity="Tag", mappedBy="sketches")
+    * @ORM\JoinColumn(name="tag", referencedColumnName="id")
+    *
+    */
+    private $tags;
+
 
     /**
      * @var \DateTime
@@ -53,6 +61,14 @@ class Sketch
      * @ORM\Column(name="date_upload", type="date")
      */
     private $dateUpload;
+
+    /**
+    *
+    * @ORM\ManyToMany(targetEntity="User", mappedBy="sketches_liked")
+    * @ORM\JoinColumn(name="user", referencedColumnName="id")
+    *
+    */
+    private $likers;
 
 
     public function __construct() {
@@ -143,5 +159,39 @@ class Sketch
     public function getDateUpload()
     {
         return $this->dateUpload;
+    }
+
+    /**
+     * Add author
+     *
+     * @param \AppBundle\Entity\User $author
+     *
+     * @return Sketch
+     */
+    public function addAuthor(\AppBundle\Entity\User $author)
+    {
+        $this->authors[] = $author;
+
+        return $this;
+    }
+
+    /**
+     * Remove author
+     *
+     * @param \AppBundle\Entity\User $author
+     */
+    public function removeAuthor(\AppBundle\Entity\User $author)
+    {
+        $this->authors->removeElement($author);
+    }
+
+    /**
+     * Get authors
+     *
+     * @return \Doctrine\Common\Collections\Collection
+     */
+    public function getAuthors()
+    {
+        return $this->authors;
     }
 }

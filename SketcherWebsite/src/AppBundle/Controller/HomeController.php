@@ -35,7 +35,7 @@ class HomeController extends Controller
 		if(!$user)
 			return $this->redirectToRoute('login');
 
-        $sketches = $user->getSketches();
+        $sketches = $this->getLastSketches(10);
 
 		return $this->render('home/gallery.html.twig',
             array (
@@ -174,6 +174,12 @@ class HomeController extends Controller
         return $this->render('home/new_sketch.html.twig', array(
             'form' => $form->createView(),
         ));
-
     }
+
+    private function getLastSketches($number = 10) {
+        $manager = $this->getDoctrine()->getManager();
+        return $manager->getRepository('AppBundle:Sketch')
+                       ->findBy(array(), array('dateUpload' => 'DESC'), $number);
+    }
+
 }

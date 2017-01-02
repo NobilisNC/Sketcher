@@ -67,4 +67,45 @@ class Tag
     {
         return $this->name;
     }
+    /**
+     * Constructor
+     */
+    public function __construct()
+    {
+        $this->sketches = new \Doctrine\Common\Collections\ArrayCollection();
+    }
+
+    /**
+     * Add sketch
+     *
+     * @param \AppBundle\Entity\Sketch $sketch
+     *
+     * @return Tag
+     */
+    public function addSketch(\AppBundle\Entity\Sketch $sketch)
+    {
+        $this->sketches[] = $sketch;
+
+        return $this;
+    }
+
+    /**
+     * Remove sketch
+     *
+     * @param \AppBundle\Entity\Sketch $sketch
+     */
+    public function removeSketch(\AppBundle\Entity\Sketch $sketch)
+    {
+        $this->sketches->removeElement($sketch);
+    }
+
+    /**
+     * Get sketches
+     *
+     * @return \Doctrine\Common\Collections\Collection
+     */
+    public function getSketches()
+    {
+        return $this->sketches;
+    }
 }
