@@ -33,6 +33,7 @@ class Sketch
      * @var string
      *
      * @ORM\Column(name="path", type="string", length=255, unique=true)
+	 * @Assert\File(mimeTypes={ "image/jpeg" })
      */
     private $path;
 

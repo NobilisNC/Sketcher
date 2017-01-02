@@ -61,6 +61,10 @@ class HomeController extends Controller
 	public function editProfileAction(Request $request)
 	{
 		$user = $this->getUser();
+
+		if(!$user)
+			return $this->redirectToRoute('login');
+
 		$form = $this->createForm(UserType::class, $user);
 
 		$form->remove('plainPassword')
@@ -119,7 +123,6 @@ class HomeController extends Controller
     */
     public function uploadAction(Request $request)
     {
-
         $sketch = new Sketch();
 
         $form = $this->createForm(SketchType::class, $sketch);

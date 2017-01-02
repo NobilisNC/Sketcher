@@ -7,7 +7,7 @@
 	{% if user is null %}
 		{{ 'User "%name%" does not exist.'|trans({'%name%' : name}) }}
 	{% else %}
-		<h3>{{ '%name%\'s profile'|trans({'%name%': user.username}) }}  {% if user.username == app.user.username %}<a class="button button-small button-blue" href="{{ path('editProfile') }}" style="float:right;">{{ 'Go back to edition'|trans }} <i class="fa fa-mail-reply"></i></a>{% endif %}</h3>
+		<h3>{{ '%name%\'s profile'|trans({'%name%': user.username}) }}  {% if app.user is not null and user.username == app.user.username %}<a class="button button-small button-blue" href="{{ path('editProfile') }}" style="float:right;">{{ 'Go back to edition'|trans }} <i class="fa fa-mail-reply"></i></a>{% endif %}</h3>
 		{{ user.email }}
 	{% endif %}
 	</div>

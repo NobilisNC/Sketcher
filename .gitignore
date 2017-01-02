@@ -15,4 +15,5 @@ node_modules
 !/SketcherWebsite/var/SymfonyRequirements.php
 /SketcherWebsite/vendor/
 /SketcherWebsite/web/bundles/
+/SketcherWebsite/web/uploads/
 SketcherWebsite/composer.lock

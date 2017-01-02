@@ -15,10 +15,10 @@ class SketchType extends AbstractType
     {
         $builder
             ->add('name', TextType::class, array(
-				'label' => 'Nom du dessin'
+				'label' => 'Name'
 			))
             ->add('path', FileType::class, array(
-                'label' => 'Votre dessin'
+                'label' => 'Sketch'
             ))
         ;
     }
