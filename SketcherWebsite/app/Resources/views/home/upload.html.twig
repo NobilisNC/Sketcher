@@ -1,0 +1,11 @@
+{% extends 'base.html.twig' %}
+
+{% block body %}
+
+{{ form_start(form) }}
+    {{ form_row(form.name)}}
+    {{ form_row(form.path) }}
+    <input type="submit" role="button" name="upload" value="upload" class="col-12 button button-primary" />
+{{ form_end(form) }}
+
+{% endblock %}
