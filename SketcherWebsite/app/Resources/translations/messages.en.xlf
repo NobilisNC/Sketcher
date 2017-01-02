@@ -118,13 +118,17 @@
                 <source>New sketch</source>
                 <target>New sketch</target>
             </trans-unit>
-            <trans-unit id="upload_sketch">
-                <source>Upload sketch</source>
-                <target>Upload sketch</target>
+            <trans-unit id="create_sketch">
+                <source>Create sketch</source>
+                <target>Create sketch</target>
             </trans-unit>
-            <trans-unit id="name">
-                <source>Name</source>
-                <target>Name</target>
+            <trans-unit id="title">
+                <source>Title</source>
+                <target>Title</target>
+            </trans-unit>
+            <trans-unit id="sketches">
+                <source>Sketches</source>
+                <target>Sketches</target>
             </trans-unit>
         </body>
     </file>

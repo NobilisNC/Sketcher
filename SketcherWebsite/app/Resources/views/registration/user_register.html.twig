@@ -1,10 +1,8 @@
 {% extends 'base.html.twig' %}
 
+{% block title %}- {{ 'Register'|trans }}{% endblock %}
+
 {% block body %}
-{#{% if error %}
-    <div>{{ error.messageKey|trans(error.messageData, 'security') }}</div>
-{% endif %}
-#}
 <div class="container col-left-4 col-4">
 	<header>{{ 'Register'|trans }}</header>
 	<main>
@@ -18,7 +16,7 @@
 							{% if f.vars.value|length > 0 %}
 								{% set class = class ~ (f.vars.valid ? ' success' : ' error')  %}
 							{% endif %}
-							{{ form_widget(f, {'attr': {'class': class} })|trans|raw }}
+							{{ form_widget(f, {'attr': {'class': class} }) }}
 							{% if f.vars.errors|length > 0 %}
 								{% for error in f.vars.errors %}
 									<p class="error">{{ error.message|trans }}</p>

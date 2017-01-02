@@ -15,7 +15,7 @@ class SketchType extends AbstractType
     {
         $builder
             ->add('name', TextType::class, array(
-				'label' => 'Name'
+				'label' => 'Title'
 			))
             ->add('path', FileType::class, array(
                 'label' => 'Sketch'

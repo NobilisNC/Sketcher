@@ -3,12 +3,20 @@
 {% block title %}- {{ 'Gallery'|trans }}{% endblock %}
 
 {% block body %}
-    <div id="topSlide">
-    {% for sketch in sketches %}
-        <a href="#" class="sketch">
-            <img src="{{ asset(sketches_directory ~ '/' ~ sketch.path)}}">
-        </a>
-    {% endfor %}
+    <div class="col-10 col-left-1">
+		<h2>{{ 'Gallery'|trans }}</h2>
+	    {% for sketch in sketches %}
+			<figure class="thumbnail col-3">
+				<a href="#" class="sketch">
+		            <img src="{{ asset(sketches_directory ~ '/' ~ sketch.path)}}">
+				</a>
+				<figcaption>
+					{{ 'Authors'|trans }} :
+				{% set first = true %}
+				{% for author in sketch.authors %}{{ (first ? '' : ', ') }}<a href="{{ path('profile', {'username': author.username}) }}">{{ author.username }}</a>{% set first = false %}{% endfor %}
+				</figcaption>
+			</figure>
+	    {% endfor %}
     </div>
 
 {% endblock %}

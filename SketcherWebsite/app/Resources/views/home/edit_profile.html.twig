@@ -3,14 +3,14 @@
 {% block title %}- {{ '%name%\'s profile'|trans({'%name%': app.user.username}) }}{% endblock %}
 
 {% block body %}
-	<div class="col-left-2 col-8">
+	<div class="col-left-1 col-10">
 		<h2>{{ 'Edit profile'|trans }} <a class="button button-small button-blue" href="{{ path('profile', {'username': app.user.username}) }}" style="float:right;">{{ 'Show what others see'|trans }}</a></h2>
 		{{ form_start(form, {'attr': {'class': 'form form-left'}}) }}
 			{% for f in form %}
 				{% if not f.vars.compound and "hidden" not in f.vars.block_prefixes %}
 					<div class="form_group row">
-						{{ form_label(f, null, {'label': (f.vars.label|trans), 'label_attr': {'class': 'col-4'}}) }}
-						<div class="input col-7">
+						{{ form_label(f, null, {'label': (f.vars.label|trans), 'label_attr': {'class': 'col-3'}}) }}
+						<div class="input col-8">
 							{% set class = 'twothirds' %}
 							{% if f.vars.value|length > 0 %}
 								{% set class = class ~ (f.vars.valid ? ' success' : ' error')  %}
@@ -26,8 +26,8 @@
 				{% endif %}
 			{% endfor %}
 			<div class="form_group row">
-				{{ form_label(form.newPassword.first, null, {'label': 'New password'|trans, 'label_attr': {'class': 'col-third'}}) }}
-				<div class="input col-7">
+				{{ form_label(form.newPassword.first, null, {'label': 'New password'|trans, 'label_attr': {'class': 'col-3'}}) }}
+				<div class="input col-8">
 					{% set class = 'twothirds' %}
 					{% if form.newPassword.first.vars.value|length > 0 %}
 						{% set class = class ~ (form.newPassword.first.vars.valid ? ' success' : ' error')  %}
@@ -36,8 +36,8 @@
 				</div>
 			</div>
 			<div class="form_group row">
-				{{ form_label(form.newPassword.second, null, {'label': 'Confirm new password'|trans, 'label_attr': {'class': 'col-third'}}) }}
-				<div class="input col-7">
+				{{ form_label(form.newPassword.second, null, {'label': 'Confirm new password'|trans, 'label_attr': {'class': 'col-3'}}) }}
+				<div class="input col-8">
 					{{ form_widget(form.newPassword.second, {'attr': {'class': 'twothirds'}}) }}
 					{% if form.newPassword.first.vars.errors|length > 0 %}
 						{% for error in form.newPassword.first.vars.errors %}

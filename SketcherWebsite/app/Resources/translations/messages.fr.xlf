@@ -114,13 +114,13 @@
                 <source>New sketch</source>
                 <target>Nouveau dessin</target>
             </trans-unit>
-            <trans-unit id="upload_sketch">
-                <source>Upload sketch</source>
-                <target>Envoyer un desssin</target>
+            <trans-unit id="create_sketch">
+                <source>Create sketch</source>
+                <target>Créer un desssin</target>
             </trans-unit>
-            <trans-unit id="name">
-                <source>Name</source>
-                <target>Nom</target>
+            <trans-unit id="title">
+                <source>Title</source>
+                <target>Titre</target>
             </trans-unit>
         </body>
     </file>

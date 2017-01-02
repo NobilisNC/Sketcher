@@ -68,15 +68,6 @@ class HomeController extends Controller
 
 	/**
 	 *
-	 * @Route("/sketch", name="newSketch")
-	 */
-	public function newSketchAction(Request $request)
-	{
-		return $this->render('home/sketch.html.twig');
-	}
-
-	/**
-	 *
 	 * @Route("/me", name="editProfile")
 	 */
 	public function editProfileAction(Request $request)
@@ -131,7 +122,7 @@ class HomeController extends Controller
 		}
 
 		return $this->render(
-			'home/editProfile.html.twig',
+			'home/edit_profile.html.twig',
 			array(
 				'form' => $form->createView()
 			)
@@ -140,9 +131,9 @@ class HomeController extends Controller
 
     /**
     *
-    * @Route("/home/upload", name="upload_sketch")
+    * @Route("/new/sketch", name="newSketch")
     */
-    public function uploadAction(Request $request)
+    public function newSketchAction(Request $request)
     {
         $user = $this->getUser();
 
@@ -180,7 +171,7 @@ class HomeController extends Controller
             return $this->redirectToRoute('homepage');
         }
 
-        return $this->render('home/upload.html.twig', array(
+        return $this->render('home/new_sketch.html.twig', array(
             'form' => $form->createView(),
         ));
 
