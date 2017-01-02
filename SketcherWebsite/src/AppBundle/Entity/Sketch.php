@@ -6,8 +6,6 @@ use Doctrine\ORM\Mapping as ORM;
 use Symfony\Component\Validator\Constraints as Assert;
 use Doctrine\Common\Collections\ArrayCollection;
 
-//use use AppBundle\Entity\User;
-
 /**
  * Sketch
  *
@@ -47,6 +45,15 @@ class Sketch
     *
     */
     private $authors;
+
+    /**
+    *
+    * @ORM\ManyToMany(targetEntity="Tag", mappedBy="sketches")
+    * @ORM\JoinColumn(name="tag", referencedColumnName="id")
+    *
+    */
+    private $tags;
+
 
     /**
      * @var \DateTime
