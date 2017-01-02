@@ -1,0 +1,17 @@
+{% extends 'base.html.twig' %}
+
+{% block body %}
+<div class="container col-left-4 col-4">
+	<header>{{ 'Upload sketch'|trans }}</header>
+	<main>
+{{ form_start(form, {'attr': {'class': 'form form-left'}}) }}
+    <div class="form_group row">
+    {{ form_row(form.name) }}
+    </div>
+    <div class="form_group row">
+    {{ form_row(form.path) }}
+    </div>
+    <input type="submit" role="button" name="upload" value={{'Upload Sketch'|trans}} class="col-12 button button-primary" />
+{{ form_end(form) }}
+
+{% endblock %}

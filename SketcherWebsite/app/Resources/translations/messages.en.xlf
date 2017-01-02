@@ -110,6 +110,18 @@
                 <source>Most liked drawings</source>
                 <target>Most liked drawings</target>
             </trans-unit>
+            <trans-unit id="sketch">
+                <source>Sketch</source>
+                <target>Sketch</target>
+            </trans-unit>
+            <trans-unit id="upload_sketch">
+                <source>Upload sketch</source>
+                <target>Upload sketch</target>
+            </trans-unit>
+            <trans-unit id="name">
+                <source>Name</source>
+                <target>Name</target>
+            </trans-unit>
         </body>
     </file>
 </xliff>
