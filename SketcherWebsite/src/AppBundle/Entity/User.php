@@ -69,11 +69,18 @@ class User implements UserInterface, \Serializable
 	 * @ORM\Column(name="is_admin", type="boolean", options={"default": false})
 	 */
 	private $isAdmin;
+
     /**
     * @ORM\ManyToMany(targetEntity="Sketch", mappedBy="authors")
     * @ORM\JoinColumn(name="sketch", referencedColumnName="id")
     */
     private $sketches;
+
+    /**
+    * @ORM\ManyToMany(targetEntity="Sketch", inversedBy="likers")
+    * @ORM\JoinColumn(name="sketch", referencedColumnName="id")
+    */
+    private $sketches_liked;
 
 	public function __construct() {
 		$this->isActive = true;
@@ -298,5 +305,39 @@ class User implements UserInterface, \Serializable
     public function getSketches()
     {
         return $this->sketches;
+    }
+
+    /**
+     * Add sketchesLiked
+     *
+     * @param \AppBundle\Entity\Sketch $sketchesLiked
+     *
+     * @return User
+     */
+    public function addSketchesLiked(\AppBundle\Entity\Sketch $sketchesLiked)
+    {
+        $this->sketches_liked[] = $sketchesLiked;
+
+        return $this;
+    }
+
+    /**
+     * Remove sketchesLiked
+     *
+     * @param \AppBundle\Entity\Sketch $sketchesLiked
+     */
+    public function removeSketchesLiked(\AppBundle\Entity\Sketch $sketchesLiked)
+    {
+        $this->sketches_liked->removeElement($sketchesLiked);
+    }
+
+    /**
+     * Get sketchesLiked
+     *
+     * @return \Doctrine\Common\Collections\Collection
+     */
+    public function getSketchesLiked()
+    {
+        return $this->sketches_liked;
     }
 }
