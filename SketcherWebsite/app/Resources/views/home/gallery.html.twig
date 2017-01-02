@@ -6,7 +6,7 @@
     <div id="topSlide">
     {% for sketch in sketches %}
         <a href="#" class="sketch">
-            <img src="{{ sketch.path }}">
+            <img src="{{ asset(sketches_directory ~ '/' ~ sketch.path)}}">
         </a>
     {% endfor %}
     </div>

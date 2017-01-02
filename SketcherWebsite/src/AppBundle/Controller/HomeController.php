@@ -36,14 +36,12 @@ class HomeController extends Controller
 			return $this->redirectToRoute('login');
 
         $sketches = $user->getSketches();
-        $nb = $sketches->count();
-        var_dump($nb);
-
-
 
 		return $this->render('home/gallery.html.twig',
                             array (
-                                    'sketches' => $sketches
+                                     'sketches' => $sketches,
+                                    'sketches_directory' => $this->getParameter('sketches_directory')
+
                                 )
         );
 	}
