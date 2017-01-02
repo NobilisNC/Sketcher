@@ -3,5 +3,12 @@
 {% block title %}- {{ 'Gallery'|trans }}{% endblock %}
 
 {% block body %}
+    <div id="topSlide">
+    {% for sketch in sketches %}
+        <a href="#" class="sketch">
+            <img src="{{ sketch.path }}">
+        </a>
+    {% endfor %}
+    </div>
 
 {% endblock %}

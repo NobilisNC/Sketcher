@@ -30,7 +30,22 @@ class HomeController extends Controller
 	 */
 	public function galleryAction(Request $request)
 	{
-		return $this->render('home/gallery.html.twig');
+        $user = $this->getUser();
+
+		if(!$user)
+			return $this->redirectToRoute('login');
+
+        $sketches = $user->getSketches();
+        $nb = $sketches->count();
+        var_dump($nb);
+
+
+
+		return $this->render('home/gallery.html.twig',
+                            array (
+                                    'sketches' => $sketches
+                                )
+        );
 	}
 
 	/**
@@ -123,6 +138,11 @@ class HomeController extends Controller
     */
     public function uploadAction(Request $request)
     {
+        $user = $this->getUser();
+
+        if(!$user)
+            return $this->redirectToRoute('login');
+
         $sketch = new Sketch();
 
         $form = $this->createForm(SketchType::class, $sketch);
@@ -144,6 +164,7 @@ class HomeController extends Controller
 
 
             $sketch->setPath($fileName);
+            $sketch->addAuthor($user);
 
 
             $db = $this->getDoctrine()->getManager();
