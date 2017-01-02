@@ -110,6 +110,10 @@
                 <source>Sketch</source>
                 <target>Dessin</target>
             </trans-unit>
+            <trans-unit id="new_sketch">
+                <source>New sketch</source>
+                <target>Nouveau dessin</target>
+            </trans-unit>
             <trans-unit id="upload_sketch">
                 <source>Upload sketch</source>
                 <target>Envoyer un desssin</target>
