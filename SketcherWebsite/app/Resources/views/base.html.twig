@@ -2,7 +2,8 @@
 <html lang="en">
 	<head>
 		<meta charset="UTF-8" />
-		<title>{% block title %}Sketcher{% endblock %}</title>
+		<title>Sketcher {% block title %}{% endblock %}</title>
+		<script src="{{ asset('js/kickstart.js') }}"></script>
 		{% block sketcher_stylesheets %}{% endblock %}
 		{% block sketcher_javascripts %}{% endblock %}
 		<link rel="stylesheet" href="{{ asset('css/kickstart.css') }}" />
@@ -11,7 +12,8 @@
 		<link rel="icon" type="image/x-icon" href="{{ asset('favicon.ico') }}" />
 	</head>
 	<body>
-		<header class="navbar">
+		<div id="sketcher">
+		</div><header class="navbar" data-ks-navbar>
 			<nav>
 				<ul>
 					<li><a href="{{ path('homepage') }}">Sketcher</a></li>
@@ -22,7 +24,13 @@
 					<li><a href="{{ path('login') }}"><i class="fa fa-sign-in"></i> {{ 'Login'|trans }}</a></li>
 				{% else %}
 					<li><a {% if app.request.getPathInfo() == path('gallery') %}class="active"{% endif %} href="{{ path('gallery') }}"><i class="fa fa-image"></i> {{ 'Gallery'|trans }}</a></li>
-					<li><a href="{{ path('logout') }}" title="Logout"><i style="color:#C82829;" class="fa fa-sign-out"></i></a></li>
+					<li>{{ app.user.username }}
+						<ul>
+							<li><a href="{{ path('editProfile') }}" title="{{ 'Profile'|trans }}">{{ 'Profile'|trans }}</a></li>
+							<li><a href="#" title="{{ 'My pictures'|trans }}">{{ 'My pictures'|trans }}</a></li>
+							<li><a href="{{ path('logout') }}" title="{{ 'Logout'|trans }}">{{ 'Logout'|trans }} <i style="color:#C82829;float:right;" class="fa fa-sign-out"></i></a></li>
+						</ul>
+					</li>
 				{% endif %}
 				</ul>
 			</nav>
@@ -30,5 +38,6 @@
 		<section class="row">
 			{% block body %}{% endblock %}
 		</section>
+		<!-- <script src="js/Sketcher.js"></script> -->
 	</body>
 </html>

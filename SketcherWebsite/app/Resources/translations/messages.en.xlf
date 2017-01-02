@@ -10,9 +10,29 @@
                 <source>Password</source>
                 <target>Password</target>
             </trans-unit>
+            <trans-unit id="email">
+                <source>E-mail</source>
+                <target>E-mail</target>
+            </trans-unit>
+            <trans-unit id="current_password">
+                <source>Current password</source>
+                <target>Current password</target>
+            </trans-unit>
+            <trans-unit id="new_password">
+                <source>New password</source>
+                <target>New password</target>
+            </trans-unit>
             <trans-unit id="confirm_password">
                 <source>Confirm password</source>
                 <target>Confirm password</target>
+            </trans-unit>
+            <trans-unit id="confirm_new_password">
+                <source>Confirm new password</source>
+                <target>Confirm new password</target>
+            </trans-unit>
+            <trans-unit id="wrong_password">
+                <source>Wrong password</source>
+                <target>CACA password</target>
             </trans-unit>
             <trans-unit id="language">
                 <source>Language</source>
@@ -22,6 +42,10 @@
                 <source>Sign up</source>
                 <target>Sign up</target>
             </trans-unit>
+            <trans-unit id="update">
+                <source>Update</source>
+                <target>Update</target>
+            </trans-unit>
             <trans-unit id="register">
                 <source>Register</source>
                 <target>Register</target>
@@ -29,6 +53,10 @@
             <trans-unit id="login">
                 <source>Login</source>
                 <target>Login</target>
+            </trans-unit>
+            <trans-unit id="logout">
+                <source>Logout</source>
+                <target>Logout</target>
             </trans-unit>
             <trans-unit id="french">
                 <source>French</source>
@@ -42,6 +70,30 @@
                 <source>Gallery</source>
                 <target>Gallery</target>
             </trans-unit>
+            <trans-unit id="my_pictures">
+                <source>My pictures</source>
+                <target>My pictures</target>
+            </trans-unit>
+            <trans-unit id="profile">
+                <source>Profile</source>
+                <target>Profile</target>
+            </trans-unit>
+            <trans-unit id="edit_profile">
+                <source>Edit profile</source>
+                <target>Edit profile</target>
+            </trans-unit>
+            <trans-unit id="show_what_others_see">
+                <source>Show what others see</source>
+                <target>Show what others see</target>
+            </trans-unit>
+            <trans-unit id="back_to_edition">
+                <source>Go back to edition</source>
+                <target>Go back to edition</target>
+            </trans-unit>
+            <trans-unit id="names_profile">
+                <source>%name%'s profile</source>
+                <target>%name%'s profile</target>
+            </trans-unit>
             <trans-unit id="invalid_credentials">
                 <source>Invalid credentials.</source>
                 <target>Invalid credentials.</target>
@@ -49,6 +101,10 @@
             <trans-unit id="username_taken">
                 <source>Username %name% is already taken</source>
                 <target>Username %name% is already taken</target>
+            </trans-unit>
+            <trans-unit id="username_doesnt_exist">
+                <source>User "%name%" does not exist.</source>
+                <target>User "%name%" does not exist.</target>
             </trans-unit>
             <trans-unit id="most_liked_drawings">
                 <source>Most liked drawings</source>

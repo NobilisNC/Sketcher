@@ -10,9 +10,29 @@
                 <source>Password</source>
                 <target>Mot de passe</target>
             </trans-unit>
+            <trans-unit id="email">
+                <source>E-mail</source>
+                <target>E-mail</target>
+            </trans-unit>
+            <trans-unit id="current_password">
+                <source>Current password</source>
+                <target>Mot de passe actuel</target>
+            </trans-unit>
+            <trans-unit id="new_password">
+                <source>New password</source>
+                <target>Nouveau mot de passe</target>
+            </trans-unit>
             <trans-unit id="confirm_password">
                 <source>Confirm password</source>
                 <target>Mot de passe (répétez)</target>
+            </trans-unit>
+            <trans-unit id="confirm_new_password">
+                <source>Confirm new password</source>
+                <target>Nouveau mot de passe (répétez)</target>
+            </trans-unit>
+            <trans-unit id="wrong_password">
+                <source>Wrong password.</source>
+                <target>Mot de passe erroné.</target>
             </trans-unit>
             <trans-unit id="language">
                 <source>Language</source>
@@ -20,7 +40,11 @@
             </trans-unit>
             <trans-unit id="signup">
                 <source>Sign up</source>
-                <target>Envoyer</target>
+                <target>Laissez-moi dessiner !</target>
+            </trans-unit>
+            <trans-unit id="update">
+                <source>Update</source>
+                <target>Sauvegarder</target>
             </trans-unit>
             <trans-unit id="register">
                 <source>Register</source>
@@ -30,6 +54,10 @@
                 <source>Login</source>
                 <target>Se connecter</target>
             </trans-unit>
+            <trans-unit id="logout">
+                <source>Logout</source>
+                <target>Se déconnecter</target>
+            </trans-unit>
             <trans-unit id="french">
                 <source>French</source>
                 <target>Français</target>
@@ -38,6 +66,30 @@
                 <source>Gallery</source>
                 <target>Gallerie</target>
             </trans-unit>
+            <trans-unit id="my_pictures">
+                <source>My pictures</source>
+                <target>Mes dessins</target>
+            </trans-unit>
+            <trans-unit id="profile">
+                <source>Profile</source>
+                <target>Profil</target>
+            </trans-unit>
+            <trans-unit id="edit_profile">
+                <source>Edit profile</source>
+                <target>Modifier mon profil</target>
+            </trans-unit>
+            <trans-unit id="show_what_others_see">
+                <source>Show what others see</source>
+                <target>Voir ce que les autres voient</target>
+            </trans-unit>
+            <trans-unit id="back_to_edition">
+                <source>Go back to edition</source>
+                <target>Retourner à l'édition de profil</target>
+            </trans-unit>
+            <trans-unit id="names_profile">
+                <source>%name%'s profile</source>
+                <target>Profil de %name%</target>
+            </trans-unit>
             <trans-unit id="invalid_credentials">
                 <source>Invalid credentials.</source>
                 <target>Identifiants invalides.</target>
@@ -45,6 +97,10 @@
             <trans-unit id="username_taken">
                 <source>Username %name% is already taken</source>
                 <target>Le nom %name% est déjà pris</target>
+            </trans-unit>
+            <trans-unit id="username_doesnt_exist">
+                <source>User "%name%" does not exist.</source>
+                <target>L'utilisateur "%name%" n'existe pas.</target>
             </trans-unit>
             <trans-unit id="most_liked_drawings">
                 <source>Most liked drawings</source>

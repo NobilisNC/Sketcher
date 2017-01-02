@@ -8,7 +8,7 @@
 			<div class="form_group row">
 				<label for="username" class="col-4">{{ 'Username'|trans }}</label>
 				<div class="input col-7">
-					<input type="text" name="_username" id="username" />
+					<input type="text" name="_username" id="username" value="{{ last_username }}" />
 				</div>
 			</div>
 			<div class="form_group row">
@@ -20,7 +20,7 @@
 				{% endif %}
 				</div>
 			</div>
-			<input type="submit" role="button" value="{{ 'Login'|trans}}" class="col-12 button button-primary" />
+			<input type="submit" role="button" value="{{ 'Login'|trans }}" class="col-12 button button-primary" />
 		</form>
 	</main>
 </div>

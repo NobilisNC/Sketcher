@@ -48,6 +48,7 @@ var Sketcher = Sketcher || (function(document, window, settings = {}) {
 	/	Appends the created element to document.body if no parent isn't specified.
 	*/
 	this.createElement = function(id, parent = null) {
+		console.log("caca");
 		var node = document.querySelector('div#'+id);
 		if(node == null) {
 			node = document.createElement('div');

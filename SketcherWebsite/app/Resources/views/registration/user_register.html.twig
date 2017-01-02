@@ -19,8 +19,10 @@
 								{% set class = class ~ (f.vars.valid ? ' success' : ' error')  %}
 							{% endif %}
 							{{ form_widget(f, {'attr': {'class': class} })|trans|raw }}
-							{% if not f.vars.valid %}
-								<p class="error">{{ f.vars.errors|trans }}</p>
+							{% if f.vars.errors|length > 0 %}
+								{% for error in f.vars.errors %}
+									<p class="error">{{ error.message|trans }}</p>
+								{% endfor %}
 							{% endif %}
 						</div>
 					</div>
@@ -34,15 +36,17 @@
 						{% set class = class ~ (form.plainPassword.first.vars.valid ? ' success' : ' error')  %}
 					{% endif %}
 					{{ form_widget(form.plainPassword.first, {'attr': {'class': class}}) }}
-					{% if not form.plainPassword.first.vars.valid %}
-						<p class="error">{{ form.plainPassword.first.vars.errors }}</p>
-					{% endif %}
 				</div>
 			</div>
 			<div class="form_group row">
 				{{ form_label(form.plainPassword.second, null, {'label': 'Confirm password', 'label_attr': {'class': 'col-third'}}) }}
 				<div class="input col-7">
 					{{ form_widget(form.plainPassword.second, {'attr': {'class': 'twothirds'}}) }}
+					{% if form.plainPassword.vars.errors|length > 0 %}
+						{% for error in form.plainPassword.vars.errors %}
+							<p class="error">{{ error.message|trans }}</p>
+						{% endfor %}
+					{% endif %}
 				</div>
 			</div>
 			<input type="submit" role="button" name="register" value="{{ 'Sign up'|trans }}" class="col-12 button button-primary" />

@@ -1,0 +1,14 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}- {{ '%name%\'s profile'|trans({'%name%': (user is null ? 'nobody' : user.username)}) }}{% endblock %}
+
+{% block body %}
+	<div class="col-left-1 col-10">
+	{% if user is null %}
+		{{ 'User "%name%" does not exist.'|trans({'%name%' : name}) }}
+	{% else %}
+		<h3>{{ '%name%\'s profile'|trans({'%name%': user.username}) }}  {% if user.username == app.user.username %}<a class="button button-small button-blue" href="{{ path('editProfile') }}" style="float:right;">{{ 'Go back to edition'|trans }} <i class="fa fa-mail-reply"></i></a>{% endif %}</h3>
+		{{ user.email }}
+	{% endif %}
+	</div>
+{% endblock %}
