@@ -7,8 +7,6 @@ use Doctrine\ORM\Mapping as ORM;
 use Symfony\Component\Validator\Constraints as Assert;
 use Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity;
 use Symfony\Component\Security\Core\User\UserInterface;
-use Doctrine\Common\Collections\ArrayCollection;
-use AppBundle\Entity\Sketch;
 
 
 /**
@@ -65,19 +63,13 @@ class User implements UserInterface, \Serializable
 	 */
 	private $isActive;
 
-	/**
-	 * @ORM\Column(name="is_admin", type="boolean", options={"default": false})
-	 */
-	private $isAdmin;
     /**
-    * @ORM\ManyToMany(targetEntity="Sketch", mappedBy="authors")
-    * @ORM\JoinColumn(name="sketch", referencedColumnName="id")
+    * @ORM\ManyToMany(targetEntity="Sketch", cascade={"persist"})
     */
     private $sketches;
 
 	public function __construct() {
 		$this->isActive = true;
-		$this->isAdmin = false;
 		$this->username = "";
 		$this->salt = md5(uniqid(null, true));
         $this->sketches = new ArrayCollection();
@@ -208,30 +200,6 @@ class User implements UserInterface, \Serializable
         return $this->isActive;
     }
 
-    /**
-     * Set isAdmin
-     *
-     * @param boolean $isAdmin
-     *
-     * @return User
-     */
-    public function setIsAdmin($isAdmin)
-    {
-        $this->isAdmin = $isAdmin;
-
-        return $this;
-    }
-
-    /**
-     * Get isAdmin
-     *
-     * @return boolean
-     */
-    public function getIsAdmin()
-    {
-        return $this->isAdmin;
-    }
-
 	public function getPlainPassword()
     {
         return $this->plainPassword;
@@ -264,39 +232,5 @@ class User implements UserInterface, \Serializable
     public function getLocale()
     {
         return $this->locale;
-    }
-
-    /**
-     * Add sketch
-     *
-     * @param Sketch $sketch
-     *
-     * @return User
-     */
-    public function addSketch(Sketch $sketch)
-    {
-        $this->sketches[] = $sketch;
-
-        return $this;
-    }
-
-    /**
-     * Remove sketch
-     *
-     * @param Sketch $sketch
-     */
-    public function removeSketch(Sketch $sketch)
-    {
-        $this->sketches->removeElement($sketch);
-    }
-
-    /**
-     * Get sketches
-     *
-     * @return \Doctrine\Common\Collections\Collection
-     */
-    public function getSketches()
-    {
-        return $this->sketches;
     }
 }

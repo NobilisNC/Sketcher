@@ -42,8 +42,7 @@ class Sketch
 
     /**
     *
-    * @ORM\ManyToMany(targetEntity="User", inversedBy="sketches")
-    * @ORM\JoinColumn(name="user", referencedColumnName="id")
+    * @ORM\ManyToMany(targetEntity="User", cascade={"persist"})
     *
     */
     private $authors;
@@ -144,39 +143,5 @@ class Sketch
     public function getDateUpload()
     {
         return $this->dateUpload;
-    }
-
-    /**
-     * Add author
-     *
-     * @param \AppBundle\Entity\User $author
-     *
-     * @return Sketch
-     */
-    public function addAuthor(\AppBundle\Entity\User $author)
-    {
-        $this->authors[] = $author;
-
-        return $this;
-    }
-
-    /**
-     * Remove author
-     *
-     * @param \AppBundle\Entity\User $author
-     */
-    public function removeAuthor(\AppBundle\Entity\User $author)
-    {
-        $this->authors->removeElement($author);
-    }
-
-    /**
-     * Get authors
-     *
-     * @return \Doctrine\Common\Collections\Collection
-     */
-    public function getAuthors()
-    {
-        return $this->authors;
     }
 }
