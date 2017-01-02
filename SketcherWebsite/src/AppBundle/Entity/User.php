@@ -17,7 +17,7 @@ use Symfony\Component\Security\Core\User\UserInterface;
 class User implements UserInterface, \Serializable
 {
 	private $salt;
-	
+
 	/**
 	 * @ORM\Column(type="integer")
 	 * @ORM\Id
@@ -30,7 +30,7 @@ class User implements UserInterface, \Serializable
 	 * @Assert\NotBlank()
 	 */
 	private $username;
-	
+
 	/**
 		* @Assert\NotBlank()
 		* @Assert\Length(max=4096)
@@ -48,7 +48,7 @@ class User implements UserInterface, \Serializable
      * @Assert\Email()
 	 */
 	private $email;
-	
+
 	/**
 	 * @ORM\Column(type="string", length=5)
 	 * @Assert\NotBlank()
@@ -60,15 +60,21 @@ class User implements UserInterface, \Serializable
 	 * @ORM\Column(name="is_active", type="boolean")
 	 */
 	private $isActive;
-	
+
+	/**
+	 * @ORM\Column(name="is_admin", type="boolean", options={"default": false})
+	 */
+	private $isAdmin;
+
 	public function __construct() {
 		$this->isActive = true;
+		$this->isAdmin = false;
 		$this->username = "";
 		$this->salt = md5(uniqid(null, true));
 	}
-	
+
 	public function eraseCredentials() {
-		
+
 	}
 
 	public function getPassword(): string {
@@ -191,7 +197,31 @@ class User implements UserInterface, \Serializable
     {
         return $this->isActive;
     }
-	
+
+    /**
+     * Set isAdmin
+     *
+     * @param boolean $isAdmin
+     *
+     * @return User
+     */
+    public function setIsAdmin($isAdmin)
+    {
+        $this->isAdmin = $isAdmin;
+
+        return $this;
+    }
+
+    /**
+     * Get isAdmin
+     *
+     * @return boolean
+     */
+    public function getIsAdmin()
+    {
+        return $this->isAdmin;
+    }
+
 	public function getPlainPassword()
     {
         return $this->plainPassword;
