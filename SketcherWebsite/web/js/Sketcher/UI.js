@@ -7,7 +7,8 @@ Sketcher.UI = (function(document, window) {
 	// Constructor
 	var UISingleton = function(document, window) {
 		Sketcher.widgets.AbstractWidget.call(this, Sketcher.Core.frame);
-		this.node = Sketcher.createElement('sketcher_ui');
+		console.log(Sketcher);
+		this.node = Sketcher.createElement('sketcher_ui', Sketcher.node);
 
 		// Create UI components containers
 		this.layerControl = new Sketcher.widgets.LayerControl(this, Sketcher.Core.getWidth()-261, 10);

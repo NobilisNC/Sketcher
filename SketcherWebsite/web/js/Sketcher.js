@@ -38,24 +38,21 @@ var Sketcher = Sketcher || (function(document, window, settings = {}) {
 				}
 			}).bind(this);
 			document.body.appendChild(this.libs[name].node);
-		} else {
+		} else
 			return false;
-		}
 	};
 
 	/*
 	/	Create a basic container with specified id
-	/	Appends the created element to document.body if no parent isn't specified.
+	/	Appends the created element to document.body if no parent is specified.
 	*/
 	this.createElement = function(id, parent = null) {
-		console.log("caca");
 		var node = document.querySelector('div#'+id);
 		if(node == null) {
 			node = document.createElement('div');
 			node.setAttribute('id', id);
+			(parent == null ? document.body : parent).appendChild(node);
 		}
-
-		(parent == null ? document.body : parent).appendChild(node);
 
 		return node;
 	};

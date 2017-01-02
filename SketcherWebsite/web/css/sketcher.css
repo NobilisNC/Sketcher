@@ -20,6 +20,8 @@ body {
 
 	#sketcher {
 		position: absolute;
+		top: 46px;
+		left: 0;
 	}
 
 	#sketcher canvas {
@@ -124,8 +126,12 @@ body {
 			#sk_layers_list li div.sk_layer_commands {
 				float: right;
 				width: 30px;
-				height: 40px;
+				height: 39px;
 			}
+
+				#sk_layers_list li div.sk_layer_commands a {
+					float: left;
+				}
 
 			#sk_layers_list li a.sk_check {
 				background: #ccc;
