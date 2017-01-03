@@ -189,7 +189,17 @@ class HomeController extends Controller
     */
 	public function sketchAction(Request $request, $sketchId)
     {
-		return $this->render('home/sketch.html.twig');
+		$db = $this->getDoctrine()->getRepository('AppBundle:Sketch');
+		$sketch = $db->findOneBy(array(
+			'id' => $sketchId
+		));
+
+		return $this->render(
+			'home/sketch.html.twig',
+			array(
+				'sketch' => $sketch
+			)
+		);
 	}
 
     /**
@@ -214,20 +224,8 @@ class HomeController extends Controller
 			imagefill($img, 0, 0, imagecolorallocate($img, 255,255,255));
 			imagejpeg($img, $this->getParameter('sketches_directory').'/'.$sketch->getPath());
 
-			// $file = $sketch->getPath();
-            // // Generate a unique name for the file before saving it
-            // $fileName = md5(uniqid()).'.'.$file->guessExtension();
-			//
-			//
-            // $file->move(
-            //      $this->getParameter('sketches_directory'),
-            //     $fileName
-            // );
-			//
-            // $sketch->setPath($fileName);
-
-
             $sketch->addAuthor($user);
+			$sketch->setData('{"width":'.$sketch->getWidth().',"height":'.$sketch->getHeight().'}');
 
             $db = $this->getDoctrine()->getManager();
 			$db->persist($sketch);

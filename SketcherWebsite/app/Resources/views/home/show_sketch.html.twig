@@ -13,7 +13,20 @@
 		<center>
 			<figure id="showSketch" class="thumbnail">
 				<img src="{{ asset(sketches_directory ~ '/' ~ sketch.path) }}" alt="{{ sketch.name }}">
-				<figcaption>{{ sketch.name }}</figcaption>
+				<figcaption>
+					{% if app.user is not null and app.user in sketch.authors %}
+					<ul class="button-group" style="float:left;">
+						<li>
+							<a href="{{ path('sketch', {'sketchId': sketch.id}) }}" class="button button-primary"><i class="fa fa-pencil"></i> Edit</a>
+							<a href="#" class="button button-red"><i class="fa fa-trash"></i> Delete</a>
+						</li>
+					</ul>
+					{% endif %}
+					{{ sketch.name }}
+					{% if app.user is not null %}
+					<a href="#" class="button button-green" style="float:right;"><i class="fa fa-thumbs-up"></i> Like</a>
+					{% endif %}
+				</figcaption>
 			</figure>
 		</center>
 	{% endif %}

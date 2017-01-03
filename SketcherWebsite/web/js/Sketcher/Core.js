@@ -10,13 +10,11 @@ Sketcher.Core = (function(document, window) {
 		this.layers = [];
 		this.selectedLayer;
 		this.clicked = false;
-		this.width = window.innerWidth;
-		this.height = window.innerHeight;
+		this.width = Sketcher.data.width;
+		this.height = Sketcher.data.height;
 		this.lineWidth = 1;
-		this.socket = new Sketcher.Socket('localhost');
+		this.socket = Sketcher.settings.offline ? null : new Sketcher.Socket('localhost');
 
-				this.socket.addObject(); // DEV___ LEAULE
-				
 		//Tools
 		Sketcher.Tools.init(this.width, this.height);
 		this.tool = Sketcher.Tools.getTool();
