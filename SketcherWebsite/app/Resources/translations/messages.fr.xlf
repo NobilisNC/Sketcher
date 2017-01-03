@@ -114,13 +114,29 @@
                 <source>New sketch</source>
                 <target>Nouveau dessin</target>
             </trans-unit>
-            <trans-unit id="create_sketch">
-                <source>Create sketch</source>
+            <trans-unit id="create.sketch">
+                <source>create.sketch</source>
                 <target>Créer un desssin</target>
             </trans-unit>
-            <trans-unit id="title">
-                <source>Title</source>
+            <trans-unit id="sketch.title">
+                <source>sketch.title</source>
                 <target>Titre</target>
+            </trans-unit>
+            <trans-unit id="sketch.authors">
+                <source>sketch.authors</source>
+                <target>one: Auteur|some: Auteurs</target>
+            </trans-unit>
+            <trans-unit id="sketch.width">
+                <source>sketch.width</source>
+                <target>Largeur</target>
+            </trans-unit>
+            <trans-unit id="sketch.height">
+                <source>sketch.height</source>
+                <target>Hauteur</target>
+            </trans-unit>
+            <trans-unit id="user.delete">
+                <source>user.delete</source>
+                <target>Supprimer l'utilisateur</target>
             </trans-unit>
         </body>
     </file>

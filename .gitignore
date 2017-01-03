@@ -1,4 +1,5 @@
 node_modules
+**/*~
 /SketcherWebsite/app/config/parameters.yml
 /SketcherWebsite/build/
 /SketcherWebsite/phpunit.xml

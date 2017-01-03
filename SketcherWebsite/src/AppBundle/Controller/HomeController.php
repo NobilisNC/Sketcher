@@ -30,11 +30,6 @@ class HomeController extends Controller
 	 */
 	public function galleryAction(Request $request)
 	{
-        $user = $this->getUser();
-
-		if(!$user)
-			return $this->redirectToRoute('login');
-
         $sketches = $this->getLastSketches(10);
 
 		return $this->render('home/gallery.html.twig',
@@ -131,6 +126,15 @@ class HomeController extends Controller
 
     /**
     *
+    * @Route("/sketch/{sketchId}", name="sketch")
+    */
+	public function sketchAction(Request $request, $sketchId)
+    {
+		return $this->render('home/sketch.html.twig');
+	}
+
+    /**
+    *
     * @Route("/new/sketch", name="newSketch")
     */
     public function newSketchAction(Request $request)
@@ -145,30 +149,40 @@ class HomeController extends Controller
         $form = $this->createForm(SketchType::class, $sketch);
         $form->handleRequest($request);
 
-        if ($form->isSubmitted() && $form->isValid()) {
+        if ($form->isSubmitted()) {
+			// Create blank image
+			$img = imagecreatetruecolor($sketch->getWidth(), $sketch->getHeight());
+			imagefill($img, 0, 0, imagecolorallocate($img, 255,255,255));
+			imagejpeg($img, $this->getParameter('sketches_directory').'/'.$sketch->getPath());
 
-            /** @var Symfony\Component\HttpFoundation\File\UploadedFile $file */
-            $file = $sketch->getPath();
+			if($form->isValid()) {
+				echo "OK";
+			}
+			// $file = $sketch->getPath();
+            // // Generate a unique name for the file before saving it
+            // $fileName = md5(uniqid()).'.'.$file->guessExtension();
+			//
+			//
+            // $file->move(
+            //      $this->getParameter('sketches_directory'),
+            //     $fileName
+            // );
+			//
+            // $sketch->setPath($fileName);
 
-            // Generate a unique name for the file before saving it
-            $fileName = md5(uniqid()).'.'.$file->guessExtension();
 
-
-            $file->move(
-                 $this->getParameter('sketches_directory'),
-                $fileName
-            );
-
-
-            $sketch->setPath($fileName);
             $sketch->addAuthor($user);
-
 
             $db = $this->getDoctrine()->getManager();
 			$db->persist($sketch);
 			$db->flush();
 
-            return $this->redirectToRoute('homepage');
+            return $this->redirectToRoute(
+				'sketch',
+				array(
+					'sketchId' => $sketch->getId()
+				)
+			);
         }
 
         return $this->render('home/new_sketch.html.twig', array(

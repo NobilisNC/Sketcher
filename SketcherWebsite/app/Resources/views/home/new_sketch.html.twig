@@ -3,30 +3,69 @@
 {% block title %}- {{ 'New sketch'|trans }}{% endblock %}
 
 {% block body %}
-<div class="col-left-2 col-8">
-	<h2>{{ 'Create sketch'|trans }}</h2>
-	<main>
+<div class="container col-left-2 col-8">
+	<header>{{ 'create.sketch'|trans }}</header>
+	<br>
 	{{ form_start(form, {'attr': {'class': 'form form-left'}}) }}
-			{% for f in form %}
-				{% if not f.vars.compound and "hidden" not in f.vars.block_prefixes %}
-					<div class="form_group row">
-						{{ form_label(f, null, {'label': (f.vars.label|trans), 'label_attr': {'class': 'col-4'}}) }}
-						<div class="input col-7">
-							{% set class = 'twothirds' %}
-							{% if f.vars.value|length > 0 %}
-								{% set class = class ~ (f.vars.valid ? ' success' : ' error')  %}
-							{% endif %}
-							{{ form_widget(f, {'attr': {'class': class} }) }}
-							{% if f.vars.errors|length > 0 %}
-								{% for error in f.vars.errors %}
-									<p class="error">{{ error.message|trans }}</p>
-								{% endfor %}
-							{% endif %}
-						</div>
-					</div>
+	<div class="form_group row">
+		{{ form_label(form.name, null, {
+			'label': form.name.vars.label|trans,
+			'label_attr': {
+				'class': 'col-4'
+			}
+		}) }}
+		<div class="input col-7">
+			{% set class = '' %}
+			{% if form.name.vars.value|length > 0 %}
+				{% set class = class ~ (form.name.vars.valid ? ' success' : ' error')  %}
+			{% endif %}
+			{{ form_widget(form.name, {'attr': {'class': class} }) }}
+			{% if form.name.vars.errors|length > 0 %}
+				{% for error in form.name.vars.errors %}
+					<p class="error">{{ error.message|trans }}</p>
+				{% endfor %}
+			{% endif %}
+		</div>
+	</div>
+	<div class="form_group row">
+		{{ form_label(form.width, null, {
+			'label': form.width.vars.label|trans ~ ' (px)',
+			'label_attr': {
+				'class': 'col-4'
+			}
+		}) }}
+		<div class="input col-2">
+			{% set class = '' %}
+			{% if form.width.vars.value|length > 0 %}
+				{% set class = class ~ (form.width.vars.valid ? ' success' : ' error')  %}
+			{% endif %}
+			{{ form_widget(form.width, {'attr': {'class': class} }) }}
+			{% if form.width.vars.errors|length > 0 %}
+				{% for error in form.width.vars.errors %}
+					<p class="error">{{ error.message|trans }}</p>
+				{% endfor %}
+			{% endif %}
+		</div>
+			{{ form_label(form.height, null, {
+				'label': form.height.vars.label|trans ~ ' (px)',
+				'label_attr': {
+					'class': 'col-2 col-left-1'
+				}
+			}) }}
+			<div class="input col-2">
+				{% set class = '' %}
+				{% if form.height.vars.value|length > 0 %}
+					{% set class = class ~ (form.height.vars.valid ? ' success' : ' error')  %}
 				{% endif %}
-			{% endfor %}
-    <input type="submit" value="{{'Upload Sketch'|trans}}" class="col-12 button button-primary" />
+				{{ form_widget(form.height, {'attr': {'class': class} }) }}
+				{% if form.height.vars.errors|length > 0 %}
+					{% for error in form.height.vars.errors %}
+						<p class="error">{{ error.message|trans }}</p>
+					{% endfor %}
+				{% endif %}
+			</div>
+	</div>
+    <input type="submit" value="{{ 'create.sketch'|trans }}" class="col-12 button button-primary" />
 {{ form_end(form) }}
 </div>
 {% endblock %}

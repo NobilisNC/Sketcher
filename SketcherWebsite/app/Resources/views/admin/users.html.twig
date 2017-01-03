@@ -1,0 +1,37 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}- {{ 'New sketch'|trans }}{% endblock %}
+
+{% block body %}
+<div class="col-left-2 col-8">
+	<h2>{{ 'users'|trans }}</h2>
+	<table class="table table-zebra table-hover">
+		<tr>
+			<th>{{ 'Username'|trans }}</th>
+			<th>{{ 'E-mail'|trans }}</th>
+			<th>{{ 'Locale'|trans }}</th>
+			<th>{{ 'Status'|trans }}</th>
+			<th>{{ 'Actions'|trans }}</th>
+		</tr>
+	{% for user in users %}
+		<tr>
+			<td><a href="{{ path('profile', {'username': user.username}) }}">{{ user.username }}</a></td>
+			<td>{{ user.email }}</td>
+			<td style="text-align:center;">{{ user.locale }}</td>
+			<td style="text-align:center;">
+			{% if user.isAdmin %}
+				<span class="label label-green">admin</span>
+			{% else %}
+				<span class="label">user</span>
+			{% endif %}
+			</td>
+			<td>
+				<a href="#" class="button button-small button-red" title="{{ 'user.delete'|trans }}"><i class="fa fa-trash"></i></a>
+				<a href="#" class="button button-small button-red" title="{{ 'user.delete'|trans }}"><i class="fa fa-trash"></i></a>
+				<a href="#" class="button button-small button-red" title="{{ 'user.delete'|trans }}"><i class="fa fa-trash"></i></a>
+			</td>
+		</tr>
+	{% endfor %}
+	</table>
+</div>
+{% endblock %}

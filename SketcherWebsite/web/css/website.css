@@ -24,6 +24,14 @@ div#topSlide {
 	overflow: hidden;
 }
 
+.table.table-hover tbody tr:hover a {
+	color: white;
+}
+
+.table.table-hover thead tr:hover {
+	background-color: white;
+}
+
 div#top a.sketch {
 	border-radius: 3px;
 	border: 1px solid #fff;

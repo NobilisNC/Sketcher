@@ -10,7 +10,7 @@ var Sketcher = Sketcher || (function(document, window, settings = {}) {
 		stickDistance: settings.stickDistance || 10,
 		unstickDistance: settings.unstickDistance || 100
 	};
-	this.basedir = 'js/Sketcher/';
+	this.basedir = '/js/Sketcher/';
 	this.libs = {
 		'Socket': {filename: 'Socket.js'},
 		'Color': {filename: 'Color.js'},

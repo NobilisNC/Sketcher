@@ -8,19 +8,23 @@ use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
 use Symfony\Component\Form\Extension\Core\Type\FileType;
 use Symfony\Component\Form\Extension\Core\Type\TextType;
+use Symfony\Component\Form\Extension\Core\Type\IntegerType;
 
 class SketchType extends AbstractType
 {
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
-        $builder
-            ->add('name', TextType::class, array(
-				'label' => 'Title'
-			))
-            ->add('path', FileType::class, array(
-                'label' => 'Sketch'
-            ))
-        ;
+        $builder->add('name', TextType::class, array(
+			'label' => 'sketch.title'
+		))
+        ->add('width', IntegerType::class, array(
+			'label' => 'sketch.width',
+			'data' => '1000'
+		))
+        ->add('height', IntegerType::class, array(
+			'label' => 'sketch.height',
+			'data' => '800'
+		));
     }
 
     public function configureOptions(OptionsResolver $resolver)

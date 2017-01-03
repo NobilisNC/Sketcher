@@ -118,17 +118,33 @@
                 <source>New sketch</source>
                 <target>New sketch</target>
             </trans-unit>
-            <trans-unit id="create_sketch">
-                <source>Create sketch</source>
+            <trans-unit id="create.sketch">
+                <source>create.sketch</source>
                 <target>Create sketch</target>
             </trans-unit>
-            <trans-unit id="title">
-                <source>Title</source>
+            <trans-unit id="sketch.title">
+                <source>sketch.title</source>
                 <target>Title</target>
             </trans-unit>
             <trans-unit id="sketches">
                 <source>Sketches</source>
                 <target>Sketches</target>
+            </trans-unit>
+            <trans-unit id="sketch.authors">
+                <source>sketch.authors</source>
+                <target>one: Author|some: Authors</target>
+            </trans-unit>
+            <trans-unit id="sketch.width">
+                <source>sketch.width</source>
+                <target>Width</target>
+            </trans-unit>
+            <trans-unit id="sketch.height">
+                <source>sketch.height</source>
+                <target>Height</target>
+            </trans-unit>
+            <trans-unit id="user.delete">
+                <source>user.delete</source>
+                <target>Delete user</target>
             </trans-unit>
         </body>
     </file>

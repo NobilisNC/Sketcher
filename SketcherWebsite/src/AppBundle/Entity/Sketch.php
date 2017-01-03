@@ -72,10 +72,25 @@ class Sketch
     */
     private $likers;
 
+	/**
+	* @ORM\Column(name="width", type="integer", options={"default": 1000})
+	*/
+	private $width;
+
+	/**
+	* @ORM\Column(name="height", type="integer", options={"default": 800})
+	*/
+	private $height;
+
+	/**
+	* @ORM\Column(name="data", type="string", length=13370, options={"default": "{}"})
+	*/
+	private $data;
 
     public function __construct() {
-		$this->name = "";
-		$this->path = "";
+		$this->name = '';
+		$this->data = '';
+		$this->path = md5(uniqid('', true)).'.jpg';
         $this->dateUpload = new \DateTime();
         $this->authors = new ArrayCollection();
     }
@@ -263,5 +278,77 @@ class Sketch
     public function getLikers()
     {
         return $this->likers;
+    }
+
+    /**
+     * Set data
+     *
+     * @param string $data
+     *
+     * @return Sketch
+     */
+    public function setData($data)
+    {
+        $this->data = $data;
+
+        return $this;
+    }
+
+    /**
+     * Get data
+     *
+     * @return string
+     */
+    public function getData()
+    {
+        return $this->data;
+    }
+
+    /**
+     * Set width
+     *
+     * @param integer $width
+     *
+     * @return Sketch
+     */
+    public function setWidth($width)
+    {
+        $this->width = $width;
+
+        return $this;
+    }
+
+    /**
+     * Get width
+     *
+     * @return integer
+     */
+    public function getWidth()
+    {
+        return $this->width;
+    }
+
+    /**
+     * Set height
+     *
+     * @param integer $height
+     *
+     * @return Sketch
+     */
+    public function setHeight($height)
+    {
+        $this->height = $height;
+
+        return $this;
+    }
+
+    /**
+     * Get height
+     *
+     * @return integer
+     */
+    public function getHeight()
+    {
+        return $this->height;
     }
 }

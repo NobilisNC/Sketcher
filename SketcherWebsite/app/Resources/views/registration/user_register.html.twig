@@ -3,9 +3,8 @@
 {% block title %}- {{ 'Register'|trans }}{% endblock %}
 
 {% block body %}
-<div class="container col-left-4 col-4">
+<div class="container col-left-3 col-6">
 	<header>{{ 'Register'|trans }}</header>
-	<main>
 	{{ form_start(form, {'attr': {'class': 'form form-left'}}) }}
 			{% for f in form %}
 				{% if not f.vars.compound and "hidden" not in f.vars.block_prefixes %}
@@ -49,6 +48,5 @@
 			</div>
 			<input type="submit" role="button" name="register" value="{{ 'Sign up'|trans }}" class="col-12 button button-primary" />
 		{{ form_end(form) }}
-	</main>
 </div>
 {% endblock %}
