@@ -82,6 +82,7 @@ class User implements UserInterface, \Serializable
     */
     private $sketches_liked;
 
+
 	public function __construct() {
 		$this->isActive = true;
 		$this->isAdmin = false;
@@ -339,5 +340,29 @@ class User implements UserInterface, \Serializable
     public function getSketchesLiked()
     {
         return $this->sketches_liked;
+    }
+
+    /**
+     * Add sketchesLiked
+     *
+     * @param \AppBundle\Entity\Sketch $sketchesLiked
+     *
+     * @return User
+     */
+    public function addSketchesLiked(\AppBundle\Entity\Sketch $sketchesLiked)
+    {
+        $this->sketches_liked[] = $sketchesLiked;
+
+        return $this;
+    }
+
+    /**
+     * Remove sketchesLiked
+     *
+     * @param \AppBundle\Entity\Sketch $sketchesLiked
+     */
+    public function removeSketchesLiked(\AppBundle\Entity\Sketch $sketchesLiked)
+    {
+        $this->sketches_liked->removeElement($sketchesLiked);
     }
 }
