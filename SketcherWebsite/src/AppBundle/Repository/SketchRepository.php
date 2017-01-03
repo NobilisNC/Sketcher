@@ -22,13 +22,24 @@ class SketchRepository extends \Doctrine\ORM\EntityRepository
 
         $query = $manager->getRepository('AppBundle:Sketch')
                        ->createQueryBuilder('sketch')
-                       ->select('sketch')
+                       ->select('sketch.id')
                        ->leftJoin('sketch.likers', 'likers')
                        ->addSelect('COUNT(sketch.id) AS nbLikes')
+                       ->orderBy('nbLikes', 'DESC')
                        ->groupBy('sketch.id')
+                       ->setMaxResults($number)
                        ->getQuery();
 
-        return $query->execute();
+        $result = $query->execute();
+
+        $ids = array();
+        foreach ($result as $row)
+            $ids[] = $row["id"];
+
+
+
+        return $manager->getRepository('AppBundle:Sketch')
+                ->findBy(array('id' => $ids));
     }
 
 }

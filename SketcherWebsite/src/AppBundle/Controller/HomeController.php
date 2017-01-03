@@ -30,18 +30,8 @@ class HomeController extends Controller
 	 */
 	public function galleryAction(Request $request)
 	{
-        //$sketches = $this->getLastSketches(10);
-        $sketches = $this->getDoctrine()->getRepository('AppBundle:Sketch')->getMostLikedSketches(10);
-        var_dump($sketches->count());
-        //var_dump($sketches->count());
-        /*$user = $this->getUser();
-        if (!$user)
-        foreach ($sketches as $s) {
-            $manager = $this->getDoctrine()->getManager();
-            $s->addLikers($user);
-            $manager->merge($s);
-            $manager->flush();
-        }*/
+        //$sketches = $this->getDoctrine()->getRepository('AppBundle:Sketch')->getLastSketches(10);
+        $sketches = $this->getDoctrine()->getRepository('AppBundle:Sketch')->getMostLikedSketches();
 
 		return $this->render('home/gallery.html.twig',
             array (

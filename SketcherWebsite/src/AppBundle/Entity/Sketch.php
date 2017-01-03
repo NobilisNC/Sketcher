@@ -351,4 +351,14 @@ class Sketch
     {
         return $this->height;
     }
+
+    /**
+     * Get height
+     *
+     * @return integer
+     */
+     public function getLikes() {
+         return $this->likers->count();
+     }
+
 }

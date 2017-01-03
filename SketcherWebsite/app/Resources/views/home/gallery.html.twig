@@ -16,6 +16,9 @@
 					{% set first = true %}
 					{% for author in sketch.authors %}{{ (first ? '' : ', ') }}<a href="{{ path('profile', {'username': author.username}) }}">{{ author.username }}</a>{% set first = false %}{% endfor %}
 					</figcaption>
+                    <figcaption>
+                        <p>NB likes : {{sketch.getLikes()}}</p>
+                    <figcaption>
 				</figure>
 		    {% endfor %}
 		</div>
