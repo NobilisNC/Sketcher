@@ -4,8 +4,10 @@ namespace AppBundle\Controller;
 
 use AppBundle\Form\UserType;
 use AppBundle\Form\SketchType;
+use AppBundle\Form\CommentType;
 use AppBundle\Entity\User;
 use AppBundle\Entity\Sketch;
+use AppBundle\Entity\Comment;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Symfony\Component\HttpFoundation\Request;
@@ -51,16 +53,48 @@ class HomeController extends Controller
 	 */
 	public function showSketchAction(Request $request, int $sketchId)
 	{
+        $data = array('form' => null);
+
 		$db = $this->getDoctrine()->getRepository('AppBundle:Sketch');
 		$sketch = $db->findOneBy(array(
 			'id' => $sketchId
 		));
 
+
+
+        $user = $this->getUser();
+
+
+        if($user) {
+            $comment = new Comment();
+
+            $form = $this->createForm(CommentType::class, $comment);
+            $form->handleRequest($request);
+
+            if ($form->isSubmitted() && $form->isValid()) {
+
+                $comment->setAuthor($user);
+                $comment->setSketch($sketch);
+
+                echo $comment->getId();
+
+                $db = $this->getDoctrine()->getManager();
+                $db->persist($comment);
+                $db->flush();
+            }
+
+            $data["form"] = $form->createView();
+        }
+
+        $db = $this->getDoctrine()->getRepository('AppBundle:Comment');
+        $data["comments"] = $db->findBy(array('sketch' => $sketch));
+
+        $data["sketch"] = $sketch;
+
+
 		return $this->render(
 			'home/show_sketch.html.twig',
-            array(
-                'sketch' => $sketch
-            )
+            $data
         );
 	}
 

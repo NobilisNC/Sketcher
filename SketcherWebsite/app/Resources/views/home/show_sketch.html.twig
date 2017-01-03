@@ -30,5 +30,28 @@
 			</figure>
 		</center>
 	{% endif %}
+
 	</div>
+    {% if form is not null %}
+    <div>
+    {{ form_start(form) }}
+        <div class="form_group row">
+        {{ form_row(form.content) }}
+        </div>
+        <input type="submit" role="button" name="upload" value={{'Commenter'}} class="col-12 button button-primary" />
+
+    {{form_end(form)}}
+    </div>
+    {% endif %}
+    {% for comment in comments %}
+    <div>
+    {{comment.author.username}}
+    {{comment.date|date('Y-m-d')}}
+    {{comment.content}}<br/>
+</div>
+    {% endfor %}
+
+
+
+
 {% endblock %}
