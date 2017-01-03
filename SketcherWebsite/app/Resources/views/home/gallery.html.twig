@@ -5,6 +5,12 @@
 {% block body %}
     <div class="col-10 col-left-1">
 		<h2>{{ 'Gallery'|trans }}</h2>
+		{% if sketches|length == 0 %}
+		<div class="info">
+			<h5>{{ 'no.sketch'|trans }}</h5>
+			<p>{{ 'no.sketch.explanation'|trans }}</p>
+		</div>
+		{% else %}
 		<div class="container col-12" id="gallery">
 		    {% for sketch in sketches %}
 				<figure class="thumbnail col-3">
@@ -21,6 +27,7 @@
 				</figure>
 		    {% endfor %}
 		</div>
+		{% endif %}
     </div>
 
 {% endblock %}

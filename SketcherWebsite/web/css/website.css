@@ -24,12 +24,33 @@ div#topSlide {
 	overflow: hidden;
 }
 
-div.error {
-	color: #e33333;
-	border: 1px solid #e33333;
+div.error, div.info {
+	border-width: 1px;
+	border-style: solid;
 	border-radius: 3px;
 	padding: 10px;
+	position: relative;
 }
+
+	div.error p, div.info p {
+		margin: 0;
+	}
+
+	div.error a.float, div.info a.float {
+		position: absolute;
+		top: 5px;
+		right: 5px;
+	}
+
+	div.error {
+		color: #e33333;
+		border-color: #e33333;
+	}
+
+	div.info {
+		color: #1b67d9;
+		border-color: #1b67d9;
+	}
 
 .table.table-hover tbody tr:hover a {
 	color: white;
@@ -97,6 +118,7 @@ div#gallery figure.thumbnail {
 		}
 
 figure#showSketch {
+	min-width: 500px;
 	max-width: 100%;
 }
 

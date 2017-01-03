@@ -187,11 +187,11 @@ class HomeController extends Controller
         if ($form->isSubmitted() && $form->isValid()) {
 			// Create blank image
 			$img = imagecreatetruecolor($sketch->getWidth(), $sketch->getHeight());
-			imagefill($img, 0, 0, imagecolorallocate($img, 255,255,255));
+			imagefill($img, 0, 0, imagecolorallocate($img, 255, 255, 255));
 			imagejpeg($img, $this->getParameter('sketches_directory').'/'.$sketch->getPath());
 
             $sketch->addAuthor($user);
-			$sketch->setData('{"width":'.$sketch->getWidth().',"height":'.$sketch->getHeight().'}');
+			$sketch->setData('{"width":'.$sketch->getWidth().',"height":'.$sketch->getHeight().',"layers":{}}');
 
             $db = $this->getDoctrine()->getManager();
 			$db->persist($sketch);
@@ -209,7 +209,4 @@ class HomeController extends Controller
             'form' => $form->createView(),
         ));
     }
-
-
-
 }

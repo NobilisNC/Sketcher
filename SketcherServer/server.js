@@ -2,7 +2,7 @@ var fs = require('fs');
 var http = require('http').Server(answerRequest);
 var io = require('socket.io')(http);
 
-var port = 10053; // the game.
+var port = 10053;
 var verb = 2; // Can be 0: errors, 1: warnings, 2: info
 
 var user = null;
@@ -88,4 +88,4 @@ http.listen(port, function(){
     console.log('Listening on '+port+'.');
 });
 
-// Tous les X secondes, on envoie aux clients "qui modifie le dessin à ce temps T"
+// Toutes les X secondes, on envoie aux clients "qui modifie le dessin à ce temps T"

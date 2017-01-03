@@ -3,26 +3,40 @@
 {% block title %}- {{ 'New sketch'|trans }}{% endblock %}
 
 {% block body %}
-<div id="sketcher"></div>
-<script src="{{ asset('js/Sketcher.js') }}"></script>
-<script type="text/javascript">
-	Sketcher.init(
-		document.querySelector('div#sketcher'),
-		{
-			data: {{ sketch.data|raw }},
-			offline: true
-		}
-	);
-</script>
+{% if sketch is null %}
+	<div class="col-left-1 col-10">
+		<div class="error">
+			<h5>{{ 'sketch.not.found'|trans }}</h5>
+			<a href="{{ path('gallery') }}" class="button button-primary float"><i class="fa fa-reply"></i> {{ 'back.to.gallery'|trans }}</a>
+			<p>{{ 'sketch.not.found.explanation'|trans }}</p>
+		</div>
+	</div>
+{% else %}
+	<div id="sketcher"></div>
+	<script src="{{ asset('js/Sketcher.js') }}"></script>
+	<script type="text/javascript">
+		Sketcher.init(
+			document.querySelector('div#sketcher'),
+			{
+				data: {{ sketch.data|raw }},
+				offline: true
+			}
+		);
+	</script>
+{% endif %}
 {% endblock %}
 
 {% block sketcher_stylesheets %}
+{% if sketch is not null %}
 <link rel="stylesheet" href="{{ asset('css/jsColor.css') }}">
 <link rel="stylesheet" href="{{ asset('css/sketcher.css') }}">
 <link rel="manifest" href="{{ asset('manifest.webmanifest') }}">
+{% endif %}
 {% endblock %}
 
 {% block sketcher_javascripts %}
+{% if sketch is not null %}
 <script src="https://cdn.socket.io/socket.io-1.4.5.js"></script>
 <script src="{{ asset('js/jsColor.js') }}"></script>
+{% endif %}
 {% endblock %}

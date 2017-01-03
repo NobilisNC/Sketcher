@@ -74,11 +74,23 @@ class Sketch
 
 	/**
 	* @ORM\Column(name="width", type="integer", options={"default": 1000})
+	* @Assert\Range(
+	*   min=0,
+	*   max=1000,
+	*   minMessage="dimension.min.limit.reached",
+	*   maxMessage="dimension.max.limit.reached"
+	* )
 	*/
 	private $width;
 
 	/**
 	* @ORM\Column(name="height", type="integer", options={"default": 800})
+	* @Assert\Range(
+	*   min=0,
+	*   max=1000,
+	*   minMessage="dimension.min.limit.reached",
+	*   maxMessage="dimension.max.limit.reached"
+	* )
 	*/
 	private $height;
 

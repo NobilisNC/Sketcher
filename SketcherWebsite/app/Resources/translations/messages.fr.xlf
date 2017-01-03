@@ -138,6 +138,34 @@
                 <source>user.delete</source>
                 <target>Supprimer l'utilisateur</target>
             </trans-unit>
+            <trans-unit id="sketch.not.found">
+                <source>sketch.not.found</source>
+                <target>Loupé ...</target>
+            </trans-unit>
+            <trans-unit id="sketch.not.found.explanation">
+                <source>sketch.not.found.explanation</source>
+                <target>Le dessin auquel vous voulez accéder n'existe pas ou est privé.</target>
+            </trans-unit>
+            <trans-unit id="back.to.gallery">
+                <source>back.to.gallery</source>
+                <target>Retourner à la gallerie</target>
+            </trans-unit>
+            <trans-unit id="no.sketch">
+                <source>no.sketch</source>
+                <target>Rien !</target>
+            </trans-unit>
+            <trans-unit id="no.sketch.explanation">
+                <source>no.sketch.explanation</source>
+                <target>Il n'y a aucun dessin à montrer.</target>
+            </trans-unit>
+            <trans-unit id="dimension.min.limit.reached">
+                <source>dimension.min.limit.reached</source>
+                <target>Les dimensions ne peuvent être négatives.</target>
+            </trans-unit>
+            <trans-unit id="dimension.max.limit.reached">
+                <source>dimension.max.limit.reached</source>
+                <target>Les dimensions maximales sont 1000x1000.</target>
+            </trans-unit>
         </body>
     </file>
 </xliff>
