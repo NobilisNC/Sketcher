@@ -6,7 +6,7 @@
 body {
 	font-family: "Tahoma", sans-serif;
 	overflow: hidden;
-	background: url(data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAoAAAAKCAYAAACNMs+9AAAAN0lEQVQYV2P8///TfwYkcOo5L4OZ5GdkITCbEV0hhgqoAIZCyk08+ez/f5CbYCbhogfSjVQPRwBHlEBhYkNWOwAAAABJRU5ErkJggg==) repeat;
+	background: url(data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABAAAAAQCAYAAAAf8/9hAAAABmJLR0QA/wD/AP+gvaeTAAAACXBIWXMAAAsTAAALEwEAmpwYAAAAB3RJTUUH4QEDDigdCtwLoAAAAB1pVFh0Q29tbWVudAAAAAAAQ3JlYXRlZCB3aXRoIEdJTVBkLmUHAAAAK0lEQVQ4y2OcOXPmfwY84OzZs/ikGZgYKASjBgwGA1gIxbOxsfFoIA5/AwAHZQhTm7rVdAAAAABJRU5ErkJggg==) repeat;
 }
 
 	a {
@@ -32,6 +32,8 @@ body {
 
 		#sketcher_layers {
 			background: #fff;
+			margin: 0 auto;
+			position: relative;
 		}
 
 	#sketcher_ui {

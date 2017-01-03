@@ -5,6 +5,15 @@
 {% block body %}
 <div id="sketcher"></div>
 <script src="{{ asset('js/Sketcher.js') }}"></script>
+<script type="text/javascript">
+	Sketcher.init(
+		document.querySelector('div#sketcher'),
+		{
+			data: {{ sketch.data|raw }},
+			offline: true
+		}
+	);
+</script>
 {% endblock %}
 
 {% block sketcher_stylesheets %}

@@ -7,11 +7,10 @@ Sketcher.UI = (function(document, window) {
 	// Constructor
 	var UISingleton = function(document, window) {
 		Sketcher.widgets.AbstractWidget.call(this, Sketcher.Core.frame);
-		console.log(Sketcher);
 		this.node = Sketcher.createElement('sketcher_ui', Sketcher.node);
 
 		// Create UI components containers
-		this.layerControl = new Sketcher.widgets.LayerControl(this, Sketcher.Core.getWidth()-261, 10);
+		this.layerControl = new Sketcher.widgets.LayerControl(this, window.innerWidth-261, 10);
 		this.palette = new Sketcher.widgets.Palette(this, 10, 10);
 		this.tools = new Sketcher.widgets.Window('Tools', this, 10, 185);
 		this.toolButtons = new Sketcher.widgets.Toolbox(this.tools);
