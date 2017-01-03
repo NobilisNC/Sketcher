@@ -42,6 +42,29 @@ class HomeController extends Controller
 
 	/**
 	 *
+	 * @Route(
+	 *   "/gallery/{sketchId}",
+	 *   requirements={"sketchId": "\d+"},
+	 *   name="showSketch"
+	 * )
+	 */
+	public function showSketchAction(Request $request, int $sketchId)
+	{
+		$db = $this->getDoctrine()->getRepository('AppBundle:Sketch');
+		$sketch = $db->findOneBy(array(
+			'id' => $sketchId
+		));
+
+		return $this->render(
+			'home/show_sketch.html.twig',
+            array(
+                'sketch' => $sketch
+            )
+        );
+	}
+
+	/**
+	 *
 	 * @Route("/profile/{username}", name="profile")
 	 */
 	public function profileAction(Request $request, $username)
@@ -150,15 +173,12 @@ class HomeController extends Controller
         $form = $this->createForm(SketchType::class, $sketch);
         $form->handleRequest($request);
 
-        if ($form->isSubmitted()) {
+        if ($form->isSubmitted() && $form->isValid()) {
 			// Create blank image
 			$img = imagecreatetruecolor($sketch->getWidth(), $sketch->getHeight());
 			imagefill($img, 0, 0, imagecolorallocate($img, 255,255,255));
 			imagejpeg($img, $this->getParameter('sketches_directory').'/'.$sketch->getPath());
 
-			if($form->isValid()) {
-				echo "OK";
-			}
 			// $file = $sketch->getPath();
             // // Generate a unique name for the file before saving it
             // $fileName = md5(uniqid()).'.'.$file->guessExtension();
