@@ -67,3 +67,24 @@ div#top a.sketch {
 		line-height: 10px;
 		box-shadow: 0 0 4px 4px rgba(255,255,255,.9);
 		}
+
+div#gallery figure.thumbnail {
+	height: 180px;
+	vertical-align: top;
+}
+
+	div#gallery figure.thumbnail a.sketch {
+		height: 145px;
+		display: block;
+		line-height: 140px;
+		text-align: center;
+	}
+
+		div#gallery figure.thumbnail a.sketch img {
+			border-radius: 3px;
+			max-height: 140px;
+			max-width: 100%;
+			height: auto;
+			width: auto;
+			vertical-align: middle;
+		}

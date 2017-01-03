@@ -85,7 +85,8 @@ class HomeController extends Controller
 
 		$form = $this->createForm(UserType::class, $user);
 
-		$form->remove('plainPassword')
+		$form->remove('username')
+		->remove('plainPassword')
 		->add('plainPassword', PasswordType::class, array(
 			'label' => 'Current password',
 			'required' => true
