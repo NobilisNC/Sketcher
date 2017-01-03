@@ -24,6 +24,13 @@ div#topSlide {
 	overflow: hidden;
 }
 
+div.error {
+	color: #e33333;
+	border: 1px solid #e33333;
+	border-radius: 3px;
+	padding: 10px;
+}
+
 .table.table-hover tbody tr:hover a {
 	color: white;
 }
@@ -88,3 +95,14 @@ div#gallery figure.thumbnail {
 			width: auto;
 			vertical-align: middle;
 		}
+
+figure#showSketch {
+	max-width: 100%;
+}
+
+	figure#showSketch img {
+		max-width: 100%;
+		max-height: 700px;
+		width: auto;
+		height: auto;
+	}

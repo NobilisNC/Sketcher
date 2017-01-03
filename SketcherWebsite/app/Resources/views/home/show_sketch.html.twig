@@ -1,0 +1,21 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}- {{ sketch is not null ? sketch.name : 'sketch.not.found'|trans }}{% endblock %}
+
+{% block body %}
+	<div class="col-left-1 col-10">
+	{% if sketch is null %}
+		<div class="error">
+			<h5>{{ 'sketch.not.found'|trans }}</h5>
+			{{ 'sketch.not.found.explanation'|trans }}
+		</div>
+	{% else %}
+		<center>
+			<figure id="showSketch" class="thumbnail">
+				<img src="{{ asset(sketches_directory ~ '/' ~ sketch.path) }}" alt="{{ sketch.name }}">
+				<figcaption>{{ sketch.name }}</figcaption>
+			</figure>
+		</center>
+	{% endif %}
+	</div>
+{% endblock %}
