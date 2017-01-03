@@ -8,14 +8,16 @@
 		<div class="container col-12" id="gallery">
 		    {% for sketch in sketches %}
 				<figure class="thumbnail col-3">
-					<a href="{{ path('showSketch', {'sketchId': sketch.id}) }}" class="sketch">
+					<a href="gallery/{{sketch.id}}" class="sketch">
 			            <img src="{{ asset(sketches_directory ~ '/' ~ sketch.path)}}">
 					</a>
 					<figcaption>
 						{{ 'sketch.authors'|transchoice(sketch.authors|length) }} :
 					{% set first = true %}
 					{% for author in sketch.authors %}{{ (first ? '' : ', ') }}<a href="{{ path('profile', {'username': author.username}) }}">{{ author.username }}</a>{% set first = false %}{% endfor %}
-					</figcaption>
+
+                    </figcaption>
+
 				</figure>
 		    {% endfor %}
 		</div>

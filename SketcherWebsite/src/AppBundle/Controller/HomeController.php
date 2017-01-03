@@ -30,7 +30,8 @@ class HomeController extends Controller
 	 */
 	public function galleryAction(Request $request)
 	{
-        $sketches = $this->getLastSketches(10);
+        //$sketches = $this->getDoctrine()->getRepository('AppBundle:Sketch')->getLastSketches(10);
+        $sketches = $this->getDoctrine()->getRepository('AppBundle:Sketch')->getMostLikedSketches();
 
 		return $this->render('home/gallery.html.twig',
             array (
@@ -209,10 +210,6 @@ class HomeController extends Controller
         ));
     }
 
-    private function getLastSketches($number = 10) {
-        $manager = $this->getDoctrine()->getManager();
-        return $manager->getRepository('AppBundle:Sketch')
-                       ->findBy(array(), array('dateUpload' => 'DESC'), $number);
-    }
+
 
 }

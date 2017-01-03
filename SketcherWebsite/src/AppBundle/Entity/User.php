@@ -314,7 +314,7 @@ class User implements UserInterface, \Serializable
      *
      * @return User
      */
-    public function addSketchesLiked(\AppBundle\Entity\Sketch $sketchesLiked)
+    public function likes(\AppBundle\Entity\Sketch $sketchesLiked)
     {
         $this->sketches_liked[] = $sketchesLiked;
 
@@ -326,7 +326,7 @@ class User implements UserInterface, \Serializable
      *
      * @param \AppBundle\Entity\Sketch $sketchesLiked
      */
-    public function removeSketchesLiked(\AppBundle\Entity\Sketch $sketchesLiked)
+    public function removeLike(\AppBundle\Entity\Sketch $sketchesLiked)
     {
         $this->sketches_liked->removeElement($sketchesLiked);
     }
