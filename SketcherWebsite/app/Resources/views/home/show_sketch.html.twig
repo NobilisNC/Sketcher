@@ -38,7 +38,7 @@
 		<div>
 			{% for comment in comments %}
 			<div class="container comment">
-				<header>{{ comment.author.username }}<span class="date">{{ comment.date|date('Y-m-d') }}</span></header>
+				<header>{{ comment.author.username }}<span class="date">{{ comment.date|date('d/m/Y | H:i') }}</span></header>
 				{{comment.content}}<br/>
 			</div>
 			{% endfor %}
@@ -55,38 +55,10 @@
 					{% endif %}
 				</div>
 			</div>
-			<input type="submit" role="button" name="upload" value={{ 'Comment'|trans }} class="col-12 button button-primary" />
+			<input type="submit" value={{ 'Comment'|trans }} class="col-12 button button-primary" />
 			{{form_end(form)}}
 		</div>
 		{% endif %}
 	{% endif %}
 	</div>
-<<<<<<< HEAD
-=======
-
-    {% for comment in comments %}
-    <div>
-    {{comment.author.username}}
-    {{comment.date|date('Y-m-d')}}
-    {{comment.content}}<br/>
-    </div>
-    {% endfor %}
-
-    {% if form is not null %}
-    <div>
-    {{ form_start(form) }}
-        <div class="form_group row">
-        {{ form_row(form.content) }}
-        </div>
-        <input type="submit" role="button" name="upload" value={{'Commenter'}} class="col-12 button button-primary" />
-
-    {{form_end(form)}}
-    </div>
-    {% endif %}
-
-
-
-
-
->>>>>>> 91b7ea7b7a33f72564f52a0e2ec1692fadf73a9b
 {% endblock %}

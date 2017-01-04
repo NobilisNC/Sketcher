@@ -179,7 +179,7 @@
                 <target>Like</target>
             </trans-unit>
             <trans-unit id="dislike">
-                <source>like</source>
+                <source>dislike</source>
                 <target>Dislike</target>
             </trans-unit>
             <trans-unit id="delete">
