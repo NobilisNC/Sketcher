@@ -27,8 +27,10 @@ class SketchType extends AbstractType
 			'data' => '800'
 		))
 		->add('tags', CollectionType::class, array(
+			'mapped' => false,
 			'label' => 'sketch.tags',
 			'entry_type' => TagType::class,
+			'by_reference' => false,
 			'allow_add' => true,
 			'allow_delete' => true,
 			'prototype' => true

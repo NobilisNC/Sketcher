@@ -66,7 +66,7 @@ var tagInput = function(elm = null) {
 			deleteButton.href = '#';
 			deleteButton.className = 'button close';
 			deleteButton.innerHTML = '<i class="fa fa-close"></i>';
-			deleteButton.setAttribute('data-id', id);
+			deleteButton.setAttribute('data-id', this.nTags);
 			deleteButton.addEventListener('mousedown', function(e) {
 				e.preventDefault();
 				var id = e.srcElement.parentElement.getAttribute('data-id').replace(/[^\d]+/g, '');
@@ -87,7 +87,7 @@ var tagInput = function(elm = null) {
 				input = document.getElementById(idPattern.replace(/__name__/g, this.nTags));
 				input.type = 'text';
 				input.className += ' tagInputValue';
-				input.value = name;
+				input.setAttribute('value', name);
 			}
 
 			this.tags[id].label.appendChild(deleteButton);
@@ -145,7 +145,7 @@ var tagInput = function(elm = null) {
 	// Events
 	this.field.addEventListener('keydown', (function(that) {
 		return function(e) {
-			if(e.keyCode == 13) {
+			if(e.keyCode == 13 && that.field.value.length > 0) {
 				e.preventDefault();
 				if(that.tooltip.style.opacity > 0) {	// Tooltip is shown
 					var tag = that.tooltipTagsList.querySelector('li.active');

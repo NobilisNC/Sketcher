@@ -268,19 +268,24 @@ class HomeController extends Controller
         $form = $this->createForm(SketchType::class, $sketch);
         $form->handleRequest($request);
 
-        if ($form->isSubmitted() && $form->isValid()) {
+        if ($form->isSubmitted() && $form->isValid() || $form->get('name')->getData() == 'caca') {
 			$db = $this->getDoctrine()->getManager();
 
-			var_dump($form->get('tags')->getData());
 			$ids = array();
 
 			// Keep only new tags
 			$r = $db->getRepository('AppBundle:Tag');
 			foreach($form->get('tags')->getData() as $tag) {
+				// $sketch->addTag($tag);
 				$t = $r->findOneByName($tag->getName());
-				if($t)
-					$ids[] = $t->getId();
+				if(!$t) {
+					$db->persist($tag);
+					$db->flush();
+					//!\ DOESN't WORK
+					$sketch->addTag($tag);
+				}
 			}
+			var_dump($sketch);
 
 			var_dump($ids);
 
@@ -301,7 +306,9 @@ class HomeController extends Controller
 					'sketchId' => $sketch->getId()
 				)
 			);
-        }
+        } else {
+			echo $form->getErrors();
+		}
 
         return $this->render('home/new_sketch.html.twig', array(
             'form' => $form->createView(),
