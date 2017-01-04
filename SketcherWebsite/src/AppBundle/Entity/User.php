@@ -80,7 +80,7 @@ class User implements UserInterface, \Serializable
     * @ORM\ManyToMany(targetEntity="Sketch", inversedBy="likers")
     * @ORM\JoinColumn(name="sketch", referencedColumnName="id")
     */
-    private $sketches_liked;
+    private $liked_sketches;
 
 
 	public function __construct() {
@@ -309,60 +309,94 @@ class User implements UserInterface, \Serializable
     }
 
     /**
-     * Add sketchesLiked
-     *
-     * @param \AppBundle\Entity\Sketch $sketchesLiked
-     *
-     * @return User
-     */
-    public function like(\AppBundle\Entity\Sketch $sketch)
-    {
-        $this->sketches_liked[] = $sketch;
-
-        return $this;
-    }
-
-    /**
-     * Remove sketchesLiked
-     *
-     * @param \AppBundle\Entity\Sketch $sketchesLiked
-     */
-    public function removeLike(\AppBundle\Entity\Sketch $sketchesLiked)
-    {
-        $this->sketches_liked->removeElement($sketchesLiked);
-    }
-
-    /**
      * Get sketchesLiked
      *
      * @return \Doctrine\Common\Collections\Collection
      */
     public function getSketchesLiked()
     {
-        return $this->sketches_liked;
+        return $this->liked_sketches;
     }
 
     /**
-     * Add sketchesLiked
+     * Like a sketch
      *
-     * @param \AppBundle\Entity\Sketch $sketchesLiked
+     * @param \AppBundle\Entity\Sketch $sketch
      *
      * @return User
      */
-    public function addSketchesLiked(\AppBundle\Entity\Sketch $sketchesLiked)
+    public function like(\AppBundle\Entity\Sketch $sketch)
     {
-        $this->sketches_liked[] = $sketchesLiked;
+        $this->liked_sketches->add($sketch);
 
         return $this;
     }
 
     /**
-     * Remove sketchesLiked
+     * Dislike a sketch
      *
-     * @param \AppBundle\Entity\Sketch $sketchesLiked
+     * @param \AppBundle\Entity\Sketch $sketch
      */
-    public function removeSketchesLiked(\AppBundle\Entity\Sketch $sketchesLiked)
+    public function dislike(\AppBundle\Entity\Sketch $sketch)
     {
-        $this->sketches_liked->removeElement($sketchesLiked);
+        $this->liked_sketches->removeElement($sketch);
     }
+
+    /**
+     * Toggle like on sketch
+     *
+     * @param \AppBundle\Entity\Sketch $sketch
+     */
+    public function toggleLike(\AppBundle\Entity\Sketch $sketch)
+    {
+		if($this->likes($sketch))
+        	$this->dislike($sketch);
+		else
+			$this->like($sketch);
+    }
+
+    /**
+     * Add likedSketch
+     *
+     * @param \AppBundle\Entity\Sketch $likedSketch
+     *
+     * @return User
+     */
+    public function addLikedSketch(\AppBundle\Entity\Sketch $likedSketch)
+    {
+        $this->liked_sketches[] = $likedSketch;
+
+        return $this;
+    }
+
+    /**
+     * Remove likedSketch
+     *
+     * @param \AppBundle\Entity\Sketch $likedSketch
+     */
+    public function removeLikedSketch(\AppBundle\Entity\Sketch $likedSketch)
+    {
+        $this->liked_sketches->removeElement($likedSketch);
+    }
+
+    /**
+     * Get likedSketches
+     *
+     * @return \Doctrine\Common\Collections\Collection
+     */
+    public function getLikedSketches()
+    {
+        return $this->liked_sketches;
+    }
+
+    /*
+    *  Return if User like a specific Sketch
+    *
+    *   @return boolean
+    */
+    public function likes(\AppBundle\Entity\Sketch $sketch) {
+
+        return $this->liked_sketches->contains($sketch);
+    }
+
 }

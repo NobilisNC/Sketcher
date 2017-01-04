@@ -30,10 +30,7 @@
 						</li>
 					</ul>
 					{% endif %}
-					{% if app.user is not null %}
-					<a href="{{ path('like', {'sketchId': sketch.id}) }}" class="button{{ can_like ? ' button-green' : '' }}" style="float:right;border-radius:0 3px 3px 0;" {{ not can_like ? 'title="' ~ 'already.liked'|trans ~ '" disabled' : '' }}><i class="fa fa-thumbs-up"></i>&nbsp;&nbsp;{{ 'like'|transchoice(sketch.likes) }}</a>
-					<button class="button button-green" style="float:right;border-radius:3px 0 0 3px;border-right:1px solid rgba(255,255,255,.3)" disabled>{{ sketch.likes }}</button>
-					{% endif %}
+                    {% include 'modules/thumbs_up.html.twig' with {'sketch' : sketch} %}
 				</figcaption>
 			</figure>
 		</center>
@@ -64,4 +61,32 @@
 		{% endif %}
 	{% endif %}
 	</div>
+<<<<<<< HEAD
+=======
+
+    {% for comment in comments %}
+    <div>
+    {{comment.author.username}}
+    {{comment.date|date('Y-m-d')}}
+    {{comment.content}}<br/>
+    </div>
+    {% endfor %}
+
+    {% if form is not null %}
+    <div>
+    {{ form_start(form) }}
+        <div class="form_group row">
+        {{ form_row(form.content) }}
+        </div>
+        <input type="submit" role="button" name="upload" value={{'Commenter'}} class="col-12 button button-primary" />
+
+    {{form_end(form)}}
+    </div>
+    {% endif %}
+
+
+
+
+
+>>>>>>> 91b7ea7b7a33f72564f52a0e2ec1692fadf73a9b
 {% endblock %}

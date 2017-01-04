@@ -178,6 +178,10 @@
                 <source>like</source>
                 <target>Like</target>
             </trans-unit>
+            <trans-unit id="dislike">
+                <source>like</source>
+                <target>Dislike</target>
+            </trans-unit>
             <trans-unit id="delete">
                 <source>delete</source>
                 <target>Delete</target>

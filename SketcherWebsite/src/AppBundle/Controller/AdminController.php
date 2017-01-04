@@ -15,7 +15,7 @@ class AdminController extends Controller
     {
 		$user = $this->getUser();
 
-		if(!$user || !$user->isAdmin())
+		if(!$user || !$user->getIsAdmin())
 			return $this->redirectToRoute('homepage');
 
         return $this->render('admin/users.html.twig', array(

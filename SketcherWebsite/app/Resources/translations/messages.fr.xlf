@@ -170,6 +170,10 @@
                 <source>like</source>
                 <target>J'aime</target>
             </trans-unit>
+            <trans-unit id="dislike">
+                <source>dislike</source>
+                <target>Je n'aime plus</target>
+            </trans-unit>
             <trans-unit id="delete">
                 <source>delete</source>
                 <target>Supprimer</target>

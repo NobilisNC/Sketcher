@@ -1,0 +1,6 @@
+{% set can_like = not app.user.likes(sketch) %}
+<a href="{{ path('like', {'sketchId': sketch.id}) }}" class="button{{ can_like ? ' button-green' : '' }}" style="float:right;border-radius:0 3px 3px 0;"><i class="fa fa-thumbs-{{ not can_like ? 'o-' : '' }}up"></i>
+{% if app.user is not null %}
+ 	&nbsp;&nbsp;{{ (can_like ? 'like' : 'dislike')|trans }}</a>
+	<button class="button button-green" style="float:right;border-radius:3px 0 0 3px;border-right:1px solid rgba(255,255,255,.3)" disabled>{{ sketch.likes }}</button>
+{% endif %}

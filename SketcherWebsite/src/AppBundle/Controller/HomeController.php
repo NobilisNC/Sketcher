@@ -61,16 +61,30 @@ class HomeController extends Controller
 		if(!$user)
 			return $this->redirectToRoute('login');
 
+		$referer = $request->headers->get('referer');
+
 		$db = $this->getDoctrine()->getManager();
 
 		$sketch = $db->getRepository('AppBundle:Sketch')->findOneById($sketchId);
-		if($user->getSketchesLiked()->contains($sketch))
-			$this->get('session')->getFlashBag()->add('already.liked', 'true');
-		else
-			$user->like($sketch);
+		// if($user->likes($sketch))
+		// 	$this->get('session')->getFlashBag()->add('already.liked', 'true');
+		// else
+		$user->toggleLike($sketch);
+		var_dump($user->likes($sketch));
 
 		$db->flush();
-		return $this->redirectToRoute('showSketch', array('sketchId' => $sketchId));
+
+		// Go back to last page
+		$lastPath = str_replace($request->getSchemeAndHttpHost(), '', $referer);
+
+        $matcher = $this->get('router')->getMatcher();
+        $parameters = $matcher->match($lastPath);
+        $last_route = $parameters['_route'];
+
+
+        return $this->redirectToRoute(
+			$last_route,
+			($last_route == 'showSketch' ? array('sketchId' => $sketch->getId()) : array() ));
 	}
 
 	/**
@@ -189,7 +203,6 @@ class HomeController extends Controller
 				$this->get('session')->set('_locale', $user->getLocale());
 
 				$db = $this->getDoctrine()->getManager();
-				$db->persist($user);
 				$db->flush();
 
 				return $this->redirectToRoute('editProfile');

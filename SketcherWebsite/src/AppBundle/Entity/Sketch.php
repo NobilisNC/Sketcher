@@ -66,7 +66,7 @@ class Sketch
 
     /**
     *
-    * @ORM\ManyToMany(targetEntity="User", mappedBy="sketches_liked")
+    * @ORM\ManyToMany(targetEntity="User", mappedBy="liked_sketches")
     * @ORM\JoinColumn(name="user", referencedColumnName="id")
     *
     */
