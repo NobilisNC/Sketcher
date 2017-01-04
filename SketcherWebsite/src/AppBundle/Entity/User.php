@@ -80,7 +80,7 @@ class User implements UserInterface, \Serializable
     * @ORM\ManyToMany(targetEntity="Sketch", inversedBy="likers")
     * @ORM\JoinColumn(name="sketch", referencedColumnName="id")
     */
-    private $sketches_liked;
+    private $liked_sketches;
 
 
 	public function __construct() {
@@ -309,30 +309,6 @@ class User implements UserInterface, \Serializable
     }
 
     /**
-     * Add sketchesLiked
-     *
-     * @param \AppBundle\Entity\Sketch $sketchesLiked
-     *
-     * @return User
-     */
-    public function likes(\AppBundle\Entity\Sketch $sketchesLiked)
-    {
-        $this->sketches_liked[] = $sketchesLiked;
-
-        return $this;
-    }
-
-    /**
-     * Remove sketchesLiked
-     *
-     * @param \AppBundle\Entity\Sketch $sketchesLiked
-     */
-    public function removeLike(\AppBundle\Entity\Sketch $sketchesLiked)
-    {
-        $this->sketches_liked->removeElement($sketchesLiked);
-    }
-
-    /**
      * Get sketchesLiked
      *
      * @return \Doctrine\Common\Collections\Collection
@@ -365,4 +341,49 @@ class User implements UserInterface, \Serializable
     {
         $this->sketches_liked->removeElement($sketchesLiked);
     }
+
+    /**
+     * Add likedSketch
+     *
+     * @param \AppBundle\Entity\Sketch $likedSketch
+     *
+     * @return User
+     */
+    public function addLikedSketch(\AppBundle\Entity\Sketch $likedSketch)
+    {
+        $this->liked_sketches[] = $likedSketch;
+
+        return $this;
+    }
+
+    /**
+     * Remove likedSketch
+     *
+     * @param \AppBundle\Entity\Sketch $likedSketch
+     */
+    public function removeLikedSketch(\AppBundle\Entity\Sketch $likedSketch)
+    {
+        $this->liked_sketches->removeElement($likedSketch);
+    }
+
+    /**
+     * Get likedSketches
+     *
+     * @return \Doctrine\Common\Collections\Collection
+     */
+    public function getLikedSketches()
+    {
+        return $this->liked_sketches;
+    }
+
+    /*
+    *  Return if User like a specific Sketch
+    *
+    *   @return boolean
+    */
+    public function likes(\AppBundle\Entity\Sketch $sketch) {
+
+        return $this->liked_sketches->contains($sketch);
+    }
+
 }

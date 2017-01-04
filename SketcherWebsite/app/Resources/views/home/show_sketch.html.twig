@@ -23,15 +23,21 @@
 						</li>
 					</ul>
 					{% endif %}
-					{% if app.user is not null %}
-					<a href="#" class="button button-green" style="float:right;"><i class="fa fa-thumbs-up"></i> {{ 'like'|trans }}</a>
-					{% endif %}
+                    {% include 'modules/thumbs_up.html.twig' with {'sketch' : sketch} %}
 				</figcaption>
 			</figure>
 		</center>
 	{% endif %}
-
 	</div>
+
+    {% for comment in comments %}
+    <div>
+    {{comment.author.username}}
+    {{comment.date|date('Y-m-d')}}
+    {{comment.content}}<br/>
+    </div>
+    {% endfor %}
+
     {% if form is not null %}
     <div>
     {{ form_start(form) }}
@@ -43,13 +49,7 @@
     {{form_end(form)}}
     </div>
     {% endif %}
-    {% for comment in comments %}
-    <div>
-    {{comment.author.username}}
-    {{comment.date|date('Y-m-d')}}
-    {{comment.content}}<br/>
-</div>
-    {% endfor %}
+
 
 
 

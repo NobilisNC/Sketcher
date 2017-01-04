@@ -1,0 +1,7 @@
+{% if app.user is not null %}
+    {% if not app.user.likes(sketch) %}
+        <a href="/like?sketch={{sketch.id}}&action=like" class="button button-green" style="float:right;"><i class="fa fa-thumbs-up"></i> {{ 'like'|trans }}</a>
+ {% else %}
+    <a href="/like?sketch={{sketch.id}}&action=unlike" class="button button-green" style="float:right;"><i class="fa fa-thumbs-up"></i> {{ 'liked'|trans }}</a>
+ {% endif %}
+{% endif %}

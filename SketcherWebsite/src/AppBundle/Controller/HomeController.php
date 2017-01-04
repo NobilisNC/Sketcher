@@ -243,4 +243,52 @@ class HomeController extends Controller
             'form' => $form->createView(),
         ));
     }
+
+    /**
+    *
+    * @Route("/like", name="Like Sketch")
+    */
+    public function likeSketch(Request $request)
+    {
+        $referer = $request->headers->get('referer');
+
+        //if parameters are valids
+        if ( !is_null($request->get('sketch')) && !is_null($request->get('action')) )
+        {
+
+            $user = $this->getUser();
+            if(!$user)
+                return $this->redirectToRoute('login');
+
+
+            $sketch =  $this->getDoctrine()->getRepository('AppBundle:Sketch')->findOneBy(array ('id' => $request->get('sketch') ));
+
+            if ( !is_null($sketch) && !is_null($request->get('action')) )
+            {
+
+                $like = $user->likes($sketch);
+
+                if ( $request->get('action') == 'like' && !$like )
+                    $user->addLikedSketch($sketch);
+                elseif ($like && $request->get('action') == 'unlike' )
+                    $user->removeLikedSketch($sketch);
+
+
+                $manager = $this->getDoctrine()->getManager();
+                $manager->merge($user);
+                $manager->flush();
+            }
+
+        }
+
+        $lastPath = str_replace($request->getSchemeAndHttpHost(), '', $referer);
+
+        $matcher = $this->get('router')->getMatcher();
+        $parameters = $matcher->match($lastPath);
+        $last_route = $parameters['_route'];
+
+
+        return $this->redirectToRoute($last_route, ($last_route == 'showSketch' ? array('sketchId' => $sketch->getId()) : array() ));
+    }
+
 }
