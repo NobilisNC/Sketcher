@@ -9,6 +9,7 @@ use Symfony\Component\OptionsResolver\OptionsResolver;
 use Symfony\Component\Form\Extension\Core\Type\FileType;
 use Symfony\Component\Form\Extension\Core\Type\TextType;
 use Symfony\Component\Form\Extension\Core\Type\IntegerType;
+use Symfony\Component\Form\Extension\Core\Type\CollectionType;
 
 class SketchType extends AbstractType
 {
@@ -24,6 +25,11 @@ class SketchType extends AbstractType
         ->add('height', IntegerType::class, array(
 			'label' => 'sketch.height',
 			'data' => '800'
+		))
+		->add('tags', CollectionType::class, array(
+			'entry_type' => TagType::class,
+			'allow_add' => true,
+			'prototype' => true
 		));
     }
 

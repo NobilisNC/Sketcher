@@ -9,11 +9,14 @@ use AppBundle\Entity\User;
 use AppBundle\Entity\Sketch;
 use AppBundle\Entity\Comment;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
+use Sensio\Bundle\FrameworkExtraBundle\Configuration\Method;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Form\Extension\Core\Type\PasswordType;
 use Symfony\Component\Form\Extension\Core\Type\RepeatedType;
 use Symfony\Component\Form\FormError;
+
+use Symfony\Component\HttpFoundation\Response;
 
 class HomeController extends Controller
 {
@@ -32,7 +35,6 @@ class HomeController extends Controller
 	 */
 	public function galleryAction(Request $request)
 	{
-        //$sketches = $this->getDoctrine()->getRepository('AppBundle:Sketch')->getLastSketches(10);
         $sketches = $this->getDoctrine()->getRepository('AppBundle:Sketch')->getMostLikedSketches();
 
 		return $this->render('home/gallery.html.twig',
@@ -41,6 +43,34 @@ class HomeController extends Controller
             	'sketches_directory' => $this->getParameter('sketches_directory')
             )
         );
+	}
+
+	/**
+	 *
+	 * @Route(
+	 *   "/like/{sketchId}",
+	 *   requirements={"sketchId": "\d+"},
+	 *   name="like"
+	 * )
+	 * @Method({"GET"})
+	 */
+	public function likeAction(Request $request, int $sketchId)
+	{
+		$user = $this->getUser();
+
+		if(!$user)
+			return $this->redirectToRoute('login');
+
+		$db = $this->getDoctrine()->getManager();
+
+		$sketch = $db->getRepository('AppBundle:Sketch')->findOneById($sketchId);
+		if($user->getSketchesLiked()->contains($sketch))
+			$this->get('session')->getFlashBag()->add('already.liked', 'true');
+		else
+			$user->like($sketch);
+
+		$db->flush();
+		return $this->redirectToRoute('showSketch', array('sketchId' => $sketchId));
 	}
 
 	/**
@@ -56,14 +86,9 @@ class HomeController extends Controller
         $data = array('form' => null);
 
 		$db = $this->getDoctrine()->getRepository('AppBundle:Sketch');
-		$sketch = $db->findOneBy(array(
-			'id' => $sketchId
-		));
-
-
+		$sketch = $db->findOneById($sketchId);
 
         $user = $this->getUser();
-
 
         if($user) {
             $comment = new Comment();
@@ -76,8 +101,6 @@ class HomeController extends Controller
                 $comment->setAuthor($user);
                 $comment->setSketch($sketch);
 
-                echo $comment->getId();
-
                 $db = $this->getDoctrine()->getManager();
                 $db->persist($comment);
                 $db->flush();
@@ -85,6 +108,8 @@ class HomeController extends Controller
 
             $data["form"] = $form->createView();
         }
+
+		$data["already_liked"] = count($this->get('session')->getFlashBag()->get('already.liked')) > 0;
 
         $db = $this->getDoctrine()->getRepository('AppBundle:Comment');
         $data["comments"] = $db->findBy(array('sketch' => $sketch));
@@ -243,4 +268,37 @@ class HomeController extends Controller
             'form' => $form->createView(),
         ));
     }
+
+	////////////
+	// TagInput Ajax requests handling
+	////////////
+
+    /**
+    *
+    * @Route("/tag/search/{term}", name="searchTag")
+    */
+    public function searchTagAction(Request $request, string $term)
+    {
+		$user = $this->getUser();
+
+		if(!$user)
+			return $this->redirectToRoute('login');
+
+		$db = $this->getDoctrine()->getRepository('AppBundle:Tag');
+		$tags = $db->createQueryBuilder('p')
+		->select('p.id, p.name')
+		->where("p.name LIKE :term")
+		->setParameter('term', $term.'%')
+		->getQuery()
+		->getResult();
+
+		$res = "[";
+		foreach($tags as $tag) {
+			$res .= '{"id":'.$tag['id'].',"name":"'.$tag['name'].'"},';
+		}
+		$res = substr($res, 0, max(1, strlen($res)-1));
+		$res .= "]";
+
+		return new Response($res);
+	}
 }

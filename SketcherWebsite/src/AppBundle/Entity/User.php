@@ -315,9 +315,9 @@ class User implements UserInterface, \Serializable
      *
      * @return User
      */
-    public function likes(\AppBundle\Entity\Sketch $sketchesLiked)
+    public function like(\AppBundle\Entity\Sketch $sketch)
     {
-        $this->sketches_liked[] = $sketchesLiked;
+        $this->sketches_liked[] = $sketch;
 
         return $this;
     }

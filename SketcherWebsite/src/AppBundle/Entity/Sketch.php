@@ -270,7 +270,7 @@ class Sketch
      */
     public function addLiker(\AppBundle\Entity\User $liker)
     {
-        $this->likers[] = $liker;
+        $this->likers->add($liker);
 
         return $this;
     }

@@ -1,3 +1,7 @@
+body {
+	margin-bottom: 30px;
+}
+
 .form {
 	margin-bottom: 0;
 }
@@ -127,4 +131,54 @@ figure#showSketch {
 		max-height: 700px;
 		width: auto;
 		height: auto;
+	}
+
+div.tagInput {
+	border-radius: 3px;
+	border: 1px solid green;
+	padding: 2px;
+	position: relative;
+}
+
+	div.tagInput span.label {
+		display: inline-block;
+		font-size: 12px;
+		line-height: 12px;
+		margin: 0 1px 0 1px;
+	}
+
+	div.tagInput span.tooltip ul.tags {
+		padding: 0;
+		margin: 0;
+		list-style: none;
+	}
+
+		div.tagInput span.tooltip ul li {
+
+		}
+
+		div.tagInput span.label a.close {
+			float: right;
+			width: 13px;
+			height: 13px;
+			padding: 0 1px;
+			font-size: 11px;
+			line-height: 10px;
+			margin-left: 5px;
+		}
+
+	div.tagInput input[type="text"].tagInputField {
+		margin-top: 2px;
+		padding: 3px;
+		border: 0px solid transparent;
+		display: inline-block;
+		width: auto;
+	}
+
+		div.tagInput input[type="text"].tagInputField:focus {
+			outline: none;
+		}
+
+	div.tagInput input[type="text"].tagInputValue {
+		display: none;
 	}

@@ -174,6 +174,18 @@
                 <source>dimension.max.limit.reached</source>
                 <target>Dimension cannot be greater than 1000x1000.</target>
             </trans-unit>
+            <trans-unit id="like">
+                <source>like</source>
+                <target>Like</target>
+            </trans-unit>
+            <trans-unit id="delete">
+                <source>delete</source>
+                <target>Delete</target>
+            </trans-unit>
+            <trans-unit id="edit">
+                <source>edit</source>
+                <target>Edit</target>
+            </trans-unit>
         </body>
     </file>
 </xliff>

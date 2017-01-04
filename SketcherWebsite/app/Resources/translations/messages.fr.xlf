@@ -166,6 +166,18 @@
                 <source>dimension.max.limit.reached</source>
                 <target>Les dimensions maximales sont 1000x1000.</target>
             </trans-unit>
+            <trans-unit id="like">
+                <source>like</source>
+                <target>J'aime</target>
+            </trans-unit>
+            <trans-unit id="delete">
+                <source>delete</source>
+                <target>Supprimer</target>
+            </trans-unit>
+            <trans-unit id="edit">
+                <source>edit</source>
+                <target>Modifier</target>
+            </trans-unit>
         </body>
     </file>
 </xliff>
