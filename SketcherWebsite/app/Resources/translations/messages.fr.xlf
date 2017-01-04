@@ -84,7 +84,7 @@
             </trans-unit>
             <trans-unit id="back_to_edition">
                 <source>Go back to edition</source>
-                <target>Retourner à l'édition de profil</target>
+                <target>Modifier mon profil</target>
             </trans-unit>
             <trans-unit id="names_profile">
                 <source>%name%'s profile</source>

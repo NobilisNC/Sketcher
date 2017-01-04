@@ -10,15 +10,8 @@
 			{{ 'sketch.not.found.explanation'|trans }}
 		</div>
 	{% else %}
-		{% set can_like = (sketch.likers.contains(app.user) ? false : true) %}
 		<center>
 			<h4>{{ sketch.name }}</h4>
-			{% if already_liked %}
-			<div class="error">
-				<h5>{{ 'already.liked'|trans }}</h5>
-			</div>
-			<br>
-			{% endif %}
 			<figure id="showSketch" class="thumbnail">
 				<img src="{{ asset(sketches_directory ~ '/' ~ sketch.path) }}" alt="{{ sketch.name }}">
 				<figcaption>

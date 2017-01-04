@@ -50,7 +50,7 @@ class Sketch
 
     /**
     *
-    * @ORM\ManyToMany(targetEntity="Tag", mappedBy="sketches")
+    * @ORM\ManyToMany(targetEntity="Tag", mappedBy="sketches", cascade={"persist"})
     * @ORM\JoinColumn(name="tag", referencedColumnName="id")
     *
     */

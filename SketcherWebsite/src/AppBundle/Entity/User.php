@@ -399,4 +399,14 @@ class User implements UserInterface, \Serializable
         return $this->liked_sketches->contains($sketch);
     }
 
+    /*
+    *  Return if User is author of the given sketch
+    *
+    *   @return boolean
+    */
+    public function isAuthorOf(\AppBundle\Entity\Sketch $sketch) {
+
+        return $this->sketches->contains($sketch);
+    }
+
 }

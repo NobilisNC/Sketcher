@@ -74,15 +74,17 @@
 		}) }}
 		<div class="input col-7">
 			<div class="tagInput">
-				<input type="text" class="tagInputValue" value="caca" id="1">
-				<input type="text" class="tagInputValue" value="lol" id="2">
-				<input type="text" class="tagInputValue" value="pipi" id="3">
+				<div id="sketch_tags" data-prototype="{{ form_widget(form.tags.vars.prototype)|e }}"></div>
+				{% for tag in form.tags %}
+				    {{ form_errors(tag) }}
+				    {{ form_widget(tag) }}
+				{% endfor %}
 				<input type="text" class="tagInputField">
 			</div>
 		</div>
 	</div>
     <input type="submit" value="{{ 'create.sketch'|trans }}" class="col-12 button button-primary" />
-{{ form_end(form) }}
+{# {{ form_end(form) }} #}
 </div>
 <script src="{{ asset('js/tagInput.js') }}"></script>
 {% endblock %}

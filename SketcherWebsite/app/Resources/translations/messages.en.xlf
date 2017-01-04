@@ -88,7 +88,7 @@
             </trans-unit>
             <trans-unit id="back_to_edition">
                 <source>Go back to edition</source>
-                <target>Go back to edition</target>
+                <target>Go to profile edition</target>
             </trans-unit>
             <trans-unit id="names_profile">
                 <source>%name%'s profile</source>

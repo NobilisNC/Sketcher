@@ -135,27 +135,29 @@ figure#showSketch {
 
 div.tagInput {
 	border-radius: 3px;
-	border: 1px solid green;
+	border: 1px solid #CCC;
 	padding: 2px;
 	position: relative;
 }
 
-	div.tagInput span.label {
-		display: inline-block;
-		font-size: 12px;
-		line-height: 12px;
-		margin: 0 1px 0 1px;
-	}
-
-	div.tagInput span.tooltip ul.tags {
+	div.tagInput span.tooltip ul {
 		padding: 0;
 		margin: 0;
 		list-style: none;
 	}
 
-		div.tagInput span.tooltip ul li {
-
+		div.tagInput span.tooltip ul li.active {
+			background: rgba(255,255,255,.2);
+			border-radius: 3px;
 		}
+
+	div.tagInput span.label {
+		display: inline-block;
+		font-size: 12px;
+		line-height: 12px;
+		margin: 1px;
+		vertical-align: top;
+	}
 
 		div.tagInput span.label a.close {
 			float: right;
@@ -172,7 +174,7 @@ div.tagInput {
 		padding: 3px;
 		border: 0px solid transparent;
 		display: inline-block;
-		width: auto;
+		width: 100%;
 	}
 
 		div.tagInput input[type="text"].tagInputField:focus {

@@ -5,6 +5,7 @@ namespace AppBundle\Controller;
 use AppBundle\Form\UserType;
 use AppBundle\Form\SketchType;
 use AppBundle\Form\CommentType;
+use AppBundle\Entity\Tag;
 use AppBundle\Entity\User;
 use AppBundle\Entity\Sketch;
 use AppBundle\Entity\Comment;
@@ -97,12 +98,15 @@ class HomeController extends Controller
 	 */
 	public function showSketchAction(Request $request, int $sketchId)
 	{
+		$user = $this->getUser();
+
+		if(!$user)
+			return $this->redirectToRoute('login');
+
         $data = array('form' => null);
 
 		$db = $this->getDoctrine()->getRepository('AppBundle:Sketch');
 		$sketch = $db->findOneById($sketchId);
-
-        $user = $this->getUser();
 
         if($user) {
             $comment = new Comment();
@@ -118,12 +122,12 @@ class HomeController extends Controller
                 $db = $this->getDoctrine()->getManager();
                 $db->persist($comment);
                 $db->flush();
+
+				return $this->redirectToRoute('showSketch', array('sketchId' => $sketchId));
             }
 
-            $data["form"] = $form->createView();
+			$data["form"] = $form->createView();
         }
-
-		$data["already_liked"] = count($this->get('session')->getFlashBag()->get('already.liked')) > 0;
 
         $db = $this->getDoctrine()->getRepository('AppBundle:Comment');
         $data["comments"] = $db->findBy(array('sketch' => $sketch));
@@ -227,10 +231,18 @@ class HomeController extends Controller
     */
 	public function sketchAction(Request $request, $sketchId)
     {
+		$user = $this->getUser();
+
+		if(!$user)
+			return $this->redirectToRoute('gallery');
+
 		$db = $this->getDoctrine()->getRepository('AppBundle:Sketch');
 		$sketch = $db->findOneBy(array(
 			'id' => $sketchId
 		));
+
+		if(!$user->isAuthorOf($sketch))
+			return $this->redirectToRoute('gallery');
 
 		return $this->render(
 			'home/sketch.html.twig',
@@ -257,6 +269,21 @@ class HomeController extends Controller
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {
+			$db = $this->getDoctrine()->getManager();
+
+			var_dump($form->get('tags')->getData());
+			$ids = array();
+
+			// Keep only new tags
+			$r = $db->getRepository('AppBundle:Tag');
+			foreach($form->get('tags')->getData() as $tag) {
+				$t = $r->findOneByName($tag->getName());
+				if($t)
+					$ids[] = $t->getId();
+			}
+
+			var_dump($ids);
+
 			// Create blank image
 			$img = imagecreatetruecolor($sketch->getWidth(), $sketch->getHeight());
 			imagefill($img, 0, 0, imagecolorallocate($img, 255, 255, 255));
@@ -265,7 +292,6 @@ class HomeController extends Controller
             $sketch->addAuthor($user);
 			$sketch->setData('{"width":'.$sketch->getWidth().',"height":'.$sketch->getHeight().',"layers":{}}');
 
-            $db = $this->getDoctrine()->getManager();
 			$db->persist($sketch);
 			$db->flush();
 
@@ -313,5 +339,36 @@ class HomeController extends Controller
 		$res .= "]";
 
 		return new Response($res);
+	}
+
+    /**
+    *
+    * @Route(
+	*   "/tag/add/{term}",
+	*   requirements={"term": "\w+"},
+	*   name="addTag"
+	* )
+    */
+    public function addTagAction(Request $request, string $term)
+    {
+
+		$user = $this->getUser();
+
+		if(!$user)
+			return $this->redirectToRoute('login');
+
+		$db = $this->getDoctrine()->getManager();
+		$r = $db->getRepository('AppBundle:Tag')->findOneByName($term);
+		if(!$r) {
+			$tag = new Tag();
+			$tag->setName($term);
+
+			$db->persist($tag);
+			$db->flush();
+		} else {
+			$tag = $r;
+		}
+
+		return new Response('{"id":'.$tag->getId().',"name":"'.$tag->getName().'"}');
 	}
 }
