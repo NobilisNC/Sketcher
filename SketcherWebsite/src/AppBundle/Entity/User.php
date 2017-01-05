@@ -67,7 +67,7 @@ class User implements UserInterface, \Serializable
 
 	/**
 	 * @var \DateTime
-     * @ORM\Column(name="last_login", type="date")
+     * @ORM\Column(name="last_login", type="datetime")
 	 */
 	private $lastLogin;
 
@@ -448,8 +448,8 @@ class User implements UserInterface, \Serializable
     public function isLoggedIn()
     {
 		$d = new \DateTime('now');
-		$d->sub(new \DateInterval('PT1M'));
-        return $this->lastLogin > $d;
+		$d->sub(new \DateInterval('PT5M'));
+        return ($this->lastLogin > $d);
     }
 
 }

@@ -4,11 +4,11 @@ namespace AppBundle\EventListener;
 use Doctrine\ORM\EntityManager;
 use Symfony\Component\HttpFoundation\Session\Session;
 use Symfony\Component\HttpKernel\Event\FilterControllerEvent;
-use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorage;
 use Symfony\Component\Security\Http\Event\InteractiveLoginEvent;
+use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorage;
 
 /**
- * Updates user's status
+ * Updates user's status and locale
  */
 class UserListener
 {
@@ -33,13 +33,14 @@ class UserListener
     }
 
     /**
-     * @param controllerActivated $event
+     * @param FilterControllerEvent $event
      */
     public function controllerActivated(FilterControllerEvent $event)
     {
 		$user = $this->getUser();
 		if($user !== null && $user !== 'anon.') {
 			$user->setLastLogin(new \DateTime('now'));
+			$this->db->persist($user);
 			$this->db->flush();
 		}
     }

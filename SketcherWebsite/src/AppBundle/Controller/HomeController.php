@@ -123,9 +123,6 @@ class HomeController extends Controller
 	{
 		$user = $this->getUser();
 
-		if(!$user)
-			return $this->redirectToRoute('login');
-
         $data = array('form' => null);
 
 		$db = $this->getDoctrine()->getRepository('AppBundle:Sketch');
