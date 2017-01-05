@@ -20,7 +20,7 @@
 					<figcaption>
 						{{ 'sketch.authors'|transchoice(sketch.authors|length) }} :
 					{% set first = true %}
-					{% for author in sketch.authors %}{{ (first ? '' : ', ') }}<a href="{{ path('profile', {'username': author.username}) }}">{{ author.username }}</a>{% set first = false %}{% endfor %}
+					{% for author in sketch.authors %}{{ (first ? '' : ', ') }}{% include 'modules/user.html.twig' with {'user' : author } %}{% set first = false %}{% endfor %}
                     </figcaption>
 				</figure>
 		    {% endfor %}

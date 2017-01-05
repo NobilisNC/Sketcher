@@ -10,26 +10,56 @@
 			{{ 'sketch.not.found.explanation'|trans }}
 		</div>
 	{% else %}
-		<center>
-			<h4>{{ sketch.name }}</h4>
-            {% for tags in sketch.tags %}
-            <h6>{{ tags.name }}</h6>
-            {% endfor %}
-			<figure id="showSketch" class="thumbnail">
-				<img src="{{ asset(sketches_directory ~ '/' ~ sketch.path) }}" alt="{{ sketch.name }}">
-				<figcaption>
-					{% if app.user is not null and app.user in sketch.authors %}
-					<ul class="button-group" style="float:left;">
-						<li>
-							<a href="{{ path('sketch', {'sketchId': sketch.id}) }}" class="button button-primary"><i class="fa fa-pencil"></i> {{ 'edit'|trans }}</a>
-							<a href="#" class="button button-red"><i class="fa fa-trash"></i> {{ 'delete'|trans }}</a>
-						</li>
-					</ul>
-					{% endif %}
-                    {% include 'modules/thumbs_up.html.twig' with {'sketch' : sketch} %}
-				</figcaption>
-			</figure>
-		</center>
+            <div class="row">
+                <div class="col-9">
+                    <center>
+                        <h4>{{ sketch.name }}</h4>
+                    </center>
+                </div>
+            </div>
+
+            <div class="row">
+                <div class="col-9">
+    			<figure id="showSketch" class="thumbnail">
+    				<img src="{{ asset(sketches_directory ~ '/' ~ sketch.path) }}" alt="{{ sketch.name }}">
+    				<figcaption>
+    					{% if app.user is not null and app.user in sketch.authors %}
+    					<ul class="button-group" style="float:left;">
+    						<li>
+    							<a href="{{ path('sketch', {'sketchId': sketch.id}) }}" class="button button-primary"><i class="fa fa-pencil"></i> {{ 'edit'|trans }}</a>
+    							<a href="#" class="button button-red"><i class="fa fa-trash"></i> {{ 'delete'|trans }}</a>
+    						</li>
+    					</ul>
+    					{% endif %}
+                        {% include 'modules/thumbs_up.html.twig' with {'sketch' : sketch} %}
+    				</figcaption>
+    			</figure>
+            </div>
+            <div class="col-3">
+                <div class="container">
+                    <header>{{'sketch.title'|trans}}</header>
+                    <main>{{sketch.name}}</main>
+                </div>
+                <div class="container">
+                    <header>{{'sketch.tags'|transchoice(sketch.tags|length)}}</header>
+                    <main>
+                        {% for tag in sketch.tags %}
+                            <a href="#">
+                                <span class="label">{{tag.name}}</span>
+                            </a>
+                        {% endfor %}
+                    </main>
+                </div>
+                <div class="container">
+                    <header>{{'sketch.authors'|transchoice(sketch.authors|length)}}</header>
+                    <main>
+                    {% for author in sketch.authors %}
+                    {% include 'modules/user.html.twig' with {'user' : author} %}<br/>
+                    {% endfor %}
+                    </main>
+                </div>
+            </div>
+        </div>
 		{% if form is not null %}
 		<div>
 			{% for comment in comments %}

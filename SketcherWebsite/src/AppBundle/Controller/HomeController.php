@@ -277,14 +277,13 @@ class HomeController extends Controller
             //On insere les nouveaux tags
             $r = $db->getRepository('AppBundle:Tag');
             foreach($form->get('tags')->getData() as $tag) {
-                
+
                 $t = $r->findOneByName($tag->getName());
                 if(!$t) {
                     $db->persist($tag);
                     $sketch->addTag($tag);
                 } else
                     $sketch->addTag($t);
-
             }
 
 
