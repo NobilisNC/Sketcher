@@ -48,6 +48,29 @@ class HomeController extends Controller
 
 	/**
 	 *
+	 * @Route("/me/sketches", name="mySketches")
+	 */
+	public function mySketchesAction(Request $request)
+	{
+		$user = $this->getUser();
+
+		if(!$user)
+			return $this->redirectToRoute('login');
+
+        // $sketches = $this->getDoctrine()->getRepository('AppBundle:Sketch')->createQueryBuilder('s')
+		// 	->where('s.')
+		// 	->getQuery()
+		// 	->getResult();
+
+		return $this->render('home/my_sketches.html.twig',
+            array (
+				'sketches' => $user->getSketches()
+            )
+        );
+	}
+
+	/**
+	 *
 	 * @Route(
 	 *   "/like/{sketchId}",
 	 *   requirements={"sketchId": "\d+"},
@@ -241,7 +264,7 @@ class HomeController extends Controller
 			'id' => $sketchId
 		));
 
-		if(!$user->isAuthorOf($sketch))
+		if($sketch && !$user->isAuthorOf($sketch))
 			return $this->redirectToRoute('gallery');
 
 		return $this->render(

@@ -1,25 +1,23 @@
 {% extends 'base.html.twig' %}
 
-{% block title %}- {{ 'Gallery'|trans }}{% endblock %}
+{% block title %}- {{ 'my.pictures'|trans }}{% endblock %}
 
 {% block body %}
     <div class="col-10 col-left-1">
-		<h2>{{ 'Gallery'|trans }}</h2>
+		<h2>{{ 'my.pictures'|trans }}</h2>
 		{% if sketches|length == 0 %}
 		<div class="info">
 			<h5>{{ 'no.sketch'|trans }}</h5>
 			<p>{{ 'no.sketch.explanation'|trans }}</p>
 		</div>
 		{% else %}
-		<div class="col-12" id="gallery">
+		<div class="container col-12" id="gallery">
 		    {% for sketch in sketches %}
 				<figure class="thumbnail col-3">
-					<a href="gallery/{{sketch.id}}" class="sketch">
+					<a href="{{ path('showSketch', {'sketchId': sketch.id}) }}" class="sketch">
 			            <img src="{{ asset(sketches_directory ~ '/' ~ sketch.path)}}">
 					</a>
-					<figcaption>
-					{{ sketch.name }}
-                    </figcaption>
+					<figcaption>{{ sketch.name }}</figcaption>
 				</figure>
 		    {% endfor %}
 		</div>

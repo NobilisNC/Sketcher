@@ -17,6 +17,10 @@ Sketcher.Socket = function(host, port) {
 		}
 	});
 
+	this.socket.on('getFreshObjectsList', function(objects) {
+		console.log('Received fresh objects '+objects);
+	});
+
 	function _login() {
 		if(this.localID != null) {
 			this.socket.emit('login', this.localID);
@@ -28,6 +32,11 @@ Sketcher.Socket = function(host, port) {
 	}
 
 	var login = _login.bind(this);
+}
+
+Sketcher.Socket.prototype.getFreshObjectsList = function() {
+	console.log('Sending objects list request.');
+	this.socket.emit('getFreshObjectsList');
 }
 
 Sketcher.Socket.prototype.addObject = function() {

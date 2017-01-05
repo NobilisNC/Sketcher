@@ -66,8 +66,8 @@
                 <source>Gallery</source>
                 <target>Gallerie</target>
             </trans-unit>
-            <trans-unit id="my_pictures">
-                <source>My pictures</source>
+            <trans-unit id="my.pictures">
+                <source>my.pictures</source>
                 <target>Mes dessins</target>
             </trans-unit>
             <trans-unit id="profile">

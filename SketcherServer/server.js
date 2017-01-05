@@ -1,6 +1,7 @@
 var fs = require('fs');
-var http = require('http').Server(answerRequest);
-var io = require('socket.io')(http);
+var http = require('http')
+var serv = http.Server(answerRequest);
+var io = require('socket.io')(serv);
 
 var port = 10053;
 var verb = 2; // Can be 0: errors, 1: warnings, 2: info
@@ -44,11 +45,31 @@ io.on('connection', function(socket){
 
 	verb == 2 && console.log('User with temporary id #'+tmpID+' just connected.');
 
-    socket.on('addObject', function(data){
-		// Store it in an array
-		//		Save this array to DB from time to time
+	socket.on('addObject', function(data){
+		// Store given object in an array
+		// Save this array to DB from time to time
 		// Broadcast addObject to all clients with commiting client ID included
         console.log('addObject : '+data);
+    });
+	socket.on('getFreshObjectsList', function(){
+		// Returns a fresh version of this sketch objects
+        console.log('[+] getFreshObjectsList request received.');
+
+		console.log(http.get({
+			host: 'localhost',
+			port: 8000,
+			path: '/8'		//!\ Hardcode
+		}, function(response) {
+			var body = '';
+			response.on('data', function(data) {
+				body += data;
+			});
+			response.on('end', function() {
+				console.log(body);
+			});
+		}));
+
+		io.emit('getFreshObjectsList', "caca");
     });
 
 	socket.on('login', function(id) {
@@ -84,7 +105,7 @@ io.on('connection', function(socket){
 	});
 });
 
-http.listen(port, function(){
+serv.listen(port, function(){
     console.log('Listening on '+port+'.');
 });
 

@@ -66,6 +66,12 @@ class User implements UserInterface, \Serializable
 	private $isActive;
 
 	/**
+	 * @var \DateTime
+     * @ORM\Column(name="last_login", type="date")
+	 */
+	private $lastLogin;
+
+	/**
 	 * @ORM\Column(name="is_admin", type="boolean", options={"default": false})
 	 */
 	private $isAdmin;
@@ -85,6 +91,7 @@ class User implements UserInterface, \Serializable
 
 	public function __construct() {
 		$this->isActive = true;
+		$this->lastLogin = new \DateTime('now');
 		$this->isAdmin = false;
 		$this->username = "";
 		$this->salt = md5(uniqid(null, true));
@@ -407,6 +414,42 @@ class User implements UserInterface, \Serializable
     public function isAuthorOf(\AppBundle\Entity\Sketch $sketch) {
 
         return $this->sketches->contains($sketch);
+    }
+
+    /**
+     * Set lastLogin
+     *
+     * @param \DateTime $lastLogin
+     *
+     * @return User
+     */
+    public function setLastLogin($lastLogin)
+    {
+        $this->lastLogin = $lastLogin;
+
+        return $this;
+    }
+
+    /**
+     * Get lastLogin
+     *
+     * @return \DateTime
+     */
+    public function getLastLogin()
+    {
+        return $this->lastLogin;
+    }
+
+    /**
+     * Check if user is logged in
+     *
+     * @return boolean
+     */
+    public function isLoggedIn()
+    {
+		$d = new \DateTime('now');
+		$d->sub(new \DateInterval('PT1M'));
+        return $this->lastLogin > $d;
     }
 
 }
