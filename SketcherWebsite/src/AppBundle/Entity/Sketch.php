@@ -236,7 +236,8 @@ class Sketch
      */
     public function addTag(\AppBundle\Entity\Tag $tag)
     {
-        $this->tags[] = $tag;
+        //$this->tags[] = $tag;
+        $tag->addSketch($this);
 
         return $this;
     }
@@ -248,7 +249,8 @@ class Sketch
      */
     public function removeTag(\AppBundle\Entity\Tag $tag)
     {
-        $this->tags->removeElement($tag);
+        //$this->tags->removeElement($tag);
+        $tag->removeSketch($this);
     }
 
     /**

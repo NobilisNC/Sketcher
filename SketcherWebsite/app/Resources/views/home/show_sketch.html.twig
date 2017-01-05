@@ -12,6 +12,9 @@
 	{% else %}
 		<center>
 			<h4>{{ sketch.name }}</h4>
+            {% for tags in sketch.tags %}
+            <h6>{{ tags.name }}</h6>
+            {% endfor %}
 			<figure id="showSketch" class="thumbnail">
 				<img src="{{ asset(sketches_directory ~ '/' ~ sketch.path) }}" alt="{{ sketch.name }}">
 				<figcaption>

@@ -36,7 +36,7 @@ class HomeController extends Controller
 	 */
 	public function galleryAction(Request $request)
 	{
-        $sketches = $this->getDoctrine()->getRepository('AppBundle:Sketch')->getMostLikedSketches();
+        $sketches = $this->getDoctrine()->getRepository('AppBundle:Sketch')->getMostLikedSketches(100);
 
 		return $this->render('home/gallery.html.twig',
             array (
@@ -271,23 +271,23 @@ class HomeController extends Controller
         if ($form->isSubmitted() && $form->isValid() || $form->get('name')->getData() == 'caca') {
 			$db = $this->getDoctrine()->getManager();
 
-			$ids = array();
 
-			// Keep only new tags
-			$r = $db->getRepository('AppBundle:Tag');
-			foreach($form->get('tags')->getData() as $tag) {
-				// $sketch->addTag($tag);
-				$t = $r->findOneByName($tag->getName());
-				if(!$t) {
-					$db->persist($tag);
-					$db->flush();
-					//!\ DOESN't WORK
-					$sketch->addTag($tag);
-				}
-			}
-			var_dump($sketch);
+            $ids = array();
 
-			var_dump($ids);
+            //On insere les nouveaux tags
+            $r = $db->getRepository('AppBundle:Tag');
+            foreach($form->get('tags')->getData() as $tag) {
+                
+                $t = $r->findOneByName($tag->getName());
+                if(!$t) {
+                    $db->persist($tag);
+                    $sketch->addTag($tag);
+                } else
+                    $sketch->addTag($t);
+
+            }
+
+
 
 			// Create blank image
 			$img = imagecreatetruecolor($sketch->getWidth(), $sketch->getHeight());
@@ -297,8 +297,10 @@ class HomeController extends Controller
             $sketch->addAuthor($user);
 			$sketch->setData('{"width":'.$sketch->getWidth().',"height":'.$sketch->getHeight().',"layers":{}}');
 
-			$db->persist($sketch);
-			$db->flush();
+
+            $db->persist($sketch);
+            $db->flush();
+
 
             return $this->redirectToRoute(
 				'sketch',

@@ -84,7 +84,7 @@ class Tag
      */
     public function addSketch(\AppBundle\Entity\Sketch $sketch)
     {
-        $this->sketches[] = $sketch;
+        $this->sketches->add($sketch);
 
         return $this;
     }
