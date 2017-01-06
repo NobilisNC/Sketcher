@@ -39,6 +39,9 @@ Sketcher.UI = (function(document, window) {
 			this.node.height = window.innerHeight;
 			Sketcher.node.style.width = window.innerWidth+'px'
 			Sketcher.node.style.height = window.innerHeight+'px';
+
+			this.layerControl.update();
+			this.palette.update();
 		}
 
 		this.update();

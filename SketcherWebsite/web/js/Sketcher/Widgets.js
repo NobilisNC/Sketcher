@@ -160,6 +160,12 @@ Sketcher.widgets.Window = function Window(title, parent, x = 0, y = 0) {
 	this.parent.appendChild(this);
 }
 
+Sketcher.widgets.Window.prototype.update = function () {
+	if(this.parent && this.node.offsetLeft > this.parent.node.width){
+		this.node.style.left = this.parent.node.width - this.node.offsetWidth - 10 + 'px';
+	}
+};
+
 /*
 /	Toolbox widget
 /	 An invisible block that contains other widgets
@@ -391,6 +397,7 @@ Sketcher.widgets.Palette = function(parent, x, y) {
 		}
 
 		this._update = function() {
+			Sketcher.widgets.Window.prototype.update.call(this);
 			this.selectedColors.update();
 
 			this.buttons.empty();

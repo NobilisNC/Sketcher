@@ -98,7 +98,6 @@ Sketcher.ToolsAbstract = ( function() {
 			ctx.fillRect(this.p1.x, this.p1.y, this.p2.x - this.p1.x, this.p2.y - this.p1.y);
 		if (this._stroke)
 			ctx.strokeRect(this.p1.x, this.p1.y, this.p2.x - this.p1.x, this.p2.y - this.p1.y);
-
 	}
 
 	Rect.prototype.onMouseDown = function (e, ctx) {

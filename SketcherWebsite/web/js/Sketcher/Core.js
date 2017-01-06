@@ -270,7 +270,7 @@ Sketcher.Core = (function(document, window) {
 		this.frame.style.height = this.height+"px";
 
 		// Add the needed trackpad layer and a first drawing layer
-		this.addLayer("trackpad", 50);
+		this.addLayer("trackpad", 98);
 		this.addLayer("background");
 
 		// Bind "this" to events

@@ -19,7 +19,8 @@
 			document.querySelector('div#sketcher'),
 			{
 				data: {{ sketch.data|raw }},
-				token: '{{ app.user.editToken }}'
+				token: '{{ app.user.editToken }}',
+				offline: true
 			}
 		);
 	</script>

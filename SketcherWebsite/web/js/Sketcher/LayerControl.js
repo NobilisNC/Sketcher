@@ -153,6 +153,7 @@ Sketcher.widgets.LayerControl = function(parent, x = 0, y = 0) {
 	);
 
 	this._update = function(force = false) {
+		Sketcher.widgets.Window.prototype.update.call(this);
 		if(force || this.layerList.children.length != Sketcher.Core.getLayers().length) {
 			this.layerList.empty();
 
