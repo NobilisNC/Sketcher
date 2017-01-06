@@ -5,9 +5,11 @@
 {% block body %}
     <div class="col-10 col-left-1">
 	{% if tag is defined %}
-		<h2>{{ 'sketches.by.tag'|trans }} <span class="label label-primary" style="vertical-align:middle;">{{ tag }}</span></h2>
-	{% elseif personal is defined %}
-        <h2>{{'sketches_of'|trans}}
+		<h2>{{ 'sketches.by.tag'|trans }} {% include 'modules/tag.html.twig' with {'tag_name' : tag} %}</h2>
+	{% elseif specific_user is defined %}
+        <h2>{{'sketch_of'|trans({'%username%' : specific_user})}}
+        <a href="{{path('profile', {'username' : specific_user })}}"><span class="label label-primary">{{'access_profil'|trans}}</span></a>
+    </h2>
     {% else %}
 		<h2>{{ 'Gallery'|trans }}</h2>
     {% endif %}
