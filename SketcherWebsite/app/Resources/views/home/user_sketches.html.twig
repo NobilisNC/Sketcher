@@ -1,0 +1,20 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}- {{ 'my.pictures'|trans }}{% endblock %}
+
+{% block body %}
+    <div class="col-10 col-left-1">
+		<h2>{{ 'my.pictures'|trans }} : {{app.user.username}}</h2>
+		{% if sketches|length == 0 %}
+		<div class="info">
+			<h5>{{ 'no.sketch'|trans }}</h5>
+			<p>{{ 'no.sketch.explanation'|trans }}</p>
+		</div>
+		{% else %}
+        {% include 'modules/pagination.html.twig' with {    'sketches' : sketches,
+                                                            'total_sketches' : app.user.sketches|length
+                                                        }   %}
+		{% endif %}
+    </div>
+
+{% endblock %}

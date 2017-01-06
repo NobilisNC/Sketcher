@@ -13,19 +13,24 @@
     {% endfor %}
 </div>
 {% set current_page = app.request.attributes.get('page') %}
+{% set parameters = app.request.attributes.get('_route_params') %}
 
 <div class="row">
     {% if current_page != 0 %}
     <div class="container col-1">
-    <a href="{{path(app.request.attributes.get('_route'), {'page' : current_page - 1 } ) }}">
+    {% set parameters = parameters|merge({'page' : current_page - 1})  %}
+    <a href="{{path(app.request.attributes.get('_route'), parameters) }}">
         <i class="fa fa-angle-left" aria-hidden="true"></i> {{'previous'|trans}}
     </a>
     </div>
     {% endif %}
-    {% if sketches|length <  %}
+
+    {% if current_page * 16 + sketches|length < total_sketches %}
+    {% set parameters = parameters|merge({'page' : current_page + 1})  %}
     <div class="container col-1 col-left-11">
-        <a href="{{path(app.request.attributes.get('_route'), { 'page' : current_page + 1 } ) }}">
+        <a href="{{path(app.request.attributes.get('_route'), parameters ) }}">
             <i class="fa fa-angle-right" aria-hidden="true"></i> {{'next'|trans}}
         </a>
     </div>
+    {% endif %}
 </div>

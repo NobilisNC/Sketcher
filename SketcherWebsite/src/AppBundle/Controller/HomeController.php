@@ -32,7 +32,8 @@ class HomeController extends Controller
 
 	/**
 	 *
-	 * @Route("/gallery/{page}", name="gallery")
+	 * @Route("/gallery/{page}", name="gallery",
+     *         defaults = {"page" : 0} )
 	 */
 	public function galleryAction(Request $request, int $page)
 	{
@@ -51,7 +52,7 @@ class HomeController extends Controller
 
     /**
      *
-     * @Route("/gallery/{username}/{page}", name="user_gallery")
+     * @Route("/galleryof/{username}/{page}", name="user_gallery")
      */
     public function user_galleryAction(Request $request, string $username, int $page)
     {
@@ -64,7 +65,8 @@ class HomeController extends Controller
         return $this->render('home/gallery.html.twig',
             array (
                 'sketches' => $sketches,
-                'sketches_directory' => $this->getParameter('sketches_directory')
+                'sketches_directory' => $this->getParameter('sketches_directory'),
+                'total_sketches' => $user->getNb()
             )
         );
     }
@@ -72,7 +74,7 @@ class HomeController extends Controller
 	/**
 	 *
 	 * @Route(
-	 *   "/gallery/{tag}",
+	 *   "/gallery/tag/{tag}",
 	 *   requirements={"tag": "[\-a-z\d]+"},
 	 *   name="galleryByTag"
 	 * )
@@ -83,15 +85,19 @@ class HomeController extends Controller
 
 		$sketches = $tag ? $tag->getSketches() : null;
 
+
 		return $this->render('home/gallery.html.twig',
             array (
 				'tag' => $tag->getName(),
                 'sketches' => $sketches,
-            	'sketches_directory' => $this->getParameter('sketches_directory')
+            	'sketches_directory' => $this->getParameter('sketches_directory'),
+                'total_sketches' => $tag->getNbSketches()
             )
         );
 	}
 
+
+    // UNUSED !!!! delete ?
 	/**
 	 *
 	 * @Route("/me/sketches", name="mySketches")

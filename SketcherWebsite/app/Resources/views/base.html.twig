@@ -28,7 +28,7 @@
 					<li>{{ app.user.username }}
 						<ul>
 							<li><a href="{{ path('editProfile') }}" title="{{ 'Profile'|trans }}">{{ 'Profile'|trans }}</a></li>
-							<li><a href="{{ path('mySketches') }}" title="{{ 'my.pictures'|trans }}">{{ 'my.pictures'|trans }}</a></li>
+							<li><a href="{{ path('user_gallery', {'username' : app.user.username, 'page' : 0}) }}" title="{{ 'my.pictures'|trans }}">{{ 'my.pictures'|trans }}</a></li>
 							<li><a href="{{ path('logout') }}" title="{{ 'Logout'|trans }}">{{ 'Logout'|trans }} <i style="color:#C82829;float:right;" class="fa fa-sign-out"></i></a></li>
 						</ul>
 					</li>

@@ -108,4 +108,13 @@ class Tag
     {
         return $this->sketches;
     }
+
+    /**
+     * Get number of sketches
+     *
+     * @return int
+     */
+    public function getNbSketches() {
+        return $this->sketches->count();
+    }
 }

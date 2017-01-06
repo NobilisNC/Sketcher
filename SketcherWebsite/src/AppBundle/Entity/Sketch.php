@@ -100,7 +100,7 @@ class Sketch
 	private $data;
 
 	/**
-	* @ORM\OneToMany(targetEntity="User", mappedBy="sketch")
+	* @ORM\OneToMany(targetEntity="User", mappedBy="editedSketch")
 	*/
 	private $editingUsers;
 
