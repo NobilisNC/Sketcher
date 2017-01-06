@@ -66,6 +66,12 @@ class User implements UserInterface, \Serializable
 	private $isActive;
 
 	/**
+	 * @var \DateTime
+     * @ORM\Column(name="last_login", type="datetime")
+	 */
+	private $lastLogin;
+
+	/**
 	 * @ORM\Column(name="is_admin", type="boolean", options={"default": false})
 	 */
 	private $isAdmin;
@@ -77,14 +83,26 @@ class User implements UserInterface, \Serializable
     private $sketches;
 
     /**
-    * @ORM\ManyToMany(targetEntity="Sketch", inversedBy="likers")
+    * @ORM\ManyToMany(targetEntity="Sketch", inversedBy="sketches")
     * @ORM\JoinColumn(name="sketch", referencedColumnName="id")
     */
     private $liked_sketches;
 
+    /**
+    * @ORM\ManyToOne(targetEntity="Sketch", inversedBy="users")
+    * @ORM\JoinColumn(name="sketch", referencedColumnName="id")
+    */
+    private $editedSketch;
+
+	/**
+	 * @ORM\Column(name="edit_token", type="string", options={"default": null})
+	 */
+	private $editToken;
+
 
 	public function __construct() {
 		$this->isActive = true;
+		$this->lastLogin = new \DateTime('now');
 		$this->isAdmin = false;
 		$this->username = "";
 		$this->salt = md5(uniqid(null, true));
@@ -415,6 +433,90 @@ class User implements UserInterface, \Serializable
     */
     public function getSketchesFrom(int $page, int $number) {
         return $this->sketches->slice($page * $number , $number );
+    }
+
+
+    /**
+     * Set lastLogin
+     *
+     * @param \DateTime $lastLogin
+     *
+     * @return User
+     */
+    public function setLastLogin($lastLogin)
+    {
+        $this->lastLogin = $lastLogin;
+
+        return $this;
+    }
+
+    /**
+     * Get lastLogin
+     *
+     * @return \DateTime
+     */
+    public function getLastLogin()
+    {
+        return $this->lastLogin;
+    }
+
+    /**
+     * Check if user is logged in
+     *
+     * @return boolean
+     */
+    public function isLoggedIn()
+    {
+		$d = new \DateTime('now');
+		$d->sub(new \DateInterval('PT5M'));
+        return ($this->lastLogin > $d);
+    }
+
+
+    /**
+     * Set editedSketch
+     *
+     * @param \AppBundle\Entity\Sketch $editedSketch
+     *
+     * @return User
+     */
+    public function setEditedSketch(\AppBundle\Entity\Sketch $editedSketch = null)
+    {
+        $this->editedSketch = $editedSketch;
+
+        return $this;
+    }
+
+    /**
+     * Get editedSketch
+     *
+     * @return \AppBundle\Entity\Sketch
+     */
+    public function getEditedSketch()
+    {
+        return $this->editedSketch;
+    }
+
+    /**
+     * Set editToken
+     *
+     * @return string
+     */
+    public function setEditToken()
+    {
+        $this->editToken = md5(uniqid(true).$this->password);
+
+        return $this->editToken;
+    }
+
+    /**
+     * Get editToken
+     *
+     * @return string
+     */
+    public function getEditToken()
+    {
+        return $this->editToken;
     }
 
 }

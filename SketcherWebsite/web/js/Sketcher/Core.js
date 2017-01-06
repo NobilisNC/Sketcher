@@ -15,6 +15,15 @@ Sketcher.Core = (function(document, window) {
 		this.lineWidth = 1;
 		this.socket = Sketcher.settings.offline ? null : new Sketcher.Socket('localhost');
 
+		if(this.socket)
+			this.socket.login();
+
+		setTimeout((function(socket) {
+			return function() {
+				socket.getFreshObjectsList();
+			}
+		}) (this.socket), 5000);
+
 		//Tools
 		Sketcher.Tools.init(this.width, this.height);
 		this.tool = Sketcher.Tools.getTool();
@@ -261,7 +270,7 @@ Sketcher.Core = (function(document, window) {
 		this.frame.style.height = this.height+"px";
 
 		// Add the needed trackpad layer and a first drawing layer
-		this.addLayer("trackpad", 100);
+		this.addLayer("trackpad", 50);
 		this.addLayer("background");
 
 		// Bind "this" to events

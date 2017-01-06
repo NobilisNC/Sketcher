@@ -67,8 +67,16 @@ var Sketcher = Sketcher || (function(document, window) {
 		};
 
 		this.data = settings.data || {};
+		this.token = settings.token || null;
 
-		console.log(this.data);
+		if(this.token == null && this.settings.offline == false) {
+			k$.growl({
+				text: 'No token given, cannot login.',
+				delay: 10000,
+				type: 'alert-red'
+			});
+			return;
+		}
 
 		this.node = this.createElement('sketcher');
 		load();
@@ -78,6 +86,7 @@ var Sketcher = Sketcher || (function(document, window) {
 		init: this.init,
 		node: this.node,
 		data: this.data,
+		token: this.token,
 		createElement: this.createElement,
 		settings: this.settings,
 		widgets: {}

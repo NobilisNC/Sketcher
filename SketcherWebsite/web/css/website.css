@@ -2,6 +2,31 @@ body {
 	margin-bottom: 30px;
 }
 
+hr {
+	width: 30%;
+	border: none;
+	border-top: 1px solid #999;
+	margin: 5px auto 30px auto;
+}
+
+nav {
+	z-index: 99;
+}
+
+	nav .menu-item ul {
+	 z-index: 99;
+	}
+
+input[type="number"] {
+	width: 100%;
+}
+
+.wordTruncation {
+	overflow: hidden;
+	white-space: nowrap;
+	text-overflow: ellipsis;
+}
+
 .form {
 	margin-bottom: 0;
 }
@@ -103,6 +128,8 @@ div#top a.sketch {
 div#gallery figure.thumbnail {
 	height: 180px;
 	vertical-align: top;
+	position: relative;
+	border-color: #ccc;
 }
 
 	div#gallery figure.thumbnail a.sketch {
@@ -119,6 +146,20 @@ div#gallery figure.thumbnail {
 			height: auto;
 			width: auto;
 			vertical-align: middle;
+		}
+
+		div#gallery figure.thumbnail figcaption {
+			text-align: center;
+			font-size: 15px;
+			border: none;
+			border-top: 1px solid #ccc;
+			overflow: hidden;
+			white-space: nowrap;
+			text-overflow: ellipsis;
+			position: absolute;
+			bottom: 0;
+			left: 0;
+			right: 0;
 		}
 
 figure#showSketch {

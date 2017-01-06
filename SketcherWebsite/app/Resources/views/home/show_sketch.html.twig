@@ -26,8 +26,8 @@
     					{% if app.user is not null and app.user in sketch.authors %}
     					<ul class="button-group" style="float:left;">
     						<li>
-    							<a href="{{ path('sketch', {'sketchId': sketch.id}) }}" class="button button-primary"><i class="fa fa-pencil"></i> {{ 'edit'|trans }}</a>
-    							<a href="#" class="button button-red"><i class="fa fa-trash"></i> {{ 'delete'|trans }}</a>
+    							<a href="{{ path('sketch', {'sketchId': sketch.id}) }}" class="button button-small button-primary"><i class="fa fa-pencil"></i> {{ 'edit'|trans }}</a>
+    							<a href="#" class="button button-small button-red"><i class="fa fa-trash"></i> {{ 'delete'|trans }}</a>
     						</li>
     					</ul>
     					{% endif %}
@@ -38,14 +38,14 @@
             <div class="col-3">
                 <div class="container">
                     <header>{{'sketch.title'|trans}}</header>
-                    <main>{{sketch.name}}</main>
+                    <div class="wordTruncation">{{sketch.name}}</div>
                 </div>
                 <div class="container">
                     <header>{{'sketch.tags'|transchoice(sketch.tags|length)}}</header>
                     <main>
                         {% for tag in sketch.tags %}
-                            <a href="#">
-                                <span class="label">{{tag.name}}</span>
+                            <a href="{{ path('galleryByTag', {'tag': tag.name}) }}">
+                                <span class="label">{{ tag.name }}</span>
                             </a>
                         {% endfor %}
                     </main>
@@ -61,6 +61,7 @@
             </div>
         </div>
 		{% if form is not null %}
+		<hr>
 		<div>
 			{% for comment in comments %}
 			<div class="container comment">

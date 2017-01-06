@@ -70,8 +70,8 @@
                 <source>Gallery</source>
                 <target>Gallery</target>
             </trans-unit>
-            <trans-unit id="my_pictures">
-                <source>My pictures</source>
+            <trans-unit id="my.pictures">
+                <source>my.pictures</source>
                 <target>My pictures</target>
             </trans-unit>
             <trans-unit id="profile">
@@ -125,11 +125,15 @@
             <trans-unit id="sketch.title">
                 <source>sketch.title</source>
                 <target>Title</target>
-            </trans-unit>
-            <trans-unit id="sketches">
-                <source>Sketches</source>
-                <target>Sketches</target>
-            </trans-unit>
+			</trans-unit>
+			<trans-unit id="sketches">
+				<source>Sketches</source>
+				<target>Sketches</target>
+			</trans-unit>
+			<trans-unit id="sketches.by.tag">
+				<source>sketches.by.tag</source>
+				<target>Sketches with tag </target>
+			</trans-unit>
             <trans-unit id="sketch.authors">
                 <source>sketch.authors</source>
                 <target>one: Author|some: Authors</target>

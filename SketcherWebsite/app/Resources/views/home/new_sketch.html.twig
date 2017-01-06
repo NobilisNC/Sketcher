@@ -11,10 +11,10 @@
 		{{ form_label(form.name, null, {
 			'label': form.name.vars.label|trans,
 			'label_attr': {
-				'class': 'col-4'
+				'class': 'col-2'
 			}
 		}) }}
-		<div class="input col-7">
+		<div class="input col-9">
 			{% set class = '' %}
 			{% if form.name.vars.value|length > 0 %}
 				{% set class = class ~ (form.name.vars.valid ? ' success' : ' error')  %}
@@ -31,19 +31,19 @@
 		{{ form_label(form.width, null, {
 			'label': form.width.vars.label|trans ~ ' (px)',
 			'label_attr': {
-				'class': 'col-4'
-			}
+				'class': 'col-2'
+				}
 		}) }}
-		<div class="input col-2">
+		<div class="input col-3">
 			{% set class = '' %}
 			{% if form.width.vars.value|length > 0 %}
-				{% set class = class ~ (form.width.vars.valid ? ' success' : ' error')  %}
+			{% set class = class ~ (form.width.vars.valid ? ' success' : ' error')  %}
 			{% endif %}
 			{{ form_widget(form.width, {'attr': {'class': class} }) }}
 			{% if form.width.vars.errors|length > 0 %}
-				{% for error in form.width.vars.errors %}
-					<p class="error">{{ error.message|trans }}</p>
-				{% endfor %}
+			{% for error in form.width.vars.errors %}
+			<p class="error">{{ error.message|trans }}</p>
+			{% endfor %}
 			{% endif %}
 		</div>
 		{{ form_label(form.height, null, {
@@ -52,16 +52,16 @@
 				'class': 'col-2 col-left-1'
 			}
 		}) }}
-		<div class="input col-2">
+		<div class="input col-3">
 			{% set class = '' %}
 			{% if form.height.vars.value|length > 0 %}
-				{% set class = class ~ (form.height.vars.valid ? ' success' : ' error')  %}
+			{% set class = class ~ (form.height.vars.valid ? ' success' : ' error')  %}
 			{% endif %}
 			{{ form_widget(form.height, {'attr': {'class': class} }) }}
 			{% if form.height.vars.errors|length > 0 %}
-				{% for error in form.height.vars.errors %}
-					<p class="error">{{ error.message|trans }}</p>
-				{% endfor %}
+			{% for error in form.height.vars.errors %}
+			<p class="error">{{ error.message|trans }}</p>
+			{% endfor %}
 			{% endif %}
 		</div>
 	</div>
@@ -69,10 +69,10 @@
 		{{ form_label(form.tags, null, {
 			'label': form.tags.vars.label|trans,
 			'label_attr': {
-				'class': 'col-4'
+				'class': 'col-2'
 			}
 		}) }}
-		<div class="input col-7">
+		<div class="input col-9">
 			<div class="tagInput">
 				<div id="sketch_tags" data-prototype="{{ form_widget(form.tags.vars.prototype)|e }}"></div>
 				{% for tag in form.tags %}
