@@ -64,6 +64,7 @@ class HomeController extends Controller
 
         return $this->render('home/gallery.html.twig',
             array (
+                'personal' => $user->getUsername(),
                 'sketches' => $sketches,
                 'sketches_directory' => $this->getParameter('sketches_directory'),
                 'total_sketches' => $user->getNb()

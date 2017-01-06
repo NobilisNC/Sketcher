@@ -6,7 +6,9 @@
     <div class="col-10 col-left-1">
 	{% if tag is defined %}
 		<h2>{{ 'sketches.by.tag'|trans }} <span class="label label-primary" style="vertical-align:middle;">{{ tag }}</span></h2>
-	{% else %}
+	{% elseif personal is defined %}
+        <h2>{{'sketches_of'|trans}}
+    {% else %}
 		<h2>{{ 'Gallery'|trans }}</h2>
     {% endif %}
     {% include 'modules/pagination.html.twig' with {    'sketches' : sketches,
