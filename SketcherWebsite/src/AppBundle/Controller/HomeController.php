@@ -54,7 +54,7 @@ class HomeController extends Controller
      *
      * @Route("/galleryof/{username}/{page}", name="user_gallery")
      */
-    public function user_galleryAction(Request $request, string $username, int $page)
+    public function user_galleryAction(Request $request, string $username, int $page = 0)
     {
         $number_page = 16;
         $db = $this->getDoctrine()->getRepository('AppBundle:User');
