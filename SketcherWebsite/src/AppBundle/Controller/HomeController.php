@@ -75,16 +75,17 @@ class HomeController extends Controller
 	/**
 	 *
 	 * @Route(
-	 *   "/gallery/tag/{tag}",
+	 *   "/gallery/tag/{tag}/{page}",
 	 *   requirements={"tag": "[\-a-z\d]+"},
+     *   defaults={"page" : 0},
 	 *   name="galleryByTag"
 	 * )
 	 */
-	public function galleryByTagAction(Request $request, string $tag)
+	public function galleryByTagAction(Request $request, string $tag, int $page)
 	{
         $tag = $this->getDoctrine()->getRepository('AppBundle:Tag')->findOneByName($tag);
 
-		$sketches = $tag ? $tag->getSketches() : null;
+		$sketches = $tag ? $tag->getSketchesFrom($page, 16) : null;
 
 
 		return $this->render('home/gallery.html.twig',

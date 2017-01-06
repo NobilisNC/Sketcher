@@ -13,9 +13,17 @@
     {% else %}
 		<h2>{{ 'Gallery'|trans }}</h2>
     {% endif %}
+    {% if sketches|length == 0 %}
+     <div class="container container-red">
+         <header>{{'no.sketch'|trans}}</header>
+         <main>{{'no.sketch.explanation'|trans}}</main>
+    </div>
+
+    {% else %}
     {% include 'modules/pagination.html.twig' with {    'sketches' : sketches,
                                                         'total_sketches' : total_sketches
                                                     }   %}
+    {% endif %}
 </div>
 
 

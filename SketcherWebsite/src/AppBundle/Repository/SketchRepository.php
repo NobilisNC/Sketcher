@@ -22,7 +22,6 @@ class SketchRepository extends \Doctrine\ORM\EntityRepository
 
         $query = $manager->getRepository('AppBundle:Sketch')
                        ->createQueryBuilder('sketch')
-                       //->select('sketch')
                        ->leftJoin('sketch.likers', 'likers')
                        ->addSelect('COUNT(sketch.id) AS HIDDEN nbLikes')
                        ->orderBy('nbLikes', 'DESC')
