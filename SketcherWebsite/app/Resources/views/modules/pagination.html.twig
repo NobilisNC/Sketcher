@@ -1,0 +1,31 @@
+<div class="col-12">
+    {% for sketch in sketches %}
+        <figure class="thumbnail col-3">
+            <a href="{{path('showSketch', {'sketchId' : sketch.id} ) }}" class="sketch">
+                <img src="{{ asset(sketches_directory ~ '/' ~ sketch.path)}}">
+            </a>
+            <figcaption>
+            <center>
+                {{sketch.name}}
+            </center>
+            </figcaption>
+        </figure>
+    {% endfor %}
+</div>
+{% set current_page = app.request.attributes.get('page') %}
+
+<div class="row">
+    {% if current_page != 0 %}
+    <div class="container col-1">
+    <a href="{{path(app.request.attributes.get('_route'), {'page' : current_page - 1 } ) }}">
+        <i class="fa fa-angle-left" aria-hidden="true"></i> {{'previous'|trans}}
+    </a>
+    </div>
+    {% endif %}
+    {% if sketches|length <  %}
+    <div class="container col-1 col-left-11">
+        <a href="{{path(app.request.attributes.get('_route'), { 'page' : current_page + 1 } ) }}">
+            <i class="fa fa-angle-right" aria-hidden="true"></i> {{'next'|trans}}
+        </a>
+    </div>
+</div>

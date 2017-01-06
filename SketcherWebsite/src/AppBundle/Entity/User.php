@@ -409,4 +409,12 @@ class User implements UserInterface, \Serializable
         return $this->sketches->contains($sketch);
     }
 
+    /*
+    * Return sketch from pagination
+    * @return \Doctrine\Common\Collections\Collection
+    */
+    public function getSketchesFrom(int $page, int $number) {
+        return $this->sketches->slice($page * $number , $number );
+    }
+
 }

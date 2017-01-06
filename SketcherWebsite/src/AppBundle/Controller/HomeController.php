@@ -32,19 +32,42 @@ class HomeController extends Controller
 
 	/**
 	 *
-	 * @Route("/gallery", name="gallery")
+	 * @Route("/gallery/{page}", name="gallery")
 	 */
-	public function galleryAction(Request $request)
+	public function galleryAction(Request $request, int $page)
 	{
-        $sketches = $this->getDoctrine()->getRepository('AppBundle:Sketch')->getMostLikedSketches(100);
+        $sketches = $this->getDoctrine()->getRepository('AppBundle:Sketch')->getMostLikedSketches($page, 16);
+        //$sketches = $this->getDoctrine()->getRepository('AppBundle:Sketch')->getLastSketches($page, 16);
+
 
 		return $this->render('home/gallery.html.twig',
             array (
                 'sketches' => $sketches,
-            	'sketches_directory' => $this->getParameter('sketches_directory')
+            	'sketches_directory' => $this->getParameter('sketches_directory'),
+                'total_sketches' => $this->getDoctrine()->getRepository('AppBundle:Sketch')->getNb()
             )
         );
 	}
+
+    /**
+     *
+     * @Route("/gallery/{username}/{page}", name="user_gallery")
+     */
+    public function user_galleryAction(Request $request, string $username, int $page)
+    {
+        $number_page = 16;
+        $db = $this->getDoctrine()->getRepository('AppBundle:User');
+        $user = $db->findOneBy( array('username' => $username));
+        $sketches = $user->getSketchesFrom($page, $number_page);
+
+
+        return $this->render('home/gallery.html.twig',
+            array (
+                'sketches' => $sketches,
+                'sketches_directory' => $this->getParameter('sketches_directory')
+            )
+        );
+    }
 
 	/**
 	 *
@@ -91,7 +114,7 @@ class HomeController extends Controller
 	/**
 	 *
 	 * @Route(
-	 *   "/gallery/{sketchId}",
+	 *   "/sketch/{sketchId}",
 	 *   requirements={"sketchId": "\d+"},
 	 *   name="showSketch"
 	 * )
@@ -277,13 +300,14 @@ class HomeController extends Controller
             //On insere les nouveaux tags
             $r = $db->getRepository('AppBundle:Tag');
             foreach($form->get('tags')->getData() as $tag) {
-
+                // $sketch->addTag($tag);
                 $t = $r->findOneByName($tag->getName());
                 if(!$t) {
                     $db->persist($tag);
                     $sketch->addTag($tag);
                 } else
                     $sketch->addTag($t);
+
             }
 
 

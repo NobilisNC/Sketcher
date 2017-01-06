@@ -11,13 +11,13 @@ namespace AppBundle\Repository;
 class SketchRepository extends \Doctrine\ORM\EntityRepository
 {
 
-    public function getLastSketches($number = 10) {
+    public function getLastSketches($page, $number) {
         $manager = $this->getEntityManager();
         return $manager->getRepository('AppBundle:Sketch')
-                       ->findBy(array(), array('dateUpload' => 'DESC'), $number);
+                       ->findBy(array(), array('dateUpload' => 'DESC'), $page * $number, $number);
     }
 
-    public function getMostLikedSketches($number = 10) {
+    public function getMostLikedSketches($page, $number) {
         $manager = $this->getEntityManager();
 
         $query = $manager->getRepository('AppBundle:Sketch')
@@ -27,6 +27,7 @@ class SketchRepository extends \Doctrine\ORM\EntityRepository
                        ->addSelect('COUNT(sketch.id) AS nbLikes')
                        ->orderBy('nbLikes', 'DESC')
                        ->groupBy('sketch.id')
+                       ->setFirstResult($page * $number)
                        ->setMaxResults($number)
                        ->getQuery();
 
@@ -41,5 +42,13 @@ class SketchRepository extends \Doctrine\ORM\EntityRepository
         return $manager->getRepository('AppBundle:Sketch')
                 ->findBy(array('id' => $ids));
     }
+
+    public function getNb() {
+        return $this->createQueryBuilder('Sketch')
+                        ->select('COUNT(Sketch)')
+                        ->getQuery()
+                        ->getSingleScalarResult();
+    }
+
 
 }

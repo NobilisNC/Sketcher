@@ -11,21 +11,40 @@
 			<p>{{ 'no.sketch.explanation'|trans }}</p>
 		</div>
 		{% else %}
-		<div class="container col-12" id="gallery">
-		    {% for sketch in sketches %}
-				<figure class="thumbnail col-3">
-					<a href="gallery/{{sketch.id}}" class="sketch">
-			            <img src="{{ asset(sketches_directory ~ '/' ~ sketch.path)}}">
-					</a>
-					<figcaption>
-						{{ 'sketch.authors'|transchoice(sketch.authors|length) }} :
-					{% set first = true %}
-					{% for author in sketch.authors %}{{ (first ? '' : ', ') }}{% include 'modules/user.html.twig' with {'user' : author } %}{% set first = false %}{% endfor %}
+        <div class="col-12">
+            {% for sketch in sketches %}
+                <figure class="thumbnail col-3">
+                    <a href="{{path('showSketch', {'sketchId' : sketch.id} ) }}" class="sketch">
+                        <img src="{{ asset(sketches_directory ~ '/' ~ sketch.path)}}">
+                    </a>
+                    <figcaption>
+                    <center>
+                        {{sketch.name}}
+                    </center>
                     </figcaption>
-				</figure>
-		    {% endfor %}
-		</div>
+                </figure>
+            {% endfor %}
+        </div>
+        {% set current_page = app.request.attributes.get('page') %}
+
+        <div class="row">
+            {% if current_page != 0 %}
+            <div class="container col-1">
+            <a href="{{path(app.request.attributes.get('_route'), {'page' : current_page - 1 } ) }}">
+                <i class="fa fa-angle-left" aria-hidden="true"></i> {{'previous'|trans}}
+            </a>
+            </div>
+            {% endif %}
+            {% if current_page * 16 + sketches|length < total_sketches   %}
+            <div class="container col-1 col-left-11">
+                <a href="{{path(app.request.attributes.get('_route'), { 'page' : current_page + 1 } ) }}">
+                    <i class="fa fa-angle-right" aria-hidden="true"></i> {{'next'|trans}}
+                </a>
+            </div>
+        </div>
 		{% endif %}
-    </div>
+    {% endif %}
+</div>
+
 
 {% endblock %}
