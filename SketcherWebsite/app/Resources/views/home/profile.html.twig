@@ -7,8 +7,18 @@
 	{% if user is null %}
 		{{ 'User "%name%" does not exist.'|trans({'%name%' : name}) }}
 	{% else %}
-		<h3>{{ '%name%\'s profile'|trans({'%name%': user.username}) }}  {% if app.user is not null and user.username == app.user.username %}<a class="button button-small button-blue" href="{{ path('editProfile') }}" style="float:right;">{{ 'Go back to edition'|trans }} <i class="fa fa-mail-reply"></i></a>{% endif %}</h3>
-		{{ user.email }}
+		<h3>{{ '%name%\'s profile'|trans({'%name%': user.username}) }}
+        <a href="{{path('user_gallery', {'username' : user.username, 'page' : 0})}}">
+            <span class="label label-primary">{{'show_sketches'|trans}}</span>
+        </a>
+        {% if app.user is not null and user.username == app.user.username %}
+        <a class="button button-small button-blue" href="{{ path('editProfile') }}" style="float:right;">{{ 'Go back to edition'|trans }} <i class="fa fa-mail-reply"></i></a>
+        {% endif %}
+        </h3>
+        <div class="container">
+            <main>{{'E-mail'|trans}} : {{user.email}}</main>
+            <main>{{'nb_sketches'|trans}} : {{user.getNb()}}</main>
+        </div>
 	{% endif %}
 	</div>
 {% endblock %}

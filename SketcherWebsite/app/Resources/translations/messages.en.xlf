@@ -32,7 +32,7 @@
             </trans-unit>
             <trans-unit id="wrong_password">
                 <source>Wrong password</source>
-                <target>CACA password</target>
+                <target>Wrong password</target>
             </trans-unit>
             <trans-unit id="language">
                 <source>Language</source>
@@ -94,6 +94,10 @@
                 <source>%name%'s profile</source>
                 <target>%name%'s profile</target>
             </trans-unit>
+            <trans-unit id="access_profile">
+                <source>access_profil</source>
+                <target>Go to his profil</target>
+            </trans-unit>
             <trans-unit id="invalid_credentials">
                 <source>Invalid credentials.</source>
                 <target>Invalid credentials.</target>
@@ -130,6 +134,10 @@
 				<source>Sketches</source>
 				<target>Sketches</target>
 			</trans-unit>
+            <trans-unit id="sketch.tags">
+                <source>sketch.tags</source>
+                <target>Tags</target>
+            </trans-unit>
 			<trans-unit id="sketches.by.tag">
 				<source>sketches.by.tag</source>
 				<target>Sketches with tag </target>
@@ -193,6 +201,26 @@
             <trans-unit id="edit">
                 <source>edit</source>
                 <target>Edit</target>
+            </trans-unit>
+            <trans-unit id="sketch_of">
+                <source>sketch_of</source>
+                <target>%username%'s sketches</target>
+            </trans-unit>
+            <trans-unit id="next">
+                <source>next</source>
+                <target>Next</target>
+            </trans-unit>
+            <trans-unit id="previous">
+                <source>previous</source>
+                <target>Previous</target>
+            </trans-unit>
+            <trans-unit id="nb_sketches">
+                <source>nb_sketches</source>
+                <target>Number of sketches</target>
+            </trans-unit>
+            <trans-unit id="show_sketches">
+                <source>show_sketches</source>
+                <target>Go to his sketches</target>
             </trans-unit>
         </body>
     </file>

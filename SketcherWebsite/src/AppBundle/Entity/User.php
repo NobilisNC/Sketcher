@@ -83,13 +83,13 @@ class User implements UserInterface, \Serializable
     private $sketches;
 
     /**
-    * @ORM\ManyToMany(targetEntity="Sketch", inversedBy="sketches")
+    * @ORM\ManyToMany(targetEntity="Sketch", inversedBy="likers")
     * @ORM\JoinColumn(name="sketch", referencedColumnName="id")
     */
     private $liked_sketches;
 
     /**
-    * @ORM\ManyToOne(targetEntity="Sketch", inversedBy="users")
+    * @ORM\ManyToOne(targetEntity="Sketch", inversedBy="editingUsers")
     * @ORM\JoinColumn(name="sketch", referencedColumnName="id")
     */
     private $editedSketch;
@@ -427,6 +427,15 @@ class User implements UserInterface, \Serializable
         return $this->sketches->contains($sketch);
     }
 
+    /*
+    * Return sketch from pagination
+    * @return \Doctrine\Common\Collections\Collection
+    */
+    public function getSketchesFrom(int $page, int $number) {
+        return $this->sketches->slice($page * $number , $number );
+    }
+
+
     /**
      * Set lastLogin
      *
@@ -509,4 +518,16 @@ class User implements UserInterface, \Serializable
     {
         return $this->editToken;
     }
+
+    /**
+    * Get Number on Sketches
+    *
+    *  @return int
+    */
+    public function getNb() {
+        return $this->sketches->count();
+    }
+
+
+
 }

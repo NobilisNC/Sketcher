@@ -44,9 +44,7 @@
                     <header>{{'sketch.tags'|transchoice(sketch.tags|length)}}</header>
                     <main>
                         {% for tag in sketch.tags %}
-                            <a href="{{ path('galleryByTag', {'tag': tag.name}) }}">
-                                <span class="label">{{ tag.name }}</span>
-                            </a>
+                            {% include 'modules/tag.html.twig' with {'tag_name' : tag.name} %}
                         {% endfor %}
                     </main>
                 </div>
@@ -54,7 +52,7 @@
                     <header>{{'sketch.authors'|transchoice(sketch.authors|length)}}</header>
                     <main>
                     {% for author in sketch.authors %}
-                    {% include 'modules/user.html.twig' with {'user' : author} %}<br/>
+                        {% include 'modules/user.html.twig' with {'user' : author} %}<br/>
                     {% endfor %}
                     </main>
                 </div>

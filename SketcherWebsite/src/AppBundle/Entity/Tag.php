@@ -108,4 +108,21 @@ class Tag
     {
         return $this->sketches;
     }
+
+    /**
+     * Get number of sketches
+     *
+     * @return int
+     */
+    public function getNbSketches() {
+        return $this->sketches->count();
+    }
+    
+    /*
+    * Return sketch from pagination
+    * @return \Doctrine\Common\Collections\Collection
+    */
+    public function getSketchesFrom(int $page, int $number) {
+        return $this->sketches->slice($page * $number , $number );
+    }
 }

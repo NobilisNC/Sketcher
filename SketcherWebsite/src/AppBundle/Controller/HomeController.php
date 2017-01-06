@@ -32,43 +32,74 @@ class HomeController extends Controller
 
 	/**
 	 *
-	 * @Route("/gallery", name="gallery")
+	 * @Route("/gallery/{page}", name="gallery",
+     *         defaults = {"page" : 0} )
 	 */
-	public function galleryAction(Request $request)
+	public function galleryAction(Request $request, int $page)
 	{
-        $sketches = $this->getDoctrine()->getRepository('AppBundle:Sketch')->getMostLikedSketches(100);
+        $sketches = $this->getDoctrine()->getRepository('AppBundle:Sketch')->getMostLikedSketches($page, 16);
+        //$sketches = $this->getDoctrine()->getRepository('AppBundle:Sketch')->getLastSketches($page, 16);
+
 
 		return $this->render('home/gallery.html.twig',
             array (
                 'sketches' => $sketches,
-            	'sketches_directory' => $this->getParameter('sketches_directory')
+            	'sketches_directory' => $this->getParameter('sketches_directory'),
+                'total_sketches' => $this->getDoctrine()->getRepository('AppBundle:Sketch')->getNb()
             )
         );
 	}
 
+    /**
+     *
+     * @Route("/galleryof/{username}/{page}", name="user_gallery")
+     */
+    public function user_galleryAction(Request $request, string $username, int $page)
+    {
+        $number_page = 16;
+        $db = $this->getDoctrine()->getRepository('AppBundle:User');
+        $user = $db->findOneBy( array('username' => $username));
+        $sketches = $user->getSketchesFrom($page, $number_page);
+
+
+        return $this->render('home/gallery.html.twig',
+            array (
+                'specific_user' => $user->getUsername(),
+                'sketches' => $sketches,
+                'sketches_directory' => $this->getParameter('sketches_directory'),
+                'total_sketches' => $user->getNb()
+            )
+        );
+    }
+
 	/**
 	 *
 	 * @Route(
-	 *   "/gallery/{tag}",
+	 *   "/gallery/tag/{tag}/{page}",
 	 *   requirements={"tag": "[\-a-z\d]+"},
+     *   defaults={"page" : 0},
 	 *   name="galleryByTag"
 	 * )
 	 */
-	public function galleryByTagAction(Request $request, string $tag)
+	public function galleryByTagAction(Request $request, string $tag, int $page)
 	{
         $tag = $this->getDoctrine()->getRepository('AppBundle:Tag')->findOneByName($tag);
 
-		$sketches = $tag ? $tag->getSketches() : null;
+		$sketches = $tag ? $tag->getSketchesFrom($page, 16) : null;
+
 
 		return $this->render('home/gallery.html.twig',
             array (
 				'tag' => $tag->getName(),
                 'sketches' => $sketches,
-            	'sketches_directory' => $this->getParameter('sketches_directory')
+            	'sketches_directory' => $this->getParameter('sketches_directory'),
+                'total_sketches' => $tag->getNbSketches()
             )
         );
 	}
 
+
+    // UNUSED !!!! delete ?
 	/**
 	 *
 	 * @Route("/me/sketches", name="mySketches")
@@ -323,13 +354,14 @@ class HomeController extends Controller
             //On insere les nouveaux tags
             $r = $db->getRepository('AppBundle:Tag');
             foreach($form->get('tags')->getData() as $tag) {
-
+                // $sketch->addTag($tag);
                 $t = $r->findOneByName($tag->getName());
                 if(!$t) {
                     $db->persist($tag);
                     $sketch->addTag($tag);
                 } else
                     $sketch->addTag($t);
+
             }
 
 

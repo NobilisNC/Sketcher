@@ -90,6 +90,10 @@
                 <source>%name%'s profile</source>
                 <target>Profil de %name%</target>
             </trans-unit>
+            <trans-unit id="access_profile">
+                <source>access_profil</source>
+                <target>Acceder à son profil</target>
+            </trans-unit>
             <trans-unit id="invalid_credentials">
                 <source>Invalid credentials.</source>
                 <target>Identifiants invalides.</target>
@@ -109,6 +113,10 @@
             <trans-unit id="sketch">
                 <source>Sketch</source>
                 <target>Dessin</target>
+            </trans-unit>
+            <trans-unit id="sketch.tags">
+                <source>sketch.tags</source>
+                <target>Tags associés</target>
             </trans-unit>
             <trans-unit id="new_sketch">
                 <source>New sketch</source>
@@ -185,6 +193,26 @@
             <trans-unit id="edit">
                 <source>edit</source>
                 <target>Modifier</target>
+            </trans-unit>
+            <trans-unit id="sketch_of">
+                <source>sketch_of</source>
+                <target>Dessins de %username%</target>
+            </trans-unit>
+            <trans-unit id="next">
+                <source>next</source>
+                <target>Suivant</target>
+            </trans-unit>
+            <trans-unit id="previous">
+                <source>previous</source>
+                <target>Précédent</target>
+            </trans-unit>
+            <trans-unit id="nb_sketches">
+                <source>nb_sketches</source>
+                <target>Nombre de dessin</target>
+            </trans-unit>
+            <trans-unit id="show_sketches">
+                <source>show_sketches</source>
+                <target>Voir ses dessins</target>
             </trans-unit>
         </body>
     </file>

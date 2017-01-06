@@ -19,16 +19,16 @@
 				</ul>
 				<ul>
 				{% if not is_granted('IS_AUTHENTICATED_REMEMBERED') %}
-					<li><a {% if app.request.getPathInfo() == path('gallery') %}class="active"{% endif %} href="{{ path('gallery') }}"><i class="fa fa-image"></i> {{ 'Gallery'|trans }}</a></li>
+					<li><a {% if app.request.getPathInfo() == path('gallery', {'page': 0}) %}class="active"{% endif %} href="{{ path('gallery', {'page' : 0}) }}"><i class="fa fa-image"></i> {{ 'Gallery'|trans }}</a></li>
 					<li><a href="{{ path('signup') }}"><i class="fa fa-pencil"></i> {{ 'Register'|trans }}</a></li>
 					<li><a href="{{ path('login') }}"><i class="fa fa-sign-in"></i> {{ 'Login'|trans }}</a></li>
 				{% else %}
 					<li><a {% if app.request.getPathInfo() == path('newSketch') %}class="active"{% endif %} href="{{ path('newSketch') }}"><i class="fa fa-plus"></i> {{ 'New sketch'|trans }}</a></li>
-					<li><a {% if app.request.getPathInfo() == path('gallery') %}class="active"{% endif %} href="{{ path('gallery') }}"><i class="fa fa-image"></i> {{ 'Gallery'|trans }}</a></li>
+					<li><a {% if app.request.getPathInfo() == path('gallery', {'page' : 0}) %}class="active"{% endif %} href="{{ path('gallery', {'page' : 0}) }}"><i class="fa fa-image"></i> {{ 'Gallery'|trans }}</a></li>
 					<li>{{ app.user.username }}
 						<ul>
 							<li><a href="{{ path('editProfile') }}" title="{{ 'Profile'|trans }}">{{ 'Profile'|trans }}</a></li>
-							<li><a href="{{ path('mySketches') }}" title="{{ 'my.pictures'|trans }}">{{ 'my.pictures'|trans }}</a></li>
+							<li><a href="{{ path('user_gallery', {'username' : app.user.username, 'page' : 0}) }}" title="{{ 'my.pictures'|trans }}">{{ 'my.pictures'|trans }}</a></li>
 							<li><a href="{{ path('logout') }}" title="{{ 'Logout'|trans }}">{{ 'Logout'|trans }} <i style="color:#C82829;float:right;" class="fa fa-sign-out"></i></a></li>
 						</ul>
 					</li>
