@@ -83,10 +83,21 @@ class User implements UserInterface, \Serializable
     private $sketches;
 
     /**
-    * @ORM\ManyToMany(targetEntity="Sketch", inversedBy="likers")
+    * @ORM\ManyToMany(targetEntity="Sketch", inversedBy="sketches")
     * @ORM\JoinColumn(name="sketch", referencedColumnName="id")
     */
     private $liked_sketches;
+
+    /**
+    * @ORM\ManyToOne(targetEntity="Sketch", inversedBy="users")
+    * @ORM\JoinColumn(name="sketch", referencedColumnName="id")
+    */
+    private $editedSketch;
+
+	/**
+	 * @ORM\Column(name="edit_token", type="string", options={"default": null})
+	 */
+	private $editToken;
 
 
 	public function __construct() {
@@ -452,4 +463,50 @@ class User implements UserInterface, \Serializable
         return ($this->lastLogin > $d);
     }
 
+
+    /**
+     * Set editedSketch
+     *
+     * @param \AppBundle\Entity\Sketch $editedSketch
+     *
+     * @return User
+     */
+    public function setEditedSketch(\AppBundle\Entity\Sketch $editedSketch = null)
+    {
+        $this->editedSketch = $editedSketch;
+
+        return $this;
+    }
+
+    /**
+     * Get editedSketch
+     *
+     * @return \AppBundle\Entity\Sketch
+     */
+    public function getEditedSketch()
+    {
+        return $this->editedSketch;
+    }
+
+    /**
+     * Set editToken
+     *
+     * @return string
+     */
+    public function setEditToken()
+    {
+        $this->editToken = md5(uniqid(true).$this->password);
+
+        return $this->editToken;
+    }
+
+    /**
+     * Get editToken
+     *
+     * @return string
+     */
+    public function getEditToken()
+    {
+        return $this->editToken;
+    }
 }

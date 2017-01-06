@@ -122,6 +122,10 @@
                 <source>sketch.title</source>
                 <target>Titre</target>
             </trans-unit>
+			<trans-unit id="sketches.by.tag">
+				<source>sketches.by.tag</source>
+				<target>Dessins avec le tag </target>
+			</trans-unit>
             <trans-unit id="sketch.authors">
                 <source>sketch.authors</source>
                 <target>one: Auteur|some: Auteurs</target>

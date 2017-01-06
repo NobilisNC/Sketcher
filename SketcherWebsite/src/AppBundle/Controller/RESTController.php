@@ -15,42 +15,75 @@ class RESTController extends Controller
 {
     /**
      * @Route(
-	 *   "/{sketchId}",
-	 *   requirements={"sketchId" = "[a-f\d]{32}"},
-	 *   name="apiRefresh"
+	 *   "/{token}",
+	 *   requirements={"token" = "[a-f\d]{32}"},
+	 *   name="apiCheckToken"
 	 *	)
 	 * @Method({"GET"})
      */
-    public function refreshAction(Request $request, $sketchId)
+    public function checkTokenAction(Request $request, $token)
     {
-		if(!$this->getUser())
-			return new Response('403 - Unauthorized', 403);
+		$res = new Response();
+		$res->headers->set('Content-Type', 'application/json');
 
-		return new Response("refresh ".$sketchId);
+		$db = $this->getDoctrine()->getManager();
+		$user = $db->getRepository('AppBundle:User')->findOneByEditToken($token);
+
+		if(!$user)
+			return $res->setStatusCode(403)->setContent('{"status": "error", "msg": "Invalid token."}');
+
+		return $res->setContent('{"status": "success"}');
 	}
 
     /**
      * @Route(
-	 *   "/{sketchId}",
+	 *   "/{token}/refresh",
+	 *   requirements={"token" = "[a-f\d]{32}"},
+	 *   name="apiRefresh"
+	 *	)
+	 * @Method({"GET"})
+     */
+    public function refreshAction(Request $request, $token)
+    {
+		$res = new Response();
+		$res->headers->set('Content-Type', 'application/json');
+
+		$db = $this->getDoctrine()->getManager();
+		$user = $db->getRepository('AppBundle:User')->findOneByEditToken($token);
+
+		if(!$user)
+			return $res->setStatusCode(403)->setContent('{"status": "error", "msg": "Invalid token."}');
+
+		$sketch = $user->getEditedSketch();
+
+		if(!$sketch)
+			return $res->setStatusCode(404)->setContent('{"status": "error", "msg": "Sketch not found."}');
+
+		return $res->setContent($sketch->getData());
+	}
+
+    /**
+     * @Route(
+	 *   "/{token}",
 	 *   requirements={"sketchId" = "[a-f\d]{32}"},
 	 *   name="apiUpdate"
 	 * )
 	 * @Method({"POST"})
      */
-    public function updateAction(Request $request, $sketchId)
+    public function updateAction(Request $request, $token)
     {
 		return new Response("update");
 	}
 
     /**
      * @Route(
-	 *   "/{sketchId}",
-	 *   requirements={"sketchId" = "[a-f\d]{32}"},
+	 *   "/{token}",
+	 *   requirements={"token" = "[a-f\d]{32}"},
 	 *   name="apiListCollaborators"
 	 * )
 	 * @Method({"OPTIONS"})
      */
-    public function listCollaboratorsAction(Request $request, int $sketchId)
+    public function listCollaboratorsAction(Request $request, int $token)
     {
 		return new Response("list collaborators");
 	}

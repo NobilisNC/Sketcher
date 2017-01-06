@@ -44,8 +44,8 @@
                     <header>{{'sketch.tags'|transchoice(sketch.tags|length)}}</header>
                     <main>
                         {% for tag in sketch.tags %}
-                            <a href="#">
-                                <span class="label">{{tag.name}}</span>
+                            <a href="{{ path('galleryByTag', {'tag': tag.name}) }}">
+                                <span class="label">{{ tag.name }}</span>
                             </a>
                         {% endfor %}
                     </main>

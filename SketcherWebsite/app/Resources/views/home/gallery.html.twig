@@ -4,7 +4,11 @@
 
 {% block body %}
     <div class="col-10 col-left-1">
+	{% if tag is defined %}
+		<h2>{{ 'sketches.by.tag'|trans }} <span class="label label-primary" style="vertical-align:middle;">{{ tag }}</span></h2>
+	{% else %}
 		<h2>{{ 'Gallery'|trans }}</h2>
+	{% endif %}
 		{% if sketches|length == 0 %}
 		<div class="info">
 			<h5>{{ 'no.sketch'|trans }}</h5>
@@ -14,7 +18,7 @@
 		<div class="col-12" id="gallery">
 		    {% for sketch in sketches %}
 				<figure class="thumbnail col-3">
-					<a href="gallery/{{sketch.id}}" class="sketch">
+					<a href="{{ path('showSketch', {'sketchId': sketch.id}) }}" class="sketch">
 			            <img src="{{ asset(sketches_directory ~ '/' ~ sketch.path)}}">
 					</a>
 					<figcaption>

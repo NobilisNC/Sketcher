@@ -48,6 +48,29 @@ class HomeController extends Controller
 
 	/**
 	 *
+	 * @Route(
+	 *   "/gallery/{tag}",
+	 *   requirements={"tag": "[\-a-z\d]+"},
+	 *   name="galleryByTag"
+	 * )
+	 */
+	public function galleryByTagAction(Request $request, string $tag)
+	{
+        $tag = $this->getDoctrine()->getRepository('AppBundle:Tag')->findOneByName($tag);
+
+		$sketches = $tag ? $tag->getSketches() : null;
+
+		return $this->render('home/gallery.html.twig',
+            array (
+				'tag' => $tag->getName(),
+                'sketches' => $sketches,
+            	'sketches_directory' => $this->getParameter('sketches_directory')
+            )
+        );
+	}
+
+	/**
+	 *
 	 * @Route("/me/sketches", name="mySketches")
 	 */
 	public function mySketchesAction(Request $request)
@@ -114,7 +137,7 @@ class HomeController extends Controller
 	/**
 	 *
 	 * @Route(
-	 *   "/gallery/{sketchId}",
+	 *   "/show/{sketchId}",
 	 *   requirements={"sketchId": "\d+"},
 	 *   name="showSketch"
 	 * )
@@ -256,18 +279,21 @@ class HomeController extends Controller
 		if(!$user)
 			return $this->redirectToRoute('gallery');
 
-		$db = $this->getDoctrine()->getRepository('AppBundle:Sketch');
-		$sketch = $db->findOneBy(array(
-			'id' => $sketchId
-		));
+		$db = $this->getDoctrine()->getManager();
+		$sketch = $db->getRepository('AppBundle:Sketch')->findOneById($sketchId);
 
 		if($sketch && !$user->isAuthorOf($sketch))
 			return $this->redirectToRoute('gallery');
 
+		$sketch->addEditingUser($user);
+		$token = $user->setEditToken();
+		$db->flush();
+
 		return $this->render(
 			'home/sketch.html.twig',
 			array(
-				'sketch' => $sketch
+				'sketch' => $sketch,
+				'token' => $token
 			)
 		);
 	}

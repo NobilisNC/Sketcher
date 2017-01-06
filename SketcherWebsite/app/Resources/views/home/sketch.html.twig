@@ -18,7 +18,8 @@
 		Sketcher.init(
 			document.querySelector('div#sketcher'),
 			{
-				data: {{ sketch.data|raw }}
+				data: {{ sketch.data|raw }},
+				token: '{{ app.user.editToken }}'
 			}
 		);
 	</script>

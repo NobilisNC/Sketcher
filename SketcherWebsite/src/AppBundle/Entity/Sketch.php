@@ -99,6 +99,11 @@ class Sketch
 	*/
 	private $data;
 
+	/**
+	* @ORM\OneToMany(targetEntity="User", mappedBy="sketch")
+	*/
+	private $editingUsers;
+
 
     public function __construct() {
 		$this->name = '';
@@ -108,8 +113,8 @@ class Sketch
         $this->authors = new ArrayCollection();
         $this->tags = new ArrayCollection();
         $this->comments = new ArrayCollection();
+        $this->editingUsers = new ArrayCollection();
     }
-
 
     /**
      * Get id
@@ -378,4 +383,40 @@ class Sketch
          return $this->likers->count();
      }
 
+
+    /**
+     * Add editingUser
+     *
+     * @param \AppBundle\Entity\User $editingUser
+     *
+     * @return Sketch
+     */
+    public function addEditingUser(\AppBundle\Entity\User $editingUser)
+    {
+        $this->editingUsers[] = $editingUser;
+		$editingUser->setEditedSketch($this);
+
+        return $this;
+    }
+
+    /**
+     * Remove editingUser
+     *
+     * @param \AppBundle\Entity\User $editingUser
+     */
+    public function removeEditingUser(\AppBundle\Entity\User $editingUser)
+    {
+        $this->editingUsers->removeElement($editingUser);
+		$editingUser->setEditedSketch(null);
+    }
+
+    /**
+     * Get editingUsers
+     *
+     * @return \Doctrine\Common\Collections\Collection
+     */
+    public function getEditingUsers()
+    {
+        return $this->editingUsers;
+    }
 }

@@ -15,7 +15,14 @@ Sketcher.Core = (function(document, window) {
 		this.lineWidth = 1;
 		this.socket = Sketcher.settings.offline ? null : new Sketcher.Socket('localhost');
 
-		this.socket.getFreshObjectsList();
+		if(this.socket)
+			this.socket.login();
+
+		setTimeout((function(socket) {
+			return function() {
+				socket.getFreshObjectsList();
+			}
+		}) (this.socket), 5000);
 
 		//Tools
 		Sketcher.Tools.init(this.width, this.height);
