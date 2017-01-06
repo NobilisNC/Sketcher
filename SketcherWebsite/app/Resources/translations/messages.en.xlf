@@ -214,6 +214,14 @@
                 <source>previous</source>
                 <target>Previous</target>
             </trans-unit>
+            <trans-unit id="nb_sketches">
+                <source>nb_sketches</source>
+                <target>Number of sketches</target>
+            </trans-unit>
+            <trans-unit id="show_sketches">
+                <source>show_sketches</source>
+                <target>Go to his sketches</target>
+            </trans-unit>
         </body>
     </file>
 </xliff>

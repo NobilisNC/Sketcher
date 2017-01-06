@@ -206,6 +206,14 @@
                 <source>previous</source>
                 <target>Précédent</target>
             </trans-unit>
+            <trans-unit id="nb_sketches">
+                <source>nb_sketches</source>
+                <target>Nombre de dessin</target>
+            </trans-unit>
+            <trans-unit id="show_sketches">
+                <source>show_sketches</source>
+                <target>Voir ses dessins</target>
+            </trans-unit>
         </body>
     </file>
 </xliff>
