@@ -365,7 +365,7 @@ div.sk_window {
 div.sk_tool_option {
 	position: relative;
 	border-top: 1px solid #ccc;
-	padding-top: 2px;
+	padding: 5px 5px 5px 0;
 }
 
 	div.sk_tool_option label {
@@ -382,12 +382,13 @@ div.sk_tool_option {
 	div.sk_tool_option input[type="number"] {
 		float: right;
 		height: 28px;
+		-moz-appearance:textfield;
 	}
 
 	div.sk_tool_option input[type="checkbox"] {
 		position: absolute;
-		right: 10px;
-		top: 6px;
+		right: 0;
+		top: 10px;
 		width: 19px;
 		height: 19px;
 	}
