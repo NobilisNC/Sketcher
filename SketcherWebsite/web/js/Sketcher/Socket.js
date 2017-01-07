@@ -12,8 +12,7 @@ Sketcher.Socket = function(host, port) {
 
 	this.socket.on('whoAreYou', (function() {
 		console.log('whoAmI ?');
-		if(this.loginState === false)
-			this.login();
+		this.login();
 	}).bind(this));
 
 	this.socket.on('hello', (function() {
@@ -24,7 +23,6 @@ Sketcher.Socket = function(host, port) {
 
 	this.socket.on('getFreshObjectsList', function(objects) {
 		Sketcher.data = objects;
-		console.log('Received fresh objects '+objects);
 	});
 }
 

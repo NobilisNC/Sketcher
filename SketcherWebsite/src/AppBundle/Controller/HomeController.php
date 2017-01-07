@@ -372,12 +372,10 @@ class HomeController extends Controller
 			imagejpeg($img, $this->getParameter('sketches_directory').'/'.$sketch->getPath());
 
             $sketch->addAuthor($user);
-			$sketch->setData('{"width":'.$sketch->getWidth().',"height":'.$sketch->getHeight().',"layers":{}}');
-
+			$sketch->setData('[{"name": "Background", "objects": []}]');
 
             $db->persist($sketch);
             $db->flush();
-
 
             return $this->redirectToRoute(
 				'sketch',

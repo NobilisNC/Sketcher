@@ -4,7 +4,9 @@ var http = require('http');
 var querystring = require('querystring');
 var serv = http.Server(answerRequest);
 var io = require('socket.io')(serv);
-var canvas = require('canvas');
+var Canvas = require('canvas');
+var Image = Canvas.Image;
+var Font = Canvas.Font;
 
 require('Sketcher.js')();
 eval(fs.readFileSync('node_modules/Sketcher/Tools.js')+'');
@@ -22,7 +24,10 @@ function answerRequest(request, response) {
 
 io.on('connection', function(socket){
 	let token = null;
+	let width = null, height = null;
 	let layers = [];
+
+	console.log('Client has connected.');
 
 	io.emit('whoAreYou');
 
@@ -67,18 +72,33 @@ io.on('connection', function(socket){
 	socket.on('addObject', function(data){
 		data.object = JSON.parse(data.object);
 
+		//!\ Get proper layer to add object
 		layers[0].objects.push(data.object);
-		let postData = querystring.stringify({"layers": JSON.stringify(layers)});
-		console.log(JSON.stringify(layers));
-		console.log(token);
+
+		let canvas = new Canvas(width, height);
+		let ctx = canvas.getContext('2d');
+
+		ctx.fillStyle = '#fff';
+		ctx.fillRect(0, 0, width, height);
+
+		layers.forEach(function(layer) {
+			layer.objects.forEach(function(object) {
+				Sketcher.Tools.drawFromJSON(JSON.stringify(object), ctx);
+			});
+		});
+		let postData = querystring.stringify({
+			"layers": JSON.stringify(layers),
+			"image": canvas.toDataURL().substr(22)
+		});
+
+		console.log(ctx.font);
 
 		if(	//!\ Need better sanitizing !
 			Object.keys(data.object).length != 2 ||
 			typeof data.object.type != 'string' ||
 			typeof data.object.data != 'object'
 		) {
-			console.log(JSON.stringify(data.object).match(/[\(\)]/), JSON.stringify(data.object));
-			// socket.emit('error');
+			socket.emit('error');
 			return;
 		}
 
@@ -154,7 +174,10 @@ io.on('connection', function(socket){
 			res.on('end', () => {
 				try {
 				  let parsedData = JSON.parse(rawData);
-				  layers = parsedData;
+				  console.log(parsedData);
+				  width = parsedData.width;
+				  height = parsedData.height;
+				  layers = parsedData.layers;
 				  io.emit('getFreshObjectsList', rawData);
 				} catch (e) {
 				  console.log(e.message);

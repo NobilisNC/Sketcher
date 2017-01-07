@@ -1,6 +1,6 @@
 {% extends 'base.html.twig' %}
 
-{% block title %}- {{ 'New sketch'|trans }}{% endblock %}
+{% block title %}- {{ 'Users administration'|trans }}{% endblock %}
 
 {% block body %}
 <div class="col-left-2 col-8">
@@ -15,7 +15,7 @@
 		</tr>
 	{% for user in users %}
 		<tr>
-			<td><a href="{{ path('profile', {'username': user.username}) }}">{{ user.username }}</a></td>
+			<td>{% include 'modules/user.html.twig' with {'user' : user} %}</a></td>
 			<td>{{ user.email }}</td>
 			<td style="text-align:center;">{{ user.locale }}</td>
 			<td style="text-align:center;">

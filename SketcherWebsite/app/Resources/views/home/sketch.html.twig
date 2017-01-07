@@ -1,6 +1,6 @@
 {% extends 'base.html.twig' %}
 
-{% block title %}- {{ 'New sketch'|trans }}{% endblock %}
+{% block title %}- {{ (sketch is null ? 'sketch.not.found' : sketch.name)|trans }}{% endblock %}
 
 {% block body %}
 {% if sketch is null %}

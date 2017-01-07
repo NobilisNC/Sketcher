@@ -107,7 +107,6 @@ class Sketch
 
     public function __construct() {
 		$this->name = '';
-		$this->data = '{}';
 		$this->path = md5(uniqid('', true)).'.jpg';
         $this->dateUpload = new \DateTime();
         $this->authors = new ArrayCollection();

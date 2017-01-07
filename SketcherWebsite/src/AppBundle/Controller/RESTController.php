@@ -59,7 +59,7 @@ class RESTController extends Controller
 		if(!$sketch)
 			return $res->setStatusCode(404)->setContent('{"status": "error", "msg": "Sketch not found."}');
 
-		return $res->setContent($sketch->getData());
+		return $res->setContent('{"width": '.$sketch->getWidth().', "height": '.$sketch->getHeight().', "layers": '.$sketch->getData().'}');
 	}
 
     /**
@@ -87,9 +87,11 @@ class RESTController extends Controller
 			return $res->setStatusCode(404)->setContent('{"status": "error", "msg": "Sketch not found."}');
 
 		$layer = $request->request->all()['layers'];
-		if($layer)
+		if($layer) {
 			$sketch->setData($layer);
-			
+			file_put_contents($this->getParameter('sketches_directory').'/'.$sketch->getPath(), base64_decode($request->request->all()['image']));
+		}
+
 		$db->persist($sketch);
 		$db->flush();
 

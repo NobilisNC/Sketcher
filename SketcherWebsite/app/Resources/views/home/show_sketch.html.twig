@@ -52,7 +52,7 @@
                     <header>{{'sketch.authors'|transchoice(sketch.authors|length)}}</header>
                     <main>
                     {% for author in sketch.authors %}
-                        {% include 'modules/user.html.twig' with {'user' : author} %}<br/>
+                        {% include 'modules/user.html.twig' with {'user' : author} %} 
                     {% endfor %}
                     </main>
                 </div>

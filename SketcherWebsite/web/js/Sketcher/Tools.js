@@ -399,7 +399,7 @@ Sketcher.ToolsAbstract = (function() {
 		_Tool.call(this);
 
 		this.icon = 'font';
-		this.font = 'serif';
+		this.font = 'DejaVu'; // Helvetica, Courier New, Georgia
 		this.bold = false;
 		this.italic = false;
 
@@ -407,7 +407,7 @@ Sketcher.ToolsAbstract = (function() {
 			text: 'Text',
 			fill: true,
 			stroke: false,
-			size: 30
+			size: 150
 		};
 	}
 
@@ -440,7 +440,8 @@ Sketcher.ToolsAbstract = (function() {
 
 		ctx.fillStyle = this.fill_color;
 		ctx.strokeStyle = this.stroke_color;
-		ctx.font = this.options.size + 'px ' + this.font;
+		ctx.font = 'normal normal '+this.options.size+'px "'+this.font+'"';
+		console.log(ctx.font);
 
 		if(this.options.stroke)
 			ctx.strokeText(this.options.text, this.p.x, this.p.y);
