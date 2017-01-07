@@ -130,7 +130,8 @@ Sketcher.widgets.LayerControl = function(parent, x = 0, y = 0) {
 
 	this.layerList = new Sketcher.widgets.LayerList(this);
 	this.layerButtons = new Sketcher.widgets.Toolbox(this);
-	this.layerButtons.appendChild(
+	this.layerButtons.addWidget(
+		'addLayer',
 		new Sketcher.widgets.Button(
 			'addLayer',
 			(function(e) {
@@ -141,7 +142,8 @@ Sketcher.widgets.LayerControl = function(parent, x = 0, y = 0) {
 			'plus'
 		)
 	);
-	this.opacitySlider = this.layerButtons.appendChild(
+	this.layerButtons.addWidget(
+		'addLayer',
 		new Sketcher.widgets.Slider(
 			'Opacity',
 			(function(e) {

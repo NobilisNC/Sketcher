@@ -14,6 +14,7 @@ var Sketcher = Sketcher || (function(document, window) {
 		'Core': {filename: 'Core.js'},
 		'Widgets': {filename: 'Widgets.js'},
 		'LayerControl': {filename: 'LayerControl.js'},
+		'ToolControl': {filename: 'ToolControl.js'},
 		'UI': {filename: 'UI.js'},
 	};
 

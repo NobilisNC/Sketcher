@@ -3,24 +3,17 @@ Sketcher.ToolsAbstract = ( function() {
 	/*
 	*	Abstract Tools
 	*/
-	function _Tool() {
-		this._stroke = true;
-	}
+	function _Tool() { }
 
-	_Tool.prototype.stroke = function (stroke) {
-		if (typeof stroke === 'boolean')
-			this._stroke = stroke;
-
-		return this._stroke;
-	}
+	_Tool.prototype.options = {};
 
 	// AbstractFunctions
 	_Tool.prototype.onMouseDown;
 	_Tool.prototype.onMouseMove;
 	_Tool.prototype.onMouseUp;
 
-
 	_Tool.prototype.config_context = function (ctx) {
+		ctx.fillStyle = this.fill_color;
 		ctx.strokeStyle = this.stroke_color;
 		ctx.lineWidth = Sketcher.Core.lineWidth;
 		ctx.lineCap = 'round';
@@ -33,18 +26,24 @@ Sketcher.ToolsAbstract = ( function() {
 	*
 	*
 	*/
-	function Line() {
+	_Line = function() {
 		_Tool.call(this)
 		this.p1;
 		this.p2;
+		this.icon = 'minus';
+		this.options = {
+			thickness: 1
+		};
 	}
 
-	Line.prototype = Object.create(_Tool.prototype);
-	Line.prototype.constructor = Line;
+	_Line.prototype = Object.create(_Tool.prototype);
+	_Line.prototype.constructor = _Line;
 
-	Line.prototype.draw = function (ctx) {
+	_Line.prototype.draw = function (ctx) {
 		this.config_context(ctx);
 
+		ctx.lineWidth = this.options.thickness;
+		ctx.strokeStyle = this.stroke_color;
 		ctx.beginPath();
 		ctx.moveTo(this.p1.x, this.p1.y);
 		ctx.lineTo(this.p2.x,this.p2.y);
@@ -52,20 +51,29 @@ Sketcher.ToolsAbstract = ( function() {
 		ctx.stroke();
 	}
 
-	Line.prototype.onMouseDown = function (e) {
-		this.p1 = {x : e.offsetX, y : e.offsetY };
-		this.line_width = Sketcher.Core.lineWidth;
+	_Line.prototype.onMouseDown = function (e) {
+		this.p1 = {
+			x : e.offsetX,
+			y : e.offsetY
+		};
+
 		this.stroke_color = Sketcher.color.foreground.getRGBa();
-		this.fill_color = Sketcher.color.background.getRGBa();
 	}
 
-	Line.prototype.onMouseMove = function (e, ctx) {
-		this.p2 =  {x : e.offsetX, y : e.offsetY};
+	_Line.prototype.onMouseMove = function (e, ctx) {
+		this.p2 = {
+			x: e.offsetX,
+			y: e.offsetY
+		};
 		this.draw(ctx);
 	}
 
-	Line.prototype.onMouseUp = function (e, ctx) {
-		this.p2 = { x :e.offsetX, y : e.offsetY};
+	_Line.prototype.onMouseUp = function (e, ctx) {
+		this.p2 = {
+			x: e.offsetX,
+			y: e.offsetY
+		};
+		console.log("OK", this);
 
 		return '{ "type":"Line","data":' + JSON.stringify(this) + '}';
 	}
@@ -76,38 +84,37 @@ Sketcher.ToolsAbstract = ( function() {
 		*
 		*
 		*/
-	function Rect() {
+	_Rectangle = function() {
 		_Tool.call(this);
-		this._fill = false;
+		this.icon = 'square';
+		this.options = {
+			thickness: 1,
+			fill: false,
+			stroke: true
+		};
 	}
 
-	Rect.prototype = Object.create(_Tool.prototype);
-	Rect.prototype.constructor = Rect;
+	_Rectangle.prototype = Object.create(_Tool.prototype);
+	_Rectangle.prototype.constructor = _Rectangle;
 
-	Rect.prototype.fill = function (fill) {
-		if (typeof fill === 'boolean')
-			this._fill = fill;
-
-		return this._fill;
-	}
-
-	Rect.prototype.draw = function (ctx) {
+	_Rectangle.prototype.draw = function (ctx) {
 		this.config_context(ctx);
+		ctx.lineWidth = this.options.thickness;
 		ctx.fillStyle = this.fill_color;
-		if(this._fill)
+		if(this.options.fill)
 			ctx.fillRect(this.p1.x, this.p1.y, this.p2.x - this.p1.x, this.p2.y - this.p1.y);
-		if (this._stroke)
+		ctx.strokeStyle = this.stroke_color;
+		if (this.options.stroke)
 			ctx.strokeRect(this.p1.x, this.p1.y, this.p2.x - this.p1.x, this.p2.y - this.p1.y);
 	}
 
-	Rect.prototype.onMouseDown = function (e, ctx) {
+	_Rectangle.prototype.onMouseDown = function (e, ctx) {
 		this.p1 = this.p2 = {x : e.offsetX, y : e.offsetY };
-		this.line_width = Sketcher.Core.lineWidth;
 		this.stroke_color = Sketcher.color.foreground.getRGBa();
 		this.fill_color = Sketcher.color.background.getRGBa();
 	}
 
-	Rect.prototype.onMouseMove = function (e, ctx) {
+	_Rectangle.prototype.onMouseMove = function (e, ctx) {
 		this.p2 =  {x : e.offsetX, y : e.offsetY};
 		if(e.ctrlKey) {
 			var dist = Math.min(this.p2.x-this.p1.x, this.p2.y-this.p1.y);
@@ -116,9 +123,9 @@ Sketcher.ToolsAbstract = ( function() {
 		this.draw(ctx);
 	}
 
-	Rect.prototype.onMouseUp = function (e, ctx) {
+	_Rectangle.prototype.onMouseUp = function (e, ctx) {
 		if(Math.abs(this.p1.x-this.p2.x) > 0 || Math.abs(this.p1.y-this.p2.y) > 0) {
-			return '{ "type":"Rect","data":' + JSON.stringify(this) + '}';
+			return '{ "type":"Rectangle","data":' + JSON.stringify(this) + '}';
 		}
 
 		return null;
@@ -129,16 +136,24 @@ Sketcher.ToolsAbstract = ( function() {
 	*
 	*
 	*/
-	function Pencil() {
+	_Pencil = function() {
 		_Tool.call(this);
 		this.p0;
 		this.points = [];
+		this.icon = 'pencil';
+		this.options = {
+			thickness: 1
+		};
 	}
 
-	Pencil.prototype = Object.create(_Tool.prototype);
-	Pencil.prototype.constructor = Pencil;
+	_Pencil.prototype = Object.create(_Tool.prototype);
+	_Pencil.prototype.constructor = _Pencil;
 
-	Pencil.prototype.draw = function (ctx) {
+	_Pencil.prototype.draw = function (ctx) {
+		this.config_context(ctx);
+
+		ctx.lineWidth = this.options.thickness;
+		ctx.strokeStyle = this.stroke_color;
 		ctx.beginPath();
 		ctx.moveTo(this.p0.x, this.p0.y);
 		for (var point of this.points) {
@@ -149,23 +164,33 @@ Sketcher.ToolsAbstract = ( function() {
 
 	}
 
-	Pencil.prototype.onMouseDown = function (e, ctx) {
-		this.p0 =  {x : e.offsetX, y : e.offsetY };
+	_Pencil.prototype.onMouseDown = function (e, ctx) {
+		this.p0 = {
+			x: e.offsetX,
+			y: e.offsetY
+		};
+
 		this.points = [];
-		this.line_width = Sketcher.Core.lineWidth;
 		this.stroke_color = Sketcher.color.foreground.getRGBa();
 		this.fill_color = Sketcher.color.background.getRGBa();
 	}
 
-	Pencil.prototype.onMouseMove = function (e, ctx) {
-		this.points.push ( {x : e.offsetX, y : e.offsetY } );
+	_Pencil.prototype.onMouseMove = function (e, ctx) {
+		this.points.push({
+			x: e.offsetX,
+			y: e.offsetY
+		});
 		this.config_context(ctx);
 		this.draw(ctx);
 	}
 
-	Pencil.prototype.onMouseUp = function (e, ctx) {
-		this.points.push ( {x : e.offsetX, y : e.offsetY } );
-		return '{ "type":"Pencil","data":' + JSON.stringify(this) + '}';
+	_Pencil.prototype.onMouseUp = function (e, ctx) {
+		this.points.push({
+			x: e.offsetX,
+			y: e.offsetY
+		});
+
+		return '{ "type": "Pencil","data": ' + JSON.stringify(this) + '}';
 	}
 
 	/* Class Circle extends _Tool
@@ -173,51 +198,63 @@ Sketcher.ToolsAbstract = ( function() {
 	*
 	*
 	*/
-	function Circle() {
+	_Circle = function() {
 		_Tool.call(this);
-		this._fill = false;
+		this.icon = 'circle';
+		this.options = {
+			thickness: 1,
+			fill: false,
+			stroke: true,
+		}
 	}
 
-	Circle.prototype = Object.create(_Tool.prototype);
-	Circle.prototype.constructor = Circle;
+	_Circle.prototype = Object.create(_Tool.prototype);
+	_Circle.prototype.constructor = _Circle;
 
-	Circle.prototype.fill = function (fill) {
-
-		if (typeof fill === 'boolean')
-			this._fill = fill;
-
-		return this._fill;
-	}
-
-	Circle.prototype.draw = function (ctx) {
+	_Circle.prototype.draw = function (ctx) {
 		this.config_context(ctx);
 
-		ctx.fillStyle = Sketcher.color.background.getRGBA();
+		ctx.lineWidth = this.options.thickness;
+		ctx.fillStyle = this.fill_color;
+		ctx.strokeStyle = this.stroke_color;
 		ctx.beginPath();
-		ctx.arc(this.p1.x,this.p1.y,Math.sqrt( Math.pow(this.p2.x-this.p1.x, 2) + Math.pow(this.p2.y-this.p1.y,2) ),0, 2*Math.PI);
-		if (this._fill)
+		ctx.arc(
+			this.p1.x, this.p1.y,
+			Math.sqrt( Math.pow(this.p2.x-this.p1.x, 2) + Math.pow(this.p2.y-this.p1.y,2) ), 0,
+			2*Math.PI
+		);
+		if (this.options.fill)
 			ctx.fill();
-		if (this._stroke)
+		if (this.options.stroke)
 			ctx.stroke();
-
 	}
 
-	Circle.prototype.onMouseDown = function (e, ctx) {
-		this.p1 = {x : e.offsetX, y : e.offsetY };
-		this.line_width = Sketcher.Core.lineWidth;
+	_Circle.prototype.onMouseDown = function (e, ctx) {
+		this.p1 = {
+			x: e.offsetX,
+			y: e.offsetY
+		};
+
 		this.stroke_color = Sketcher.color.foreground.getRGBa();
 		this.fill_color = Sketcher.color.background.getRGBa();
 	}
 
-	Circle.prototype.onMouseMove = function (e, ctx) {
-		this.p2 =  {x : e.offsetX, y : e.offsetY};
+	_Circle.prototype.onMouseMove = function (e, ctx) {
+		this.p2 = {
+			x: e.offsetX,
+			y: e.offsetY
+		};
+
 		this.draw(ctx);
 	}
 
-	Circle.prototype.onMouseUp = function (e, ctx) {
-		this.p2 = { x :e.offsetX, y : e.offsetY};
+	_Circle.prototype.onMouseUp = function (e, ctx) {
+		this.p2 = {
+			x: e.offsetX,
+			y: e.offsetY
+		};
 
-		return '{ "type":"Circle","data":' + JSON.stringify(this) + '}';
+		return '{ "type": "Circle","data": ' + JSON.stringify(this) + '}';
 	}
 
 
@@ -226,17 +263,17 @@ Sketcher.ToolsAbstract = ( function() {
 	*
 	*
 	*/
-	function PaintBucket( width, height) {
+	_PaintBucket = function( width, height) {
 		_Tool.call(this);
 		this.width = width;
 		this.height = height;
 		this.precision = 2550 * 0.2;
 	}
 
-    PaintBucket.prototype = Object.create(_Tool.prototype);
-	PaintBucket.prototype.constructor = PaintBucket;
+    _PaintBucket.prototype = Object.create(_Tool.prototype);
+	_PaintBucket.prototype.constructor = _PaintBucket;
 
-	PaintBucket.prototype.precision = function(precision) {
+	_PaintBucket.prototype.precision = function(precision) {
 		if (typeof precision === 'number')
 			if (precision < 0)
 				console.error('La precision doit être un chiffre positif');
@@ -249,16 +286,16 @@ Sketcher.ToolsAbstract = ( function() {
 
 	}
 
-	PaintBucket.prototype.posOk = function(pos) {
+	_PaintBucket.prototype.posOk = function(pos) {
 		return pos.x >= 0 && pos.x < this.width && pos.y >= 0 && pos.y < this.height;
 	}
 
 
-	PaintBucket.prototype.getPosInData = function(pos) {
+	_PaintBucket.prototype.getPosInData = function(pos) {
 		return (pos.y * this.width + pos.x) * 4;
 	}
 
-	PaintBucket.prototype.isTargetColor = function(pos, img, targetColor) {
+	_PaintBucket.prototype.isTargetColor = function(pos, img, targetColor) {
 		pos_data = this.getPosInData(pos);
 		if (!this.posOk(pos)) {
 			return false;
@@ -268,43 +305,46 @@ Sketcher.ToolsAbstract = ( function() {
 
 		var already_colored = img.data[pos_data] -  Sketcher.color.background.r + img.data[pos_data+1] - Sketcher.color.background.g + img.data[pos_data+2] - Sketcher.color.background.b ;
 
-		if (already_colored == 0) {
+		if(already_colored == 0)
 			return false;
-		}else if(diff < this.precision) {
-			//alert('ok')
+		else if(diff < this.precision)
 			return true;
-
-		}else {
-			//alert('nope')
+		else
 			return false;
-		}
-
 	}
 
 
-	PaintBucket.prototype.draw = function (ctx) {
+	_PaintBucket.prototype.draw = function (ctx) {
 		var img = ctx.getImageData(0, 0, this.width, this.height);
 		var pixel =  this.getPosInData(this.p);
-		var targetColor = {r : img.data[pixel], g : img.data[pixel +1 ], b : img.data[pixel +2],a: img.data[pixel + 3]};
+		var targetColor = {
+			r: img.data[pixel],
+			g: img.data[pixel +1],
+			b: img.data[pixel +2],
+			a: img.data[pixel +3]
+		};
 
 		var P = [];
 		P.push(this.p);
 
-		while (P.length) {
+		while(P.length) {
 			n = P.pop();
 
-			if( this.isTargetColor(n, img, targetColor) ) {
+			if(this.isTargetColor(n, img, targetColor)) {
 
-				//On check ouest
-				var w = {'x' : n.x-1, 'y':n.y};
+				// On check west
+				var w = {
+					x: n.x-1,
+					y:n.y
+				};
+
 				while(this.isTargetColor(w,img,targetColor))
 					w.x--;
 
-				//On check est
+				// On check east
 				var e = {'x' : n.x+1, 'y':n.y};
 				while(this.isTargetColor(e,img,targetColor) )
 					e.x++;
-
 
 				for (let pix = w; pix.x < e.x; pix.x++){
 					let pos_data = this.getPosInData(pix);
@@ -313,33 +353,44 @@ Sketcher.ToolsAbstract = ( function() {
 					img.data[pos_data +2] = Sketcher.color.background.b;
 					img.data[pos_data +3] = Sketcher.color.background.a;
 
-					var south = {x : pix.x , y : pix.y - 1};
-					if (this.isTargetColor(south, img, targetColor))
-						P.push(south);
-					var north = {x : pix.x , y : pix.y + 1};
-					if (this.isTargetColor(north, img, targetColor))
-						P.push(north);
+					var south = {
+						x: pix.x,
+						y: pix.y - 1
+					};
 
+					if(this.isTargetColor(south, img, targetColor))
+						P.push(south);
+					var north = {
+						x: pix.x,
+						y: pix.y + 1
+					};
+
+					if(this.isTargetColor(north, img, targetColor))
+						P.push(north);
 				}
 			}
 		}
 		ctx.putImageData(img, 0,0);
 	}
 
-	PaintBucket.prototype.onMouseDown = function (e, ctx) {
+	_PaintBucket.prototype.onMouseDown = function (e, ctx) {
 
 	}
 
-	PaintBucket.prototype.onMouseMove = function (e, ctx) {
+	_PaintBucket.prototype.onMouseMove = function (e, ctx) {
 
 	}
 
-	PaintBucket.prototype.onMouseUp = function (e, ctx) {
-		this.p = { x :e.offsetX, y : e.offsetY};
+	_PaintBucket.prototype.onMouseUp = function (e, ctx) {
+		this.p = {
+			x: e.offsetX,
+			y: e.offsetY
+		};
+
 		this.config_context(ctx);
 		this.draw(ctx);
 
-		return '{ "type":"PaintBucket","data":' + JSON.stringify(this) + '}';
+		return '{ "type": "PaintBucket","data": ' + JSON.stringify(this) + '}';
 	}
 
 
@@ -348,92 +399,79 @@ Sketcher.ToolsAbstract = ( function() {
 	*
 	*
 	*/
-	function Text() {
+	_Text = function() {
 		_Tool.call(this);
-		this._fill = false;
-		this.text = 'caca';
-		this.font = 'Calibri';
-		this.size = '50px';
+		this.icon = 'font';
+		this.font = 'serif';
 		this.bold = false;
 		this.italic = false;
 
-		this.stroke(true);
-		this.fill(true);
+		this.options = {
+			text: 'Text',
+			fill: true,
+			stroke: false,
+			size: 30
+		};
 	}
 
-	Text.prototype = Object.create(_Tool.prototype);
-	Text.prototype.constructor = Text;
+	_Text.prototype = Object.create(_Tool.prototype);
+	_Text.prototype.constructor = _Text;
 
-	Text.prototype.fill = function (fill) {
-		if (typeof fill === 'boolean')
-			this._fill = fill;
-
-		return this._fill;
-	}
-
-	Text.prototype.font = function(font) {
+	_Text.prototype.font = function(font) {
 		if (typeof font === 'string')
 			this.font = font;
 
 		return this.font;
 	}
 
-	Text.prototype.size = function(size) {
-		if (typeof size === 'string')
-			this.size = size;
-
-		return this.size;
-	}
-
-	Text.prototype.bold = function(bold) {
+	_Text.prototype.bold = function(bold) {
 		if (typeof bold === 'boolean')
 			this.bold = bold;
 
 		return this.bold;
 	}
 
-	Text.prototype.italic = function(italic) {
+	_Text.prototype.italic = function(italic) {
 		if (typeof italic === 'boolean')
 			this.italic = italic;
 
 		return this.italic;
 	}
 
-	Text.prototype.text = function(text) {
-		if (typeof text === 'string')
-			this.text = text;
-
-		return this.text;
-
-	}
-
-
-	Text.prototype.draw = function (ctx) {
-
-		ctx.fillStyle = Sketcher.color.background.getRGBA();
-		ctx.font = (this.bold ? 'bold ' : '') + (this.italic ? 'italic ' : '') + this.size + ' ' + this.font;
-
-		if (this._fill)
-			ctx.fillText(this.text,this.p.x,this.p.y);
-
-
-		if (this._stroke)
-			ctx.strokeText(this.text,this.p.x,this.p.y);
-
-	}
-
-	Text.prototype.onMouseDown = function (e, ctx) {
-	}
-
-	Text.prototype.onMouseMove = function (e, ctx) {
-	}
-
-	Text.prototype.onMouseUp = function (e, ctx) {
-		this.p = { x :e.offsetX, y : e.offsetY};
+	_Text.prototype.draw = function(ctx) {
 		this.config_context(ctx);
+
+		ctx.fillStyle = this.fill_color;
+		ctx.strokeStyle = this.stroke_color;
+		ctx.font = this.options.size + 'px ' + this.font;
+
+		if(this.options.stroke)
+			ctx.strokeText(this.options.text, this.p.x, this.p.y);
+		if(this.options.fill) {
+			console.log('fill');
+			ctx.fillText(this.options.text, this.p.x, this.p.y);
+		}
+
+	}
+
+	_Text.prototype.onMouseDown = function (e, ctx) {
+	}
+
+	_Text.prototype.onMouseMove = function (e, ctx) {
+	}
+
+	_Text.prototype.onMouseUp = function (e, ctx) {
+		this.p = {
+			x: e.offsetX,
+			y: e.offsetY
+		};
+
+		this.fill_color = Sketcher.color.background.getRGBA();
+		this.stroke_color = Sketcher.color.foreground.getRGBA();
+
 		this.draw(ctx);
 
-		return '{ "type":"Text","data":' + JSON.stringify(this) + '}';
+		return '{ "type": "Text","data": ' + JSON.stringify(this) + '}';
 	}
 
 
@@ -444,14 +482,18 @@ Sketcher.ToolsAbstract = ( function() {
 
 		rawObject = JSON.parse(json_str, ctx);
 
+		console.log(rawObject);
+
 		if (rawObject.type === "Line")
-			c = Line;
-		else if (rawObject.type === "Rect")
-			c = Rect;
+			c = _Line;
+		else if (rawObject.type === "Rectangle")
+			c = _Rectangle;
 		else if (rawObject.type === "Pencil")
-			c = Pencil;
+			c = _Pencil;
 		else if (rawObject.type === "Circle")
-			c = Circle;
+			c = _Circle;
+		else if (rawObject.type === "Text")
+			c = this.Text;
 
 		obj = cast(rawObject.data, c)
 		obj.draw(ctx);
@@ -468,66 +510,51 @@ Sketcher.ToolsAbstract = ( function() {
 
 
 	return {
-		line : Line,
-		rectangle : Rect,
-		pencil : Pencil,
-		circle : Circle,
-		paint_bucket : PaintBucket,
-		text : Text,
+		Line: _Line,
+		Rectangle: _Rectangle,
+		Pencil: _Pencil,
+		Circle: _Circle,
+		// PaintBucket: _PaintBucket,
+		Text: _Text,
 
-		fromJSON : factory
+		fromJSON: factory
 	}
 
 }());
 
 
 Sketcher.Tools = (function() {
-
-	var tools;
-	var current;
-
-
-	function initialization(width, height) {
-	tools = {
-					 'line' : new Sketcher.ToolsAbstract.line(),
-					 'rectangle' : new Sketcher.ToolsAbstract.rectangle(),
-					 'pencil' : new Sketcher.ToolsAbstract.pencil(),
-					 'circle' : new Sketcher.ToolsAbstract.circle(),
-					 'paint_bucket' : new Sketcher.ToolsAbstract.paint_bucket(width, height),
-					 'text' : new Sketcher.ToolsAbstract.text()
-		}
-
-		current = 'rectangle';
-
+	this.tools = {
+		Line : new Sketcher.ToolsAbstract.Line(),
+		Rectangle: new Sketcher.ToolsAbstract.Rectangle(),
+		Pencil: new Sketcher.ToolsAbstract.Pencil(),
+		Circle: new Sketcher.ToolsAbstract.Circle(),
+		//  PaintBucket: new Sketcher.ToolsAbstract.PaintBucket(width, height),
+		Text: new Sketcher.ToolsAbstract.Text()
 	}
 
+	this.current = 'Text';
 
-  function getCurrentTool() {
+ 	function getCurrentTool() {
 		return tools[current];
 	}
 
-
 	function setCurrentTool(name) {
-		if ( name in tools) {
+		if(name in tools) {
 				current = name;
 		} else {
 			console.error(name+' is not a tool');
 		}
-
-
 	}
 
 	function fromJSON(json, ctx) {
 		Sketcher.ToolsAbstract.fromJSON(json, ctx);
 	}
 
-
-
 	return {
-		init : initialization,
-		getTool : getCurrentTool,
-		setTool : setCurrentTool,
-		drawFromJSON : fromJSON
+		getTool: getCurrentTool,
+		setTool: setCurrentTool,
+		drawFromJSON: fromJSON,
+		toolsList: tools
 	}
-
 }());

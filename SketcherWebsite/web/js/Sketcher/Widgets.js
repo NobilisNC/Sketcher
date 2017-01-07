@@ -178,6 +178,13 @@ Sketcher.widgets.Toolbox = function Toolbox(parent) {
 
 	this.parent = parent;
 	this.parent.appendChild(this);
+
+	this.widgets = {};
+
+	this.addWidget = function(name, widget) {
+		this.widgets[name] = widget;
+		this.appendChild(widget);
+	}
 }
 
 /*
@@ -187,6 +194,7 @@ Sketcher.widgets.Toolbox = function Toolbox(parent) {
 */
 Sketcher.widgets.Button = function Button(title, action, parent, icon, bgColor, focus) {
 	Sketcher.widgets.AbstractWidget.call(this, parent);
+
 	this.title = title;
 	this.action = action;
 	this.icon = icon || '';
@@ -198,6 +206,15 @@ Sketcher.widgets.Button = function Button(title, action, parent, icon, bgColor, 
 
 	this.update = function() {
 		this.node.className += (this.focus ? ' active' : '');
+	}
+
+	this.setActive = function() {
+		this.setInactive();
+		this.node.className += ' active';
+	}
+
+	this.setInactive = function() {
+		this.node.className = this.node.className.replace(/(^| )active/, '');
 	}
 
 	if(this.bgColor != '') {

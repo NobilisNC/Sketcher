@@ -25,7 +25,6 @@ Sketcher.Core = (function(document, window) {
 		}) (this.socket), 5000);
 
 		//Tools
-		Sketcher.Tools.init(this.width, this.height);
 		this.tool = Sketcher.Tools.getTool();
 
 		/***** EVENTS *****/

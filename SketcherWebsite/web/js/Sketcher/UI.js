@@ -11,33 +11,13 @@ Sketcher.UI = (function(document, window) {
 
 		// Create UI components containers
 		this.layerControl = new Sketcher.widgets.LayerControl(this, window.innerWidth-261, 10);
+		this.toolControl = new Sketcher.widgets.ToolControl(this, 10, 185);
 		this.palette = new Sketcher.widgets.Palette(this, 10, 10);
-		this.tools = new Sketcher.widgets.Window('Tools', this, 10, 185);
-		this.toolButtons = new Sketcher.widgets.Toolbox(this.tools);
-		[	//!\ DEV This hardcoded array looks like shit. Let's generalize it.
-			['Rectangle', 'rectangle', 'square'],
-			['Circle', 'circle', 'circle'],
-			['Pencil', 'pencil', 'pencil'],
-			['Line', 'line', 'minus'],
-			['Bucket', 'paint_bucket', 'adjust'],
-			['Text', 'text', 'font']
-		].forEach((function(tool){
-			this.toolButtons.appendChild(
-				new Sketcher.widgets.Button(
-					tool[0],
-					function(e) {
-						Sketcher.Core.setTool(tool[1]);
-					},
-					this,
-					tool[2]
-				)
-			);
-		}).bind(this));
 
 		this.update = function() {
 			this.node.width = window.innerWidth;
 			this.node.height = window.innerHeight;
-			Sketcher.node.style.width = window.innerWidth+'px'
+			Sketcher.node.style.width = window.innerWidth+'px';
 			Sketcher.node.style.height = window.innerHeight+'px';
 
 			this.layerControl.update();
@@ -55,7 +35,7 @@ Sketcher.UI = (function(document, window) {
 			deleteColor: this.palette.deleteColor,
 			updatePalette: this.palette.update,
 			updateLayers: this.layerControl.update,
-			updateOpacitySlider: this.layerControl.opacitySlider.update.bind(this.layerControl.opacitySlider)
+			// updateOpacitySlider: this.layerControl.opacitySlider.update.bind(this.layerControl.opacitySlider)
 		};
 	}
 
