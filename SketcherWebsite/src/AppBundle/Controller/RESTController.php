@@ -72,7 +72,28 @@ class RESTController extends Controller
      */
     public function updateAction(Request $request, $token)
     {
-		return new Response("update");
+		$res = new Response();
+		$res->headers->set('Content-Type', 'application/json');
+
+		$db = $this->getDoctrine()->getManager();
+		$user = $db->getRepository('AppBundle:User')->findOneByEditToken($token);
+
+		if(!$user)
+			return $res->setStatusCode(403)->setContent('{"status": "error", "msg": "Invalid token."}');
+
+		$sketch = $user->getEditedSketch();
+
+		if(!$sketch)
+			return $res->setStatusCode(404)->setContent('{"status": "error", "msg": "Sketch not found."}');
+
+		$layer = $request->request->all()['layers'];
+		if($layer)
+			$sketch->setData($layer);
+			
+		$db->persist($sketch);
+		$db->flush();
+
+		return $res->setContent('{"status": "success"}');
 	}
 
     /**

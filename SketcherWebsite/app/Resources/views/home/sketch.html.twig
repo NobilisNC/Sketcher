@@ -18,9 +18,13 @@
 		Sketcher.init(
 			document.querySelector('div#sketcher'),
 			{
-				data: {{ sketch.data|raw }},
+				data: {
+					width: {{ sketch.width }},
+					height: {{ sketch.height }},
+					layers: {{ sketch.data|raw }}
+				},
 				token: '{{ app.user.editToken }}',
-				offline: true
+				offline: false
 			}
 		);
 	</script>

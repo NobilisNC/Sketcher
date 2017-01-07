@@ -18,12 +18,6 @@ Sketcher.Core = (function(document, window) {
 		if(this.socket)
 			this.socket.login();
 
-		setTimeout((function(socket) {
-			return function() {
-				socket.getFreshObjectsList();
-			}
-		}) (this.socket), 5000);
-
 		//Tools
 		this.tool = Sketcher.Tools.getTool();
 
@@ -35,6 +29,7 @@ Sketcher.Core = (function(document, window) {
 				var ctx = this.selectedLayer.getContext();
 				var obj = this.tool.onMouseUp(e, ctx);
 				if(obj != null) {
+					this.socket.addObject(this.selectedLayer.name, obj);
 					this.selectedLayer.objects.push(obj);
 					this.selectedLayer.clear();
 					this.selectedLayer.draw();
@@ -43,7 +38,6 @@ Sketcher.Core = (function(document, window) {
 			}
 
 			if(!e.shiftKey) {
-				// this.frame.removeEventListener("mousemove", this.onMouseMove);
 				this.clicked = false;
 			}
 		};
@@ -94,7 +88,7 @@ Sketcher.Core = (function(document, window) {
 			return ret;
 		}
 
-		this.addLayer = function(name, zIndex = 0) {
+		this.addLayer = function(name, zIndex = 0, objects = []) {
 			var i = this.layers.push(
 				new Sketcher.widgets.Layer(
 					name,
@@ -104,6 +98,14 @@ Sketcher.Core = (function(document, window) {
 					this.frame
 				)
 			);
+
+			objects.forEach((function(object) {
+				this.layers[i-1].objects.push(JSON.stringify(object));
+			}).bind(this));
+
+			this.layers[i-1].update();
+			this.layers[i-1].draw();
+
 			this.selectLayer(this.layers[i-1].id);
 		}
 
@@ -270,7 +272,13 @@ Sketcher.Core = (function(document, window) {
 
 		// Add the needed trackpad layer and a first drawing layer
 		this.addLayer("trackpad", 98);
-		this.addLayer("background");
+		Sketcher.data.layers.forEach((function(layer) {
+			this.addLayer(
+				layer.name,
+				layer.zIndex || this.layers.length,
+				layer.objects
+			);
+		}).bind(this));
 
 		// Bind "this" to events
 		this.onMouseUp = this._onMouseUp.bind(this);

@@ -34,8 +34,7 @@ Sketcher.UI = (function(document, window) {
 			addColor: this.palette.addColor,
 			deleteColor: this.palette.deleteColor,
 			updatePalette: this.palette.update,
-			updateLayers: this.layerControl.update,
-			// updateOpacitySlider: this.layerControl.opacitySlider.update.bind(this.layerControl.opacitySlider)
+			updateLayers: this.layerControl.update
 		};
 	}
 

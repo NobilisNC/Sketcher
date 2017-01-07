@@ -1,14 +1,26 @@
 Sketcher.Socket = function(host, port) {
 	this.host = host || 'localhost';
 	this.port = port || 10053;
-	this.loginState = 'disconnected';
+	this.loginState = false;
 	this.localID = window.localStorage.getItem('user_id');
 
 	this.socket = io('http://'+this.host+':'+this.port+'/');
 
-	this.socket.on('hello', function() {
-		console.log('Token is valid.');
-	});
+	this.socket.on('reconnect_error', (function() {
+		this.loginState = false;
+	}).bind(this));
+
+	this.socket.on('whoAreYou', (function() {
+		console.log('whoAmI ?');
+		if(this.loginState === false)
+			this.login();
+	}).bind(this));
+
+	this.socket.on('hello', (function() {
+		console.log('Token is valid');
+		this.getFreshObjectsList();
+		this.loginState = true;
+	}).bind(this));
 
 	this.socket.on('getFreshObjectsList', function(objects) {
 		Sketcher.data = objects;
@@ -18,6 +30,7 @@ Sketcher.Socket = function(host, port) {
 
 Sketcher.Socket.prototype.login = function() {
 	console.log('Loging in.');
+	this.loginState = null;
 	this.socket.emit('login', JSON.stringify({
 		'token': Sketcher.token
 	}));
@@ -28,7 +41,8 @@ Sketcher.Socket.prototype.getFreshObjectsList = function() {
 	this.socket.emit('getFreshObjectsList');
 }
 
-Sketcher.Socket.prototype.addObject = function() {
+Sketcher.Socket.prototype.addObject = function(name, object) {
 	console.log('object added');
-	this.socket.emit('addObject', JSON.stringify({'leaule': 'prout'}));
+	console.log(object);
+	this.socket.emit('addObject', {"name": name, "object": object});
 }

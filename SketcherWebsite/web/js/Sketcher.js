@@ -71,7 +71,7 @@ var Sketcher = Sketcher || (function(document, window) {
 		this.token = settings.token || null;
 
 		if(this.token == null && this.settings.offline == false) {
-			k$.growl({
+			k$.growl({	// Kickstart alert
 				text: 'No token given, cannot login.',
 				delay: 10000,
 				type: 'alert-red'

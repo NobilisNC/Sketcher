@@ -1,8 +1,13 @@
 "use strict";
 var fs = require('fs');
-var http = require('http')
+var http = require('http');
+var querystring = require('querystring');
 var serv = http.Server(answerRequest);
 var io = require('socket.io')(serv);
+var canvas = require('canvas');
+
+require('Sketcher.js')();
+eval(fs.readFileSync('node_modules/Sketcher/Tools.js')+'');
 
 var port = 10053;
 var verb = 2; // Can be 0: errors, 1: warnings, 2: info
@@ -16,7 +21,10 @@ function answerRequest(request, response) {
 }
 
 io.on('connection', function(socket){
-	var token = null;
+	let token = null;
+	let layers = [];
+
+	io.emit('whoAreYou');
 
 	socket.on('login', function(data) {
 		data = JSON.parse(data);
@@ -26,12 +34,12 @@ io.on('connection', function(socket){
 			const contentType = res.headers['content-type'];
 
 			let error;
-			if (statusCode !== 200) {
+			if(statusCode !== 200) {
 				error = new Error('Request Failed.\nStatus Code: '+statusCode);
 			} else if (!/^application\/json/.test(contentType)) {
 				error = new Error('Invalid content-type.\nExpected application/json but received '+contentType);
 			}
-			if (error) {
+			if(error) {
 				console.log(error.message);
 				res.resume();
 				return;
@@ -57,10 +65,67 @@ io.on('connection', function(socket){
 	});
 
 	socket.on('addObject', function(data){
-		// Store given object in an array
-		// Save this array to DB from time to time
-		// Broadcast addObject to all clients with commiting client ID included
-        console.log('addObject : '+data);
+		data.object = JSON.parse(data.object);
+
+		layers[0].objects.push(data.object);
+		let postData = querystring.stringify({"layers": JSON.stringify(layers)});
+		console.log(JSON.stringify(layers));
+		console.log(token);
+
+		if(	//!\ Need better sanitizing !
+			Object.keys(data.object).length != 2 ||
+			typeof data.object.type != 'string' ||
+			typeof data.object.data != 'object'
+		) {
+			console.log(JSON.stringify(data.object).match(/[\(\)]/), JSON.stringify(data.object));
+			// socket.emit('error');
+			return;
+		}
+
+		http.request({
+			hostname: 'localhost',
+			port: 8000,
+			path: '/api/'+token,
+			method: 'POST',
+			headers: {
+			    'Content-Type': 'application/x-www-form-urlencoded',
+			    'Content-Length': Buffer.byteLength(postData)
+			}
+		}, (res) => {
+			const statusCode = res.statusCode;
+			const contentType = res.headers['content-type'];
+
+			let error;
+			if (statusCode !== 200) {
+				error = new Error('Request Failed.\nStatus Code: '+statusCode);
+			} else if (!/^application\/json/.test(contentType)) {
+				error = new Error('Invalid content-type.\nExpected application/json but received '+contentType);
+			}
+			if (error) {
+				console.log(error.message);
+				res.resume();
+				return;
+			}
+
+			res.setEncoding('utf8');
+			let rawData = '';
+			res.on('data', (chunk) => rawData += chunk);
+			res.on('end', () => {
+				try {
+					let parsedData = JSON.parse(rawData);
+					if(parsedData.status == 'success') {
+						console.log("Sketch updated");
+						console.log(parsedData);
+					} else {
+						console.log("An error occured.");
+					}
+				} catch (e) {
+					console.log(e.message);
+				}
+			});
+		}).on('error', (e) => {
+		  console.log('Got error: '+e.message);
+	  }).write(postData);
     });
 
 	socket.on('getFreshObjectsList', function(){
@@ -89,6 +154,7 @@ io.on('connection', function(socket){
 			res.on('end', () => {
 				try {
 				  let parsedData = JSON.parse(rawData);
+				  layers = parsedData;
 				  io.emit('getFreshObjectsList', rawData);
 				} catch (e) {
 				  console.log(e.message);
