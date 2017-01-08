@@ -1,4 +1,5 @@
 /SketcherServer/node_modules/*
+!/SketcherServer/node_modules/Sketcher
 !/SketcherServer/node_modules/Sketcher.js
 **/*~
 /SketcherWebsite/app/config/parameters.yml
