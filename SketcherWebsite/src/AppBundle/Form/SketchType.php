@@ -34,6 +34,15 @@ class SketchType extends AbstractType
 			'allow_add' => true,
 			'allow_delete' => true,
 			'prototype' => true
+		))
+		->add('authors', CollectionType::class, array(
+			'mapped' => false,
+			'label' => false,
+			'entry_type' => TextType::class,
+			'by_reference' => false,
+			'allow_add' => true,
+			'allow_delete' => true,
+			'prototype' => true
 		));
     }
 

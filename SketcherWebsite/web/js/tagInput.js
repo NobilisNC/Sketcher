@@ -1,6 +1,7 @@
-var idPattern = 'sketch_tags___name___name';
-var tagInput = function(elm = null) {
+var tagInput = function(settings = {}) {
+	this.idPattern = settings.idPattern || 'sketch_tags___name___name';
 	this.searchForElement = function() {
+		console.log('SEARCH FOR ELM');
 		var node = document.querySelector('.tagInput');
 
 		if(node == null) {
@@ -11,7 +12,16 @@ var tagInput = function(elm = null) {
 		return node;
 	};
 
-	this.node = elm || this.searchForElement();
+	this.entity = settings.entity || 'tag';
+	this.prototypeId = settings.prototypeId || 'sketch_tags';
+	this.allowNew = settings.allowNew || false;
+	this.dynamicUpdate = settings.dynamicUpdate || false;
+	this.extraData = settings.extraData || '';
+
+	this.node = settings.elm || this.searchForElement();
+	this.node.className += ' tagInput';
+
+	this.id = this.node.id || Math.random()*1000000%100000;
 
 	// Create tags wrapper
 	this.tagWrapper = document.createElement('div');
@@ -22,10 +32,11 @@ var tagInput = function(elm = null) {
 	this.node.appendChild(this.inputsWrapper);
 
 	// Get input or create it if it doesn't exist
-	this.field = this.node.querySelector('input.tagInputField');
+	this.field = document.querySelector('#'+this.id+' input.tagInputField');
 	if(this.field == null) {
-		this.field = this.node.createElement('input');
+		this.field = document.createElement('input');
 		this.field.className = 'tagInputField';
+		this.node.appendChild(this.field);
 	}
 
 	// Create tag selection tooltip
@@ -50,9 +61,42 @@ var tagInput = function(elm = null) {
 	// Append or edit a tag
 	//	id		Tag id
 	//	name	Tag name
-	this.set = function(id, name) {
+	this.set = function(id, name, update = true) {
 		if(this.tags[id] == undefined) {
+			if(this.dynamicUpdate && update) {
+				var x = new XMLHttpRequest();
+				x.open('GET', '/'+this.entity+'/add/'+name+this.extraData, true);
+				x.onreadystatechange = (function(that) {
+					return function() {
+						if(x.readyState == XMLHttpRequest.DONE && x.status === 200) {
+							try {
+								var res = JSON.parse(x.responseText);
+								if(res.status == 'success') {
+									k$.growl({	// Kickstart alert
+										text: res.msg,
+										delay: 2000,
+										type: 'alert-green'
+									});
+								} else {
+									k$.growl({	// Kickstart alert
+										text: res.msg,
+										delay: 10000,
+										type: 'alert-red'
+									});
+									return;
+								}
+							} catch(e) {
+								console.error('Received invalid response.', x.responseText);
+								return;
+							}
+						}
+					}
+				}) (this);
+				x.send();
+			}
+
 			this.nTags += 1;
+			console.log(name);
 			this.tags[id] = {
 				'name': name,
 				'label': document.createElement('span')
@@ -67,27 +111,32 @@ var tagInput = function(elm = null) {
 			deleteButton.className = 'button close';
 			deleteButton.innerHTML = '<i class="fa fa-close"></i>';
 			deleteButton.setAttribute('data-id', this.nTags);
-			deleteButton.addEventListener('mousedown', function(e) {
+			deleteButton.addEventListener('mousedown', (function(e) {
 				e.preventDefault();
-				var id = e.srcElement.parentElement.getAttribute('data-id').replace(/[^\d]+/g, '');
+				var id = e.srcElement.parentElement.getAttribute('data-id');
 				if(id) {
-					var parent = this.parentElement.parentElement;
-					var input = document.getElementById(idPattern.replace('__name__', id));
+					id = id.replace(/[^\d]+/g, '');
+					var parent = e.srcElement.parentElement.parentElement.parentElement;
+					var input = document.getElementById(this.idPattern.replace('__name__', id));
 					input.parentNode.removeChild(input);
 					var label = document.querySelector('a[data-id="'+id+'"]').parentNode;
 					label.parentNode.removeChild(label);
 				}
-			}, true);
+			}).bind(this), true);
 
 			// Create input
-			var input = document.getElementById(idPattern.replace('__name__', this.nTags));
+			var input = document.getElementById(this.idPattern.replace(/__name__/g, this.nTags));
 			if(input == null) {
-				var inputText = document.getElementById('sketch_tags').dataset.prototype;
-				this.inputsWrapper.innerHTML += inputText.replace(/.*(<input[^\/]+\/>).*/,'$1').replace(/__name__/g, this.nTags);
-				input = document.getElementById(idPattern.replace(/__name__/g, this.nTags));
+				// console.log(this.idPattern.replace(/__name__/g, this.nTags));
+				// var inputText = document.getElementById(this.prototypeId).dataset.prototype;
+				input = document.createElement('input');
+				input.id = this.idPattern.replace(/__name__/g, this.nTags);
+				input.name = 'sketch['+this.entity+'s]['+this.nTags+'][name]';
 				input.type = 'text';
 				input.className += ' tagInputValue';
 				input.setAttribute('value', name);
+
+				this.inputsWrapper.appendChild(input);
 			}
 
 			this.tags[id].label.appendChild(deleteButton);
@@ -96,16 +145,16 @@ var tagInput = function(elm = null) {
 	}
 
 	// Refresh tags
-	this.refresh = function() {
-		document.querySelectorAll('input.tagInputValue').forEach(function(input) {
-			this.set(input.getAttribute('id').replace(/[^\d]+/g, ''), input.value);
+	this.refresh = function(update = false) {
+		document.querySelectorAll('#'+this.id+' input.tagInputValue').forEach(function(input) {
+			this.set(input.getAttribute('id').replace(/[^\d]+/g, ''), input.value, update);
 		}, this);
 	}
 
 	this.searchForTokens = function() {
 		if(this.lastValue != this.field.value && this.field.value.length > 0) {
 			var x = new XMLHttpRequest();
-			x.open('GET', '/tag/search/'+this.field.value, true);
+			x.open('GET', '/'+this.entity+'/search/'+this.field.value, true);
 			x.onreadystatechange = (function(that) {
 				return function() {
 					if(x.readyState == XMLHttpRequest.DONE && x.status === 200) {
@@ -139,7 +188,7 @@ var tagInput = function(elm = null) {
 		}
 	}
 
-	this.refresh();
+	this.refresh(false);
 
 	//////
 	// Events
@@ -150,13 +199,15 @@ var tagInput = function(elm = null) {
 				if(that.tooltip.style.opacity > 0) {	// Tooltip is shown
 					var tag = that.tooltipTagsList.querySelector('li.active');
 					if(tag == null)
-						console.err('An error occured.');
+						console.error('An error occured.');
 					else {
 						that.set(tag.dataset.id, tag.innerHTML);
 						that.field.value = '';
 					}
 				} else {
-					that.set(that.tags.length, that.field.value);
+					if(that.allowNew) {
+						that.set(that.tags.length, that.field.value);
+					}
 					that.field.value = '';
 				}
 			}
@@ -197,5 +248,3 @@ var tagInput = function(elm = null) {
 		'set': this.set,
 	};
 }
-
-var tags = new tagInput();

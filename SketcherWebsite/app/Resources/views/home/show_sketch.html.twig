@@ -41,24 +41,44 @@
                     <div class="wordTruncation">{{sketch.name}}</div>
                 </div>
                 <div class="container">
-                    <header>{{'sketch.tags'|transchoice(sketch.tags|length)}}</header>
+                    <header>{{'sketch.tags'|transchoice(sketch.tags|length)}} {{ sketch.tags|length }}</header>
                     <main>
-                        {% for tag in sketch.tags %}
-                            {% include 'modules/tag.html.twig' with {'tag_name' : tag.name} %}
-                        {% endfor %}
+					{% if app.user.isAuthorOf(sketch) %}
+						<div id="tagInput">
+							<div id="tagInputPrototype" data-prototype="{{ form_widget(sketch_form.tags.vars.prototype)|e }}"></div>
+							{% for tag in sketch.tags %}
+							<input type="text" id="sketch_tags_{{ tag.id }}" name="sketch[tags][{{ tag.id }}]" class="tagInputValue" value="{{ tag.name }}" required="required"/>
+							{% endfor %}
+							<input type="text" class="tagInputField">
+						</div>
+					{% else %}
+						{% for tag in sketch.tags %}
+						{% include 'modules/tag.html.twig' with {'tag_name' : tag.name} %}
+						{% endfor %}
+					{% endif %}
                     </main>
                 </div>
                 <div class="container">
                     <header>{{'sketch.authors'|transchoice(sketch.authors|length)}}</header>
                     <main>
-                    {% for author in sketch.authors %}
-                        {% include 'modules/user.html.twig' with {'user' : author} %} 
-                    {% endfor %}
+					{% if app.user.isAuthorOf(sketch) %}
+						<div id="authorInput">
+							<div id="authorInputPrototype" data-prototype="{{ form_widget(sketch_form.authors.vars.prototype)|e }}"></div>
+							{% for author in sketch.authors %}
+							<input type="text" id="sketch_authors_{{ author.id }}" name="sketch[authors][{{ author.id }}]" class="tagInputValue" value="{{ author.username }}" required="required"/>
+							{% endfor %}
+							<input type="text" class="tagInputField">
+						</div>
+					{% else %}
+						{% for author in sketch.authors %}
+						{% include 'modules/user.html.twig' with {'user' : author} %}
+						{% endfor %}
+					{% endif %}
                     </main>
                 </div>
             </div>
         </div>
-		{% if form is not null %}
+		{% if comment_form is not null %}
 		<hr>
 		<div>
 			{% for comment in comments %}
@@ -67,23 +87,45 @@
 				{{comment.content}}<br/>
 			</div>
 			{% endfor %}
-			{{ form_start(form) }}
+			{{ form_start(comment_form) }}
 			<div class="form_group row">
-				{{ form_label(form.content, null, {'label': (form.content.vars.label|trans), 'label_attr': {'class': 'col-left-1 col-2'}}) }}
+				{{ form_label(comment_form.content, null, {'label': (comment_form.content.vars.label|trans), 'label_attr': {'class': 'col-left-1 col-2'}}) }}
 				<div class="input col-9">
 					{% set class = 'col-12' %}
-					{{ form_widget(form.content, {'attr': {'class': class} })|raw }}
-					{% if form.content.vars.errors|length > 0 %}
-						{% for error in form.content.vars.errors %}
+					{{ form_widget(comment_form.content, {'attr': {'class': class} })|raw }}
+					{% if comment_form.content.vars.errors|length > 0 %}
+						{% for error in comment_form.content.vars.errors %}
 							<p class="error">{{ error.message|trans }}</p>
 						{% endfor %}
 					{% endif %}
 				</div>
 			</div>
 			<input type="submit" value={{ 'Comment'|trans }} class="col-12 button button-primary" />
-			{{form_end(form)}}
+			{{form_end(comment_form)}}
 		</div>
 		{% endif %}
 	{% endif %}
 	</div>
+<script src="{{ asset('js/tagInput.js') }}"></script>
+<script>
+	var tags = new tagInput({
+		elm: document.getElementById('tagInput'),
+		idPattern: 'sketch_tags___name___name',
+		entity: 'tag',
+		prototypeId: 'tagInputPrototype',
+		allowNew: true,
+		dynamicUpdate: true,
+		extraData: '/{{ sketch.id }}'
+	});
+	console.log('-----');
+	var authors = new tagInput({
+		elm: document.getElementById('authorInput'),
+		idPattern: 'sketch_authors___name___name',
+		entity: 'author',
+		prototypeId: 'authorInputPrototype',
+		allowNew: false,
+		dynamicUpdate: true,
+		extraData: '/{{ sketch.id }}'
+	});
+</script>
 {% endblock %}

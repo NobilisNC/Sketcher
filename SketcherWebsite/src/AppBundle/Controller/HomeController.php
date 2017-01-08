@@ -200,8 +200,14 @@ class HomeController extends Controller
 				return $this->redirectToRoute('showSketch', array('sketchId' => $sketchId));
             }
 
-			$data["form"] = $form->createView();
+			$data["comment_form"] = $form->createView();
         }
+
+		if($user->isAuthorOf($sketch)) {
+			$form = $this->createForm(SketchType::class, $sketch);
+
+			$data["sketch_form"] = $form->createView();
+		}
 
         $db = $this->getDoctrine()->getRepository('AppBundle:Comment');
         $data["comments"] = $db->findBy(array('sketch' => $sketch));
@@ -343,18 +349,19 @@ class HomeController extends Controller
         $sketch = new Sketch();
 
         $form = $this->createForm(SketchType::class, $sketch);
+
+		$form->remove('authors');
+
         $form->handleRequest($request);
 
-        if ($form->isSubmitted() && $form->isValid() || $form->get('name')->getData() == 'caca') {
+        if($form->isSubmitted() && $form->isValid()) {
 			$db = $this->getDoctrine()->getManager();
-
 
             $ids = array();
 
-            //On insere les nouveaux tags
+            // On insere les nouveaux tags
             $r = $db->getRepository('AppBundle:Tag');
             foreach($form->get('tags')->getData() as $tag) {
-                // $sketch->addTag($tag);
                 $t = $r->findOneByName($tag->getName());
                 if(!$t) {
                     $db->persist($tag);
@@ -363,8 +370,6 @@ class HomeController extends Controller
                     $sketch->addTag($t);
 
             }
-
-
 
 			// Create blank image
 			$img = imagecreatetruecolor($sketch->getWidth(), $sketch->getHeight());
@@ -428,31 +433,94 @@ class HomeController extends Controller
     /**
     *
     * @Route(
-	*   "/tag/add/{term}",
-	*   requirements={"term": "\w+"},
+	*   "/tag/add/{term}/{sketchId}",
+	*   requirements={"sketchId": "\d+"},
 	*   name="addTag"
 	* )
     */
-    public function addTagAction(Request $request, string $term)
+    public function addTagAction(Request $request, string $term, int $sketchId)
     {
+		$user = $this->getUser();
 
+		if(!$user)
+			return new Response('{"status": "error", "msg": "Need login first"}');
+
+		$db = $this->getDoctrine()->getManager();
+		$tag = $db->getRepository('AppBundle:Tag')->findOneByName($term);
+		if(!$tag) {
+			$tag = new Tag();
+			$tag->setName($term);
+			$db->persist($tag);
+		}
+
+		$sketch = $db->getRepository('AppBundle:Sketch')->findOneById($sketchId);
+		$sketch->addTag($tag);
+		$db->persist($sketch);
+
+		$db->flush();
+
+		return new Response('{"status": "success", "msg": "Tag added", "id":'.$tag->getId().',"name":"'.$tag->getName().'"}');
+	}
+
+    /**
+    *
+    * @Route(
+	*   "/author/search/{term}",
+	*   name="searchAuthor"
+	* )
+    */
+    public function searchAuthorAction(Request $request, string $term)
+    {
+		$user = $this->getUser();
+
+		if(!$user)
+			return $this->redirectToRoute('login');
+
+		$db = $this->getDoctrine()->getRepository('AppBundle:User');
+		$users = $db->createQueryBuilder('u')
+		->select('u.id, u.username')
+		->where("u.username LIKE :term AND u.username != :username")
+		->setParameter('term', $term.'%')
+		->setParameter('username', $user->getUsername())
+		->getQuery()
+		->getResult();
+
+		$res = "[";
+		foreach($users as $user) {
+			$res .= '{"id":'.$user['id'].',"name":"'.$user['username'].'"},';
+		}
+		$res = substr($res, 0, max(1, strlen($res)-1));
+		$res .= "]";
+
+		return new Response($res);
+	}
+
+    /**
+    *
+    * @Route(
+	*   "/author/add/{term}/{sketchId}",
+	*   requirements={"sketchId": "\d+"},
+	*   name="addAuthor"
+	* )
+    */
+    public function addAuthorAction(Request $request, string $term, int $sketchId)
+    {
 		$user = $this->getUser();
 
 		if(!$user)
 			return $this->redirectToRoute('login');
 
 		$db = $this->getDoctrine()->getManager();
-		$r = $db->getRepository('AppBundle:Tag')->findOneByName($term);
-		if(!$r) {
-			$tag = new Tag();
-			$tag->setName($term);
-
-			$db->persist($tag);
+		$r = $db->getRepository('AppBundle:User')->findOneByUsername($term);
+		if($r) {
+			$sketch = $db->getRepository('AppBundle:Sketch')->findOneById($sketchId);
+			$sketch->addAuthor($r);
+			$db->persist($sketch);
 			$db->flush();
-		} else {
-			$tag = $r;
-		}
 
-		return new Response('{"id":'.$tag->getId().',"name":"'.$tag->getName().'"}');
+			return new Response('{"status": "success", "msg": "Author added", "id":'.$r->getId().',"name":"'.$r->getUsername().'"}');
+		}
+		else
+			return new Response('{"status": "error", "msg": "User doesn\'t exist."}');
 	}
 }
