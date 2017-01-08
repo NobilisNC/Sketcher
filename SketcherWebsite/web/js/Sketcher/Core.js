@@ -62,8 +62,8 @@ Sketcher.Core = (function(document, window) {
 				||	e.offsetY >= this.height
 				||	e.buttons == 0
 			) {
-				this.clicked = false;
-				this._onMouseUp(e);
+				// this.clicked = false;
+				// this._onMouseUp(e);
 			} else {
 				var ctx = this.layers[0].getContext();
 				this.clear(ctx);

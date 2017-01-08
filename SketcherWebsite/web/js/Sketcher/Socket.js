@@ -11,12 +11,15 @@ Sketcher.Socket = function(host, port) {
 	}).bind(this));
 
 	this.socket.on('whoAreYou', (function() {
-		console.log('whoAmI ?');
-		this.login();
+		console.log('[+] Received whoAreYou request');
+		if(this.loginState === false)
+			this.login();
+		else
+			this.socket.emit('iAm', Sketcher.token);
 	}).bind(this));
 
 	this.socket.on('hello', (function() {
-		console.log('Token is valid');
+		console.log('[+] Token is valid');
 		this.getFreshObjectsList();
 		this.loginState = true;
 	}).bind(this));
@@ -27,7 +30,7 @@ Sketcher.Socket = function(host, port) {
 }
 
 Sketcher.Socket.prototype.login = function() {
-	console.log('Loging in.');
+	console.log('[+] Loging in');
 	this.loginState = null;
 	this.socket.emit('login', JSON.stringify({
 		'token': Sketcher.token
@@ -35,12 +38,12 @@ Sketcher.Socket.prototype.login = function() {
 }
 
 Sketcher.Socket.prototype.getFreshObjectsList = function() {
-	console.log('Sending objects list request.');
+	console.log('[+] Sending fresh objects request');
 	this.socket.emit('getFreshObjectsList');
 }
 
 Sketcher.Socket.prototype.addObject = function(name, object) {
-	console.log('object added');
+	console.log('[+] Object added');
 	console.log(object);
 	this.socket.emit('addObject', {"name": name, "object": object});
 }

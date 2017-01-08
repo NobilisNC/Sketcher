@@ -5,7 +5,7 @@
 
 body {
 	font-family: "Tahoma", sans-serif;
-	overflow: hidden;
+	/*overflow: hidden;*/
 	background: url(data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABAAAAAQCAYAAAAf8/9hAAAABmJLR0QA/wD/AP+gvaeTAAAACXBIWXMAAAsTAAALEwEAmpwYAAAAB3RJTUUH4QEDDigdCtwLoAAAAB1pVFh0Q29tbWVudAAAAAAAQ3JlYXRlZCB3aXRoIEdJTVBkLmUHAAAAK0lEQVQ4y2OcOXPmfwY84OzZs/ikGZgYKASjBgwGA1gIxbOxsfFoIA5/AwAHZQhTm7rVdAAAAABJRU5ErkJggg==) repeat;
 }
 
@@ -292,7 +292,7 @@ input.sk_slider {
 	}
 
 div.sk_window {
-	position: absolute;
+	position: fixed;
 	top: 10px; left: 10px;
 	border: 1px solid #545454;
 	border-radius: 3px;

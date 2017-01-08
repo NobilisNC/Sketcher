@@ -29,7 +29,57 @@ io.on('connection', function(socket){
 
 	console.log('Client has connected.');
 
+	// Returns a fresh version of this sketch objects
+	function getFreshObjectsList(token) {
+		if(!token) {
+			return;
+		}
+
+		console.log('[+] '+token+' - getFreshObjectsList request received.');
+
+		http.get('http://localhost:8000/api/'+token+'/refresh', (res) => {
+			const statusCode = res.statusCode;
+			const contentType = res.headers['content-type'];
+
+			let error;
+			if (statusCode !== 200) {
+			error = new Error('[!] '+token+' - getFreshObjectsList request FAILED.\tStatus Code: '+statusCode);
+			} else if (!/^application\/json/.test(contentType)) {
+				error = new Error('[!] '+token+' - Invalid content-type.\tExpected application/json but received '+contentType);
+			}
+			if(error) {
+				console.log(error.message);
+				res.resume();
+				return;
+			}
+
+			res.setEncoding('utf8');
+			let rawData = '';
+			res.on('data', (chunk) => rawData += chunk);
+			res.on('end', () => {
+				try {
+				  let parsedData = JSON.parse(rawData);
+				  console.log('[+] '+token+' - Sent back fresh objects');
+				  width = parsedData.width;
+				  height = parsedData.height;
+				  layers = parsedData.layers;
+
+				  io.emit('getFreshObjectsList', rawData);
+				} catch (e) {
+				  console.log(e.message);
+				}
+			});
+		}).on('error', (e) => {
+		  console.log('Got error: '+e.message);
+		});
+	}
+
 	io.emit('whoAreYou');
+
+	socket.on('iAm', function(data) {
+		token = data;
+		getFreshObjectsList(token);
+	});
 
 	socket.on('login', function(data) {
 		data = JSON.parse(data);
@@ -40,12 +90,7 @@ io.on('connection', function(socket){
 
 			let error;
 			if(statusCode !== 200) {
-				error = new Error('Request Failed.\nStatus Code: '+statusCode);
-			} else if (!/^application\/json/.test(contentType)) {
-				error = new Error('Invalid content-type.\nExpected application/json but received '+contentType);
-			}
-			if(error) {
-				console.log(error.message);
+				console.log('[!] '+token+' - Authentication FAILED.\tStatus Code: '+statusCode);
 				res.resume();
 				return;
 			}
@@ -59,6 +104,9 @@ io.on('connection', function(socket){
 					if(parsedData.status == 'success') {
 						token = data.token;
 						io.emit('hello');
+					} else {
+						io.emit('error');
+						console.log('[!] '+data.token+' - Authentication failed. IP '+socket.handshake.address.address);
 					}
 				} catch (e) {
 					console.log(e.message);
@@ -91,8 +139,6 @@ io.on('connection', function(socket){
 			"image": canvas.toDataURL().substr(22)
 		});
 
-		console.log(ctx.font);
-
 		if(	//!\ Need better sanitizing !
 			Object.keys(data.object).length != 2 ||
 			typeof data.object.type != 'string' ||
@@ -117,9 +163,9 @@ io.on('connection', function(socket){
 
 			let error;
 			if (statusCode !== 200) {
-				error = new Error('Request Failed.\nStatus Code: '+statusCode);
+				error = new Error('[!] '+token+' - Add object request FAILED.\tStatus Code: '+statusCode);
 			} else if (!/^application\/json/.test(contentType)) {
-				error = new Error('Invalid content-type.\nExpected application/json but received '+contentType);
+				error = new Error('[!] '+token+' - Invalid content-type.\tExpected application/json but received '+contentType);
 			}
 			if (error) {
 				console.log(error.message);
@@ -134,8 +180,7 @@ io.on('connection', function(socket){
 				try {
 					let parsedData = JSON.parse(rawData);
 					if(parsedData.status == 'success') {
-						console.log("Sketch updated");
-						console.log(parsedData);
+						console.log('[+] '+token+' - Sketch updated');
 					} else {
 						console.log("An error occured.");
 					}
@@ -148,57 +193,10 @@ io.on('connection', function(socket){
 	  }).write(postData);
     });
 
-	socket.on('getFreshObjectsList', function(){
-		// Returns a fresh version of this sketch objects
-        console.log('[+] getFreshObjectsList request received.');
-
-		http.get('http://localhost:8000/api/'+token+'/refresh', (res) => {
-			const statusCode = res.statusCode;
-			const contentType = res.headers['content-type'];
-
-			let error;
-			if (statusCode !== 200) {
-			error = new Error('getFreshObjectsList request Failed.\nStatus Code: '+statusCode);
-			} else if (!/^application\/json/.test(contentType)) {
-				error = new Error('Invalid content-type.\nExpected application/json but received '+contentType);
-			}
-			if (error) {
-				console.log(error.message);
-				res.resume();
-				return;
-			}
-
-			res.setEncoding('utf8');
-			let rawData = '';
-			res.on('data', (chunk) => rawData += chunk);
-			res.on('end', () => {
-				try {
-				  let parsedData = JSON.parse(rawData);
-				  console.log(parsedData);
-				  width = parsedData.width;
-				  height = parsedData.height;
-				  layers = parsedData.layers;
-				  io.emit('getFreshObjectsList', rawData);
-				} catch (e) {
-				  console.log(e.message);
-				}
-			});
-		}).on('error', (e) => {
-		  console.log('Got error: '+e.message);
-		});
-    });
-
-    socket.on('saveSketch', function(data){
-        var file = fs.openSync('lol.png', 'w');
-        var buff = new Buffer(data.data, 'base64');
-        fs.write(file, buff, 0, buff.length, 0, function(err, data){
-            console.log('File saved.');
-        });
-        console.log('Save : '+data.data);
-    });
+	socket.on('getFreshObjectsList', getFreshObjectsList.bind(this, token));
 
 	socket.on('disconnect', function() {
-		console.log(token+' has disconnected.');
+		console.log('[ ] '+token+' has disconnected.');
 	});
 });
 
