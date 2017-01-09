@@ -177,7 +177,7 @@ class HomeController extends Controller
 	{
 		$user = $this->getUser();
 
-        $data = array('form' => null);
+        $data = array('comment_form' => null);
 
 		$db = $this->getDoctrine()->getRepository('AppBundle:Sketch');
 		$sketch = $db->findOneById($sketchId);
@@ -201,13 +201,15 @@ class HomeController extends Controller
             }
 
 			$data["comment_form"] = $form->createView();
+
+            if($user->isAuthorOf($sketch)) {
+                $form = $this->createForm(SketchType::class, $sketch);
+
+                $data["sketch_form"] = $form->createView();
+            }
         }
 
-		if($user->isAuthorOf($sketch)) {
-			$form = $this->createForm(SketchType::class, $sketch);
 
-			$data["sketch_form"] = $form->createView();
-		}
 
         $db = $this->getDoctrine()->getRepository('AppBundle:Comment');
         $data["comments"] = $db->findBy(array('sketch' => $sketch));
