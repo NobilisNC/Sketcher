@@ -189,7 +189,8 @@ Sketcher.ToolsAbstract = (function() {
 		this.points.x.push(e.offsetX);
 		this.points.y.push(e.offsetY);
 
-		return '{ "type": "Pencil", "data": ' + JSON.stringify(this) + '}';
+		if(this.points.x.length > 2)
+			return '{ "type": "Pencil", "data": ' + JSON.stringify(this) + '}';
 	}
 
 	/*
@@ -399,7 +400,7 @@ Sketcher.ToolsAbstract = (function() {
 		_Tool.call(this);
 
 		this.icon = 'font';
-		this.font = 'DejaVu'; // Helvetica, Courier New, Georgia
+		this.font = 'Linux Libertine'; // Helvetica, Courier New, Georgia
 		this.bold = false;
 		this.italic = false;
 
@@ -440,8 +441,8 @@ Sketcher.ToolsAbstract = (function() {
 
 		ctx.fillStyle = this.fill_color;
 		ctx.strokeStyle = this.stroke_color;
+		console.log(this.font);
 		ctx.font = 'normal normal '+this.options.size+'px "'+this.font+'"';
-		console.log(ctx.font);
 
 		if(this.options.stroke)
 			ctx.strokeText(this.options.text, this.p.x, this.p.y);

@@ -1,7 +1,6 @@
 var tagInput = function(settings = {}) {
 	this.idPattern = settings.idPattern || 'sketch_tags___name___name';
 	this.searchForElement = function() {
-		console.log('SEARCH FOR ELM');
 		var node = document.querySelector('.tagInput');
 
 		if(node == null) {
@@ -21,7 +20,8 @@ var tagInput = function(settings = {}) {
 	this.node = settings.elm || this.searchForElement();
 	this.node.className += ' tagInput';
 
-	this.id = this.node.id || Math.random()*1000000%100000;
+	this.id = this.node.id || parseInt(Math.random()*1000000);
+	this.node.id = this.id;
 
 	// Create tags wrapper
 	this.tagWrapper = document.createElement('div');
@@ -32,7 +32,7 @@ var tagInput = function(settings = {}) {
 	this.node.appendChild(this.inputsWrapper);
 
 	// Get input or create it if it doesn't exist
-	this.field = document.querySelector('#'+this.id+' input.tagInputField');
+	this.field = this.node.querySelector('input.tagInputField');
 	if(this.field == null) {
 		this.field = document.createElement('input');
 		this.field.className = 'tagInputField';
@@ -96,7 +96,6 @@ var tagInput = function(settings = {}) {
 			}
 
 			this.nTags += 1;
-			console.log(name);
 			this.tags[id] = {
 				'name': name,
 				'label': document.createElement('span')
@@ -127,7 +126,6 @@ var tagInput = function(settings = {}) {
 			// Create input
 			var input = document.getElementById(this.idPattern.replace(/__name__/g, this.nTags));
 			if(input == null) {
-				// console.log(this.idPattern.replace(/__name__/g, this.nTags));
 				// var inputText = document.getElementById(this.prototypeId).dataset.prototype;
 				input = document.createElement('input');
 				input.id = this.idPattern.replace(/__name__/g, this.nTags);
@@ -146,7 +144,7 @@ var tagInput = function(settings = {}) {
 
 	// Refresh tags
 	this.refresh = function(update = false) {
-		document.querySelectorAll('#'+this.id+' input.tagInputValue').forEach(function(input) {
+		this.node.querySelectorAll('input.tagInputValue').forEach(function(input) {
 			this.set(input.getAttribute('id').replace(/[^\d]+/g, ''), input.value, update);
 		}, this);
 	}

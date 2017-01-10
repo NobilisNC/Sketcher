@@ -76,7 +76,7 @@ class HomeController extends Controller
 	 *
 	 * @Route(
 	 *   "/gallery/tag/{tag}/{page}",
-	 *   requirements={"tag": "[\-a-z\d]+"},
+	 *   requirements={"page": "\d+"},
      *   defaults={"page" : 0},
 	 *   name="galleryByTag"
 	 * )
@@ -368,7 +368,6 @@ class HomeController extends Controller
                     $sketch->addTag($tag);
                 } else
                     $sketch->addTag($t);
-
             }
 
 			// Create blank image
@@ -398,8 +397,40 @@ class HomeController extends Controller
     }
 
 	////////////
-	// TagInput Ajax requests handling
+	// FastInput and TagInput Ajax requests handling
 	////////////
+
+    /**
+    *
+    * @Route(
+	*   "/title/set/{sketchId}/{name}",
+	*   requirements={"sketchId": "\d+"},
+	*   name="setSketchTitle"
+	* )
+    */
+    public function setSketchTitleAction(Request $request, int $sketchId, string $name)
+    {
+		$res = new Response();
+		$res->headers->set('Content-Type', 'application/json');
+
+		$user = $this->getUser();
+
+		if(!$user)
+			return $res->setStatusCode(403)->setContent('{"status": "error", "msg": "You\'re not authenticated."}');
+
+		$db = $this->getDoctrine()->getManager();
+
+		$sketch = $db->getRepository('AppBundle:Sketch')->findOneById($sketchId);
+
+		if(!$sketch || !$user->isAuthorOf($sketch))
+			return $res->setStatusCode(404)->setContent('{"status": "error", "msg": "'.$sketchId.' doesn\'t exist or is not accessible."}');
+
+		$sketch->setName($name);
+		$db->persist($sketch);
+		$db->flush();
+
+		return $res->setContent('{"status": "success", "msg": "Title has been updated."}');
+	}
 
     /**
     *

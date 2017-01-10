@@ -95,7 +95,7 @@ class Sketch
 	private $height;
 
 	/**
-	* @ORM\Column(name="data", type="string", length=13370, options={"default": "{}"})
+	* @ORM\Column(name="data", type="text", nullable=true)
 	*/
 	private $data;
 

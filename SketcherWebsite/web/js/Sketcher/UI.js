@@ -10,7 +10,7 @@ Sketcher.UI = (function(document, window) {
 		this.node = Sketcher.createElement('sketcher_ui', Sketcher.node);
 
 		// Create UI components containers
-		this.layerControl = new Sketcher.widgets.LayerControl(this, window.innerWidth-261, 45);
+		this.layerControl = new Sketcher.widgets.LayerControl(this, window.innerWidth-271, 45);
 		this.toolControl = new Sketcher.widgets.ToolControl(this, 10, 215);
 		this.palette = new Sketcher.widgets.Palette(this, 10, 45);
 
@@ -46,7 +46,7 @@ Sketcher.UI = (function(document, window) {
 			Sketcher.node.style.width = this.node.width+'px';
 			Sketcher.node.style.height = this.node.height+'px';
 
-			this.layerControl.update();
+			this.layerControl.update(true);
 			this.palette.update();
 		}
 
@@ -60,7 +60,8 @@ Sketcher.UI = (function(document, window) {
 			addColor: this.palette.addColor,
 			deleteColor: this.palette.deleteColor,
 			updatePalette: this.palette.update,
-			updateLayers: this.layerControl.update
+			updateLayers: this.layerControl.update,
+			updateOpacitySlider: this.layerControl.layerButtons.widgets.opacitySlider.update.bind(this.layerControl.opacitySlider)
 		};
 	}
 

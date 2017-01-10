@@ -26,6 +26,7 @@ Sketcher.Socket = function(host, port) {
 
 	this.socket.on('getFreshObjectsList', function(objects) {
 		Sketcher.data = objects;
+		console.log('[+] got fresh objects');
 	});
 }
 

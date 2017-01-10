@@ -95,7 +95,7 @@ class User implements UserInterface, \Serializable
     private $editedSketch;
 
 	/**
-	 * @ORM\Column(name="edit_token", type="string", options={"default": null})
+	 * @ORM\Column(name="edit_token", type="string", nullable=true, options={"default": null})
 	 */
 	private $editToken;
 

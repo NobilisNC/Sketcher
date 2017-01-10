@@ -29,7 +29,7 @@ class Tag
     private $name;
 
     /**
-    * @ORM\ManyToMany(targetEntity="Sketch", inversedBy="tags")
+    * @ORM\ManyToMany(targetEntity="Sketch", inversedBy="tags", cascade={"persist"})
     * @ORM\JoinColumn(name="sketch", referencedColumnName="id")
     */
     private $sketches;
@@ -117,7 +117,7 @@ class Tag
     public function getNbSketches() {
         return $this->sketches->count();
     }
-    
+
     /*
     * Return sketch from pagination
     * @return \Doctrine\Common\Collections\Collection

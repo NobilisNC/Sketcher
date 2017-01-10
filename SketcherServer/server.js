@@ -8,6 +8,9 @@ var Canvas = require('canvas');
 var Image = Canvas.Image;
 var Font = Canvas.Font;
 
+Canvas.registerFont('open-sans.ttf', {family: 'Open Sans'});
+Canvas.registerFont('playfair-display.ttf', {family: 'Playfair Display'});
+
 require('Sketcher.js')();
 eval(fs.readFileSync('node_modules/Sketcher/Tools.js')+'');
 
@@ -25,7 +28,7 @@ function answerRequest(request, response) {
 io.on('connection', function(socket){
 	let token = null;
 	let width = null, height = null;
-	let layers = [];
+	var layers = [];
 
 	console.log('Client has connected.');
 
@@ -37,7 +40,7 @@ io.on('connection', function(socket){
 
 		console.log('[+] '+token+' - getFreshObjectsList request received.');
 
-		http.get('http://localhost:8000/api/'+token+'/refresh', (res) => {
+		http.get('http://sketcher/api/'+token+'/refresh', (res) => {
 			const statusCode = res.statusCode;
 			const contentType = res.headers['content-type'];
 
@@ -58,19 +61,19 @@ io.on('connection', function(socket){
 			res.on('data', (chunk) => rawData += chunk);
 			res.on('end', () => {
 				try {
-				  let parsedData = JSON.parse(rawData);
-				  console.log('[+] '+token+' - Sent back fresh objects');
-				  width = parsedData.width;
-				  height = parsedData.height;
-				  layers = parsedData.layers;
+					let parsedData = JSON.parse(rawData);
+					console.log('[+] '+token+' - Sent back fresh objects');
+					width = parsedData.width;
+					height = parsedData.height;
+					layers = parsedData.layers;
 
-				  io.emit('getFreshObjectsList', rawData);
+					io.broadcast.emit('getFreshObjectsList', rawData);
 				} catch (e) {
-				  console.log(e.message);
+					console.log(e.message);
 				}
 			});
 		}).on('error', (e) => {
-		  console.log('Got error: '+e.message);
+			console.log('Got error: '+e.message);
 		});
 	}
 
@@ -84,7 +87,7 @@ io.on('connection', function(socket){
 	socket.on('login', function(data) {
 		data = JSON.parse(data);
 
-		http.get('http://localhost:8000/api/'+data.token, (res) => {
+		http.get('http://sketcher/api/'+data.token, (res) => {
 			const statusCode = res.statusCode;
 			const contentType = res.headers['content-type'];
 
@@ -149,8 +152,8 @@ io.on('connection', function(socket){
 		}
 
 		http.request({
-			hostname: 'localhost',
-			port: 8000,
+			hostname: 'sketcher',
+			port: 80,
 			path: '/api/'+token,
 			method: 'POST',
 			headers: {

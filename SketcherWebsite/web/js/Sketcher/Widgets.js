@@ -87,7 +87,6 @@ Sketcher.widgets.Window = function Window(title, parent, x = 0, y = 0) {
 			let x = e.clientX - Sketcher.node.offsetLeft - this.node.getAttribute('data-x');
 			let y = e.clientY - Sketcher.node.offsetTop - this.node.getAttribute('data-y');
 
-			let offsetTop = 45
 			let unstickDist = Sketcher.settings.unstickDistance;
 			let stickDist = Sketcher.settings.stickDistance;
 			let maxX = Sketcher.node.offsetWidth - this.node.offsetWidth;
@@ -97,7 +96,7 @@ Sketcher.widgets.Window = function Window(title, parent, x = 0, y = 0) {
 				this.node.style.left = x + 'px';
 			}
 			if(!this.stuck.y) {
-				this.node.style.top = y+offsetTop + 'px';
+				this.node.style.top = y + 'px';
 			}
 
 			if(
@@ -114,14 +113,14 @@ Sketcher.widgets.Window = function Window(title, parent, x = 0, y = 0) {
 			}
 
 			if(	// Same as above for y coordinate
-					(y < offsetTop || y > maxY)
-				||	!this.stuck.y && (y < stickDist+offsetTop || y > maxY - stickDist)
-				||	this.stuck.y && (y < unstickDist+offsetTop || y > maxY - unstickDist)
+					(y < 0 || y > maxY)
+				||	!this.stuck.y && (y < stickDist || y > maxY - stickDist)
+				||	this.stuck.y && (y < unstickDist || y > maxY - unstickDist)
 			) {
 				if(Sketcher.settings.stickingWindows) {
 					this.stuck.y = true;
 				}
-				this.node.style.top = (y < maxY / 2 ? offsetTop : maxY)+'px';
+				this.node.style.top = (y < maxY / 2 ? 0 : maxY)+'px';
 			} else if(Sketcher.settings.stickingWindows) {
 				this.stuck.y = false;
 			}
@@ -281,7 +280,8 @@ Sketcher.widgets.Slider = function Slider(labelText, onInput, parent, icon) {
 	this.node.appendChild(this.slider);
 
 	this.update = function() {
-		this.slider.value = Sketcher.Core.getSelectedLayer().opacity*100;
+		if(this.slider)
+			this.slider.value = Sketcher.Core.getSelectedLayer().opacity*100;
 	}
 }
 

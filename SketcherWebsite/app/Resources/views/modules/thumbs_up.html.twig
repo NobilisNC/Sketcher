@@ -1,10 +1,10 @@
+{% if app.user is not null %}
+{% set can_like = not app.user.likes(sketch) %}
+<a href="{{ path('like', {'sketchId': sketch.id}) }}" class="button button-small{{ can_like ? ' button-green' : '' }}" style="float:right;border-radius:0 3px 3px 0;"><i class="fa fa-thumbs-{{ not can_like ? 'o-' : '' }}up"></i>
+	&nbsp;&nbsp;{{ (can_like ? 'like' : 'dislike')|trans }}</a>
+{% endif %}
 <button class="button button-small button-green" style="float:right;border-radius:3px {{ app.user is not null ? '0 0' : '3px 3px' }} 3px;border-right:1px solid rgba(255,255,255,.3)" disabled>{{ sketch.likes }}
 {% if app.user is null %}
 &nbsp;&nbsp;<i class="fa fa-thumbs-up"></i>
 {% endif %}
 </button>
-{% if app.user is not null %}
-	{% set can_like = not app.user.likes(sketch) %}
-	<a href="{{ path('like', {'sketchId': sketch.id}) }}" class="button button-small{{ can_like ? ' button-green' : '' }}" style="float:right;border-radius:0 3px 3px 0;"><i class="fa fa-thumbs-{{ not can_like ? 'o-' : '' }}up"></i>
- 	&nbsp;&nbsp;{{ (can_like ? 'like' : 'dislike')|trans }}</a>
-{% endif %}

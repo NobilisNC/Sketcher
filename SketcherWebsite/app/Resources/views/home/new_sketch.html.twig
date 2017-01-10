@@ -88,6 +88,8 @@
 </div>
 <script src="{{ asset('js/tagInput.js') }}"></script>
 <script>
-	var tags = new tagInput();
+	var tags = new tagInput({
+		allowNew: true,
+	});
 </script>
 {% endblock %}

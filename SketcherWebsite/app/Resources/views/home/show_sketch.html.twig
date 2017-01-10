@@ -13,7 +13,7 @@
             <div class="row">
                 <div class="col-9">
                     <center>
-                        <h4>{{ sketch.name }}</h4>
+                        <h4 class="title_refresh">{{ sketch.name }}</h4>
                     </center>
                 </div>
             </div>
@@ -38,10 +38,14 @@
             <div class="col-3">
                 <div class="container">
                     <header>{{'sketch.title'|trans}}</header>
+				{% if app.user.isAuthorOf(sketch) %}
+					{{ form_widget(sketch_form.name) }}
+				{% else %}
                     <div class="wordTruncation">{{sketch.name}}</div>
+				{% endif %}
                 </div>
                 <div class="container">
-                    <header>{{'sketch.tags'|transchoice(sketch.tags|length)}} {{ sketch.tags|length }}</header>
+                    <header>{{'sketch.tags'|transchoice(sketch.tags|length)}}</header>
                     <main>
 					{% if app.user.isAuthorOf(sketch) %}
 						<div id="tagInput">
@@ -106,8 +110,14 @@
 		{% endif %}
 	{% endif %}
 	</div>
+<script src="{{ asset('js/fastInput.js') }}"></script>
 <script src="{{ asset('js/tagInput.js') }}"></script>
 <script>
+	var title = new fastInput({
+		elm: document.getElementById('sketch_name'),
+		extraData: '/{{ sketch.id }}',
+		updateClass: '.title_refresh'
+	});
 	var tags = new tagInput({
 		elm: document.getElementById('tagInput'),
 		idPattern: 'sketch_tags___name___name',
@@ -117,7 +127,6 @@
 		dynamicUpdate: true,
 		extraData: '/{{ sketch.id }}'
 	});
-	console.log('-----');
 	var authors = new tagInput({
 		elm: document.getElementById('authorInput'),
 		idPattern: 'sketch_authors___name___name',

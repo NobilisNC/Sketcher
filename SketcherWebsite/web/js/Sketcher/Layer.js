@@ -67,6 +67,7 @@ Sketcher.widgets.Layer = function(name, zIndex, width, height, frame) {
 
 	this.draw = function() {
 		var ctx = this.getContext();
+
 		this.objects.forEach(function(o) {
 			Sketcher.Tools.drawFromJSON(o, ctx);
 		});

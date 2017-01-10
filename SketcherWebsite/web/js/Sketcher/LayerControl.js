@@ -143,7 +143,7 @@ Sketcher.widgets.LayerControl = function(parent, x = 0, y = 0) {
 		)
 	);
 	this.layerButtons.addWidget(
-		'addLayer',
+		'opacitySlider',
 		new Sketcher.widgets.Slider(
 			'Opacity',
 			(function(e) {

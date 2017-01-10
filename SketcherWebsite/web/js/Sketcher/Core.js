@@ -61,12 +61,14 @@ Sketcher.Core = (function(document, window) {
 				||  e.offsetX >= this.width
 				||	e.offsetY >= this.height
 				||	e.buttons == 0
+				||	this.clicked == false
 			) {
 				// this.clicked = false;
 				// this._onMouseUp(e);
 			} else {
 				var ctx = this.layers[0].getContext();
 				this.clear(ctx);
+				console.log(Sketcher.UI);
 				this.tool.onMouseMove(e, ctx);
 			}
 		}
@@ -270,15 +272,20 @@ Sketcher.Core = (function(document, window) {
 		this.frame.style.width = this.width+"px";
 		this.frame.style.height = this.height+"px";
 
-		// Add the needed trackpad layer and a first drawing layer
-		this.addLayer("trackpad", 98);
-		Sketcher.data.layers.forEach((function(layer) {
-			this.addLayer(
-				layer.name,
-				layer.zIndex || this.layers.length,
-				layer.objects
-			);
-		}).bind(this));
+		window.onload = (function() {
+			// console.log(JSON.parse(Sketcher.data));
+			// Add the needed trackpad layer and a first drawing layer
+			this.addLayer("trackpad", 98);
+			Sketcher.data.layers.forEach((function(layer) {
+				this.addLayer(
+					layer.name,
+					layer.zIndex || this.layers.length,
+					layer.objects
+				);
+			}).bind(this));
+
+			Sketcher.UI.updateLayers();
+		}).bind(this);
 
 		// Bind "this" to events
 		this.onMouseUp = this._onMouseUp.bind(this);
