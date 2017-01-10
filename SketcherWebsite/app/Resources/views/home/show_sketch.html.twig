@@ -47,7 +47,7 @@
                 <div class="container">
                     <header>{{'sketch.tags'|transchoice(sketch.tags|length)}}</header>
                     <main>
-					{% if app.user.isAuthorOf(sketch) %}
+					{% if app.user is not null  and app.user.isAuthorOf(sketch) %}
 						<div id="tagInput">
 							<div id="tagInputPrototype" data-prototype="{{ form_widget(sketch_form.tags.vars.prototype)|e }}"></div>
 							{% for tag in sketch.tags %}
@@ -65,7 +65,7 @@
                 <div class="container">
                     <header>{{'sketch.authors'|transchoice(sketch.authors|length)}}</header>
                     <main>
-					{% if app.user.isAuthorOf(sketch) %}
+					{% if app.user is not null  and app.user.isAuthorOf(sketch) %}
 						<div id="authorInput">
 							<div id="authorInputPrototype" data-prototype="{{ form_widget(sketch_form.authors.vars.prototype)|e }}"></div>
 							{% for author in sketch.authors %}

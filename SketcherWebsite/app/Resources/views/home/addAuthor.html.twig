@@ -1,0 +1,25 @@
+{% extends 'base.html.twig' %}
+
+{% block body %}
+<div class="col-left-1 col-10"
+
+<h2>{{'add_author'|trans}}</h2>
+
+{{ form_start(form) }}
+<div class="form_group row">
+    {{ form_label(form.username, null, {'label': (form.username.vars.label|trans), 'label_attr': {'class': 'col-left-1 col-2'}}) }}
+    <div class="input col-9">
+        {% set class = 'col-12' %}
+        {{ form_widget(form.username, {'attr': {'class': class} })|raw }}
+        {% if form.username.vars.errors|length > 0 %}
+            {% for error in form.username.vars.errors %}
+                <p class="error">{{ error.message|trans }}</p>
+            {% endfor %}
+        {% endif %}
+    </div>
+</div>
+<input type="submit" value={{ 'SetAuthor'|trans }} class="col-12 button button-primary" />
+{{form_end(form)}}
+
+</div>
+{% endblock %}
