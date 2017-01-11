@@ -9,7 +9,9 @@
 	{% elseif specific_user is defined %}
         <h2>{{'sketch_of'|trans({'%username%' : specific_user})}}
         <a href="{{path('profile', {'username' : specific_user })}}"><span class="label label-primary">{{'access_profil'|trans}}</span></a>
-    </h2>
+        </h2>
+    {% elseif search is defined %}
+    <h2>Results of {{search}} </h2>
     {% else %}
 		<h2>{{ 'Gallery'|trans }}</h2>
         <!-- <div class="container" style="float:right">aaaa </div> -->

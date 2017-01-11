@@ -222,6 +222,10 @@
                 <source>show_sketches</source>
                 <target>Voir ses dessins</target>
             </trans-unit>
+            <trans-unit id="Search">
+                <source>Search</source>
+                <target>Rechercher</target>
+            </trans-unit>
         </body>
     </file>
 </xliff>
