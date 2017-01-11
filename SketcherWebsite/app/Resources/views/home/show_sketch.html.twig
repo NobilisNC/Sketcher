@@ -88,7 +88,7 @@
 			{% for comment in comments %}
 			<div class="container comment">
 				<header>{{ comment.author.username }}<span class="date">{{ comment.date|date('d/m/Y | H:i') }}</span></header>
-				{{comment.content}}<br/>
+				{{comment.content|nl2br}}<br/>
 			</div>
 			{% endfor %}
 			{{ form_start(comment_form) }}
