@@ -24,12 +24,13 @@ class HomeController extends Controller
     /**
      * @Route("/", name="homepage")
      * @Route("/home/{page}", name="homepageLiteral")
+     *
      */
     public function indexAction(Request $request, int $page = 0)
     {
         if($request->get('_route') == 'homepage')
             return $this->redirectToRoute('homepageLiteral');
-            
+
         $sketches = $this->getDoctrine()->getRepository('AppBundle:Sketch')->getMostLikedSketches($page, 16);
 
 
@@ -49,8 +50,10 @@ class HomeController extends Controller
 	 */
 	public function galleryAction(Request $request, int $page = 0)
 	{
-        //$sketches = $this->getDoctrine()->getRepository('AppBundle:Sketch')->getMostLikedSketches($page, 16);
-        $sketches = $this->getDoctrine()->getRepository('AppBundle:Sketch')->getLastSketches($page, 16);
+        if ($request->get('sort') == 'like')
+            $sketches = $this->getDoctrine()->getRepository('AppBundle:Sketch')->getMostLikedSketches($page, 16);
+         else
+            $sketches = $this->getDoctrine()->getRepository('AppBundle:Sketch')->getLastSketches($page, 16);
 
 
 		return $this->render('home/gallery.html.twig',
@@ -66,7 +69,7 @@ class HomeController extends Controller
      *
      * @Route("/galleryof/{username}/{page}", name="user_gallery")
      */
-    public function user_galleryAction(Request $request, string $username, int $page = 0)
+    public function galleryByUserAction(Request $request, string $username, int $page = 0)
     {
         $number_page = 16;
         $db = $this->getDoctrine()->getRepository('AppBundle:User');
@@ -95,17 +98,17 @@ class HomeController extends Controller
 	 */
 	public function galleryByTagAction(Request $request, string $tag, int $page = 0)
 	{
-        $tag = $this->getDoctrine()->getRepository('AppBundle:Tag')->findOneByName($tag);
+        $tag_e = $this->getDoctrine()->getRepository('AppBundle:Tag')->findOneByName($tag);
 
-		$sketches = $tag ? $tag->getSketchesFrom($page, 16) : null;
+		$sketches = $tag_e ? $tag_e->getSketchesFrom($page, 16) : null;
 
 
 		return $this->render('home/gallery.html.twig',
             array (
-				'tag' => $tag->getName(),
+				'tag' => ( $tag_e ? $tag_e->getName() : $tag),
                 'sketches' => $sketches,
             	'sketches_directory' => $this->getParameter('sketches_directory'),
-                'total_sketches' => $tag->getNbSketches()
+                'total_sketches' => ($tag_e ? $tag_e->getNbSketches() : 0 )
             )
         );
 	}
@@ -131,11 +134,9 @@ class HomeController extends Controller
 		$db = $this->getDoctrine()->getManager();
 
 		$sketch = $db->getRepository('AppBundle:Sketch')->findOneById($sketchId);
-		// if($user->likes($sketch))
-		// 	$this->get('session')->getFlashBag()->add('already.liked', 'true');
-		// else
+
 		$user->toggleLike($sketch);
-		var_dump($user->likes($sketch));
+		//var_dump($user->likes($sketch));
 
 		$db->flush();
 
