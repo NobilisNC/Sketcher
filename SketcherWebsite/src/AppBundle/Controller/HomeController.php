@@ -52,8 +52,11 @@ class HomeController extends Controller
 	{
         if ($request->get('sort') == 'like')
             $sketches = $this->getDoctrine()->getRepository('AppBundle:Sketch')->getMostLikedSketches($page, 16);
+        elseif ($request->get('searchSketch'))
+            return $this->redirectToRoute('search_gallery', array('searchToken' => $request->get('searchSketch')));
          else
             $sketches = $this->getDoctrine()->getRepository('AppBundle:Sketch')->getLastSketches($page, 16);
+
 
 
 		return $this->render('home/gallery.html.twig',
@@ -76,7 +79,7 @@ class HomeController extends Controller
         $user = $db->findOneBy( array('username' => $username));
         $sketches = $user->getSketchesFrom($page, $number_page);
 
-        return $this->redirectToRoute('search_gallery', array('search' => "caca"));
+        return $this->redirectToRoute('search_gallery', array('searchToken' => "caca"));
 
         return $this->render('home/gallery.html.twig',
             array (

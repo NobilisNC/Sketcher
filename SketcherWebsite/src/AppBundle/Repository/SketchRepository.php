@@ -48,7 +48,7 @@ class SketchRepository extends \Doctrine\ORM\EntityRepository
 
     public function getSketchesTitleLike($term, $page, $number) {
         $query = $this->createQueryBuilder('s')
-                      ->addWhere('s.title LIKE :term')
+                      ->andWhere('s.name LIKE :term')
                       ->setFirstResult($page * $number)
                       ->setMaxResults($number)
                       ->setParameter('term', '%'.$term.'%')
@@ -58,9 +58,9 @@ class SketchRepository extends \Doctrine\ORM\EntityRepository
     }
 
     public function getSketchesTitleLike_NB($term) {
-        return $this->createQueryBuilder('Sketch')
-                        ->select('COUNT(Sketch)')
-                        ->addWhere('s.title LIKE :term')
+        return $this->createQueryBuilder('s')
+                        ->select('COUNT(s)')
+                        ->andWhere('s.name LIKE :term')
                         ->setParameter('term', '%'.$term.'%')
                         ->getQuery()
                         ->getSingleScalarResult();

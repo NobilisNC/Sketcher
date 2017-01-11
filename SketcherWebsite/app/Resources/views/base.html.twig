@@ -16,6 +16,14 @@
 			<nav>
 				<ul>
 					<li><a href="{{ path('homepage') }}">Sketcher</a></li>
+                    <li>
+                        <form class="form form-horizontal" action="{{path('gallery')}}" method="get">
+                          <div class="form_group">
+                            <input name="searchSketch" type="text" />
+                            <input type="submit" />
+                          </div>
+                        </form>
+                    </li>
 				</ul>
 				<ul>
 				{% if not is_granted('IS_AUTHENTICATED_REMEMBERED') %}
