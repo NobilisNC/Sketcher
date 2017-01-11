@@ -19,9 +19,12 @@
 				</ul>
                 <ul>
                     <li>
-                        <form  action="{{path('gallery')}}" method="get">
+                        <form class="form form-horizontal" action="{{path('gallery')}}" method="get">
+                            <div class="form_group">
+                                <label for="searchSketch">{{'Search'|trans}}</label>
                                 <input name="searchSketch" type="text" placeholder="{{'Search'|trans}}" />
                                 <button type="submit"><i class="fa fa-search"></i></button>
+                            </div>
                         </form>
                     </li>
                 </ul>
@@ -57,5 +60,19 @@
 		<section class="row">
 			{% block body %}{% endblock %}
 		</section>
+
+
+
+
+        <form class="form form-horizontal">
+  <div class="form_group">
+    <label for="fname">First name</label>
+    <input name="fname" type="text" />
+    <input type="submit" />
+  </div>
+</form>
+
+
+
 	</body>
 </html>
