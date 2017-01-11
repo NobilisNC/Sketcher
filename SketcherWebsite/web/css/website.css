@@ -25,6 +25,10 @@ textarea {
 	resize: none;
 }
 
+span.tag {
+	border: 1px solid #fff;
+}
+
 .wordTruncation {
 	overflow: hidden;
 	white-space: nowrap;
