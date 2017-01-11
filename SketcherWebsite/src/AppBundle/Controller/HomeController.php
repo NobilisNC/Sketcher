@@ -67,7 +67,7 @@ class HomeController extends Controller
 
     /**
      *
-     * @Route("/galleryof/{username}/{page}", name="user_gallery")
+     * @Route("/gallery/user/{username}/{page}", name="user_gallery")
      */
     public function galleryByUserAction(Request $request, string $username, int $page = 0)
     {
@@ -76,6 +76,7 @@ class HomeController extends Controller
         $user = $db->findOneBy( array('username' => $username));
         $sketches = $user->getSketchesFrom($page, $number_page);
 
+        return $this->redirectToRoute('search_gallery', array('search' => "caca"));
 
         return $this->render('home/gallery.html.twig',
             array (
@@ -85,6 +86,28 @@ class HomeController extends Controller
                 'total_sketches' => $user->getNb()
             )
         );
+    }
+
+    /**
+    * @Route("/gallery/search/{searchToken}/{page}", name="search_gallery")
+    *
+    */
+    public function galleryBySearchAction(Request $request, string $searchToken, int $page = 0)
+    {
+        $sketches = $this->getDoctrine()->getRepository('AppBundle:Sketch')->getSketchesTitleLike($searchToken, $page, 16);
+        $nb = $this->getDoctrine()->getRepository('AppBundle:Sketch')->getSketchesTitleLike_NB($searchToken);
+
+        return $this->render('home/gallery.html.twig',
+            array (
+                'search' => $searchToken,
+                'sketches' => $sketches,
+                'sketches_directory' => $this->getParameter('sketches_directory'),
+                'total_sketches' => $nb
+            )
+        );
+
+
+
     }
 
 	/**

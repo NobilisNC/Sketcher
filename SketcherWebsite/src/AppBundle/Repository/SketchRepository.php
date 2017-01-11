@@ -12,9 +12,8 @@ class SketchRepository extends \Doctrine\ORM\EntityRepository
 {
 
     public function getLastSketches($page, $number) {
-        $manager = $this->getEntityManager();
-        $query = $manager->getRepository('AppBundle:Sketch')
-                        ->createQueryBuilder('s')
+
+        $query =  $this->createQueryBuilder('s')
                         ->addOrderBy('s.dateUpload', 'DESC')
                         ->setFirstResult($page * $number)
                         ->setMaxResults($number)
@@ -25,10 +24,8 @@ class SketchRepository extends \Doctrine\ORM\EntityRepository
     }
 
     public function getMostLikedSketches($page, $number) {
-        $manager = $this->getEntityManager();
 
-        $query = $manager->getRepository('AppBundle:Sketch')
-                       ->createQueryBuilder('s')
+        $query =  $this->createQueryBuilder('s')
 					   ->leftJoin('s.likers', 'l')
 					   ->select('s, COUNT(l.id) AS HIDDEN nbLikes')
                        ->addOrderBy('nbLikes', 'DESC')
@@ -45,6 +42,26 @@ class SketchRepository extends \Doctrine\ORM\EntityRepository
     public function getNb() {
         return $this->createQueryBuilder('Sketch')
                         ->select('COUNT(Sketch)')
+                        ->getQuery()
+                        ->getSingleScalarResult();
+    }
+
+    public function getSketchesTitleLike($term, $page, $number) {
+        $query = $this->createQueryBuilder('s')
+                      ->addWhere('s.title LIKE :term')
+                      ->setFirstResult($page * $number)
+                      ->setMaxResults($number)
+                      ->setParameter('term', '%'.$term.'%')
+                      ->getQuery();
+
+        return $query->execute();
+    }
+
+    public function getSketchesTitleLike_NB($term) {
+        return $this->createQueryBuilder('Sketch')
+                        ->select('COUNT(Sketch)')
+                        ->addWhere('s.title LIKE :term')
+                        ->setParameter('term', '%'.$term.'%')
                         ->getQuery()
                         ->getSingleScalarResult();
     }
