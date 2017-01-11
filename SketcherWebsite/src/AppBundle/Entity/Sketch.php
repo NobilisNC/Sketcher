@@ -232,6 +232,16 @@ class Sketch
     }
 
     /**
+     * Get authors number
+     *
+     * @return int
+     */
+    public function getAuthorsNumber()
+    {
+        return $this->authors->count();
+    }
+
+    /**
      * Add tag
      *
      * @param \AppBundle\Entity\Tag $tag

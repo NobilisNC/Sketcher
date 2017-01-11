@@ -98,31 +98,6 @@ class HomeController extends Controller
         );
 	}
 
-
-    // UNUSED !!!! delete ?
-	/**
-	 *
-	 * @Route("/me/sketches", name="mySketches")
-	 */
-	public function mySketchesAction(Request $request)
-	{
-		$user = $this->getUser();
-
-		if(!$user)
-			return $this->redirectToRoute('login');
-
-        // $sketches = $this->getDoctrine()->getRepository('AppBundle:Sketch')->createQueryBuilder('s')
-		// 	->where('s.')
-		// 	->getQuery()
-		// 	->getResult();
-
-		return $this->render('home/my_sketches.html.twig',
-            array (
-				'sketches' => $user->getSketches()
-            )
-        );
-	}
-
 	/**
 	 *
 	 * @Route(
@@ -311,7 +286,7 @@ class HomeController extends Controller
     *
     * @Route("/sketch/{sketchId}", name="sketch")
     */
-	public function sketchAction(Request $request, $sketchId)
+	public function sketchAction(Request $request, int $sketchId)
     {
 		$user = $this->getUser();
 
@@ -389,8 +364,6 @@ class HomeController extends Controller
 					'sketchId' => $sketch->getId()
 				)
 			);
-        } else {
-			echo $form->getErrors();
 		}
 
         return $this->render('home/new_sketch.html.twig', array(
@@ -440,10 +413,13 @@ class HomeController extends Controller
     */
     public function searchTagAction(Request $request, string $term)
     {
+		$res = new Response();
+		$res->headers->set('Content-Type', 'application/json');
+
 		$user = $this->getUser();
 
 		if(!$user)
-			return $this->redirectToRoute('login');
+			return $res->setStatusCode(403)->setContent('{"status": "error", "msg": "You\'re not authenticated"}');
 
 		$db = $this->getDoctrine()->getRepository('AppBundle:Tag');
 		$tags = $db->createQueryBuilder('p')
@@ -453,14 +429,14 @@ class HomeController extends Controller
 		->getQuery()
 		->getResult();
 
-		$res = "[";
+		$json = "[";
 		foreach($tags as $tag) {
-			$res .= '{"id":'.$tag['id'].',"name":"'.$tag['name'].'"},';
+			$json .= '{"id":'.$tag['id'].',"name":"'.$tag['name'].'"},';
 		}
-		$res = substr($res, 0, max(1, strlen($res)-1));
-		$res .= "]";
+		$json = substr($json, 0, max(1, strlen($json)-1));
+		$json .= "]";
 
-		return new Response($res);
+		return $res->setContent($json);
 	}
 
     /**
@@ -473,10 +449,13 @@ class HomeController extends Controller
     */
     public function addTagAction(Request $request, string $term, int $sketchId)
     {
+		$res = new Response();
+		$res->headers->set('Content-Type', 'application/json');
+
 		$user = $this->getUser();
 
 		if(!$user)
-			return new Response('{"status": "error", "msg": "Need login first"}');
+			return $res->setStatusCode(403)->setContent('{"status": "error", "msg": "You\'re not authenticated"}');
 
 		$db = $this->getDoctrine()->getManager();
 		$tag = $db->getRepository('AppBundle:Tag')->findOneByName($term);
@@ -492,7 +471,40 @@ class HomeController extends Controller
 
 		$db->flush();
 
-		return new Response('{"status": "success", "msg": "Tag added", "id":'.$tag->getId().',"name":"'.$tag->getName().'"}');
+		return $res->setContent('{"status": "success", "msg": "Tag added", "id":'.$tag->getId().',"name":"'.$tag->getName().'"}');
+	}
+
+    /**
+    *
+    * @Route(
+	*   "/tag/remove/{term}/{sketchId}",
+	*   requirements={"sketchId": "\d+"},
+	*   name="removeTag"
+	* )
+    */
+    public function removeTagAction(Request $request, string $term, int $sketchId)
+    {
+		$res = new Response();
+		$res->headers->set('Content-Type', 'application/json');
+
+		$user = $this->getUser();
+
+		if(!$user)
+			return $res->setStatusCode(403)->setContent('{"status": "error", "msg": "You\'re not authenticated"}');
+
+		$db = $this->getDoctrine()->getManager();
+		$sketch = $db->getRepository('AppBundle:Sketch')->findOneById($sketchId);
+		$tag = $db->getRepository('AppBundle:Tag')->findOneByName($term);
+
+		if(!$sketch)
+			return $res->setStatusCode(404)->setContent('{"status": "error", "msg": "Sketch not found"}');
+
+		$sketch->removeTag($tag);
+		$db->persist($sketch);
+
+		$db->flush();
+
+		return $res->setContent('{"status": "success", "msg": "Tag removed"}');
 	}
 
     /**
@@ -504,10 +516,13 @@ class HomeController extends Controller
     */
     public function searchAuthorAction(Request $request, string $term)
     {
+		$res = new Response();
+		$res->headers->set('Content-Type', 'application/json');
+
 		$user = $this->getUser();
 
 		if(!$user)
-			return $this->redirectToRoute('login');
+			return $res->setStatusCode(403)->setContent('{"status": "error", "msg": "You\'re not authenticated"}');
 
 		$db = $this->getDoctrine()->getRepository('AppBundle:User');
 		$users = $db->createQueryBuilder('u')
@@ -518,42 +533,80 @@ class HomeController extends Controller
 		->getQuery()
 		->getResult();
 
-		$res = "[";
+		$json = "[";
 		foreach($users as $user) {
-			$res .= '{"id":'.$user['id'].',"name":"'.$user['username'].'"},';
+			$json .= '{"id":'.$user['id'].',"name":"'.$user['username'].'"},';
 		}
-		$res = substr($res, 0, max(1, strlen($res)-1));
-		$res .= "]";
+		$json = substr($json, 0, max(1, strlen($json)-1));
+		$json .= "]";
 
-		return new Response($res);
+		return $res->setContent($json);
 	}
 
     /**
     *
     * @Route(
-	*   "/author/add/{term}/{sketchId}",
+	*   "/author/add/{username}/{sketchId}",
 	*   requirements={"sketchId": "\d+"},
 	*   name="addAuthor"
 	* )
     */
-    public function addAuthorAction(Request $request, string $term, int $sketchId)
+    public function addAuthorAction(Request $request, string $username, int $sketchId)
     {
+		$res = new Response();
+		$res->headers->set('Content-Type', 'application/json');
+
 		$user = $this->getUser();
 
 		if(!$user)
-			return $this->redirectToRoute('login');
+			return $res->setStatusCode(403)->setContent('{"status": "error", "msg": "You\'re not authenticated"}');
 
 		$db = $this->getDoctrine()->getManager();
-		$r = $db->getRepository('AppBundle:User')->findOneByUsername($term);
+		$r = $db->getRepository('AppBundle:User')->findOneByUsername($username);
 		if($r) {
 			$sketch = $db->getRepository('AppBundle:Sketch')->findOneById($sketchId);
 			$sketch->addAuthor($r);
 			$db->persist($sketch);
 			$db->flush();
 
-			return new Response('{"status": "success", "msg": "Author added", "id":'.$r->getId().',"name":"'.$r->getUsername().'"}');
+			return $res->setContent('{"status": "success", "msg": "Author added", "id":'.$r->getId().',"name":"'.$r->getUsername().'"}');
 		}
 		else
-			return new Response('{"status": "error", "msg": "User doesn\'t exist."}');
+			return $res->setStatusCode(404)->setContent('{"status": "error", "msg": "User doesn\'t exist."}');
+	}
+
+    /**
+    *
+    * @Route(
+	*   "/author/remove/{username}/{sketchId}",
+	*   requirements={"sketchId": "\d+"},
+	*   name="removeAuthor"
+	* )
+    */
+    public function removeAuthorAction(Request $request, string $username, int $sketchId)
+    {
+		$res = new Response();
+		$res->headers->set('Content-Type', 'application/json');
+
+		$user = $this->getUser();
+
+		if(!$user)
+			return $res->setStatusCode(403)->setContent('{"status": "error", "msg": "You\'re not authenticated"}');
+
+		$db = $this->getDoctrine()->getManager();
+		$author = $db->getRepository('AppBundle:User')->findOneByUsername($username);
+		$sketch = $db->getRepository('AppBundle:Sketch')->findOneById($sketchId);
+
+		if(!$author || !$sketch || !$author->isAuthorOf($sketch))
+			return $res->setStatusCode(404)->setContent('{"status": "error", "msg": "Sketch doesn\' exist or user doesn\'t exist or is not an author of this sketch"}');
+
+		if($sketch->getAuthorsNumber() < 2)
+			return $res->setStatusCode(403)->setContent('{"status": "error", "msg": "You cannot delete the last author of a sketch"}');
+
+		$sketch->removeAuthor($author);
+		$db->persist($sketch);
+		$db->flush();
+
+		return $res->setContent('{"status": "success", "msg": "Author removed"}');
 	}
 }

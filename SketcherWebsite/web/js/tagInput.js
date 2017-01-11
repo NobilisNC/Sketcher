@@ -68,7 +68,7 @@ var tagInput = function(settings = {}) {
 				x.open('GET', '/'+this.entity+'/add/'+name+this.extraData, true);
 				x.onreadystatechange = (function(that) {
 					return function() {
-						if(x.readyState == XMLHttpRequest.DONE && x.status === 200) {
+						if(x.readyState == XMLHttpRequest.DONE && (x.status === 200 || x.status === 403 || x.status === 404)) {
 							try {
 								var res = JSON.parse(x.responseText);
 								if(res.status == 'success') {
@@ -115,11 +115,41 @@ var tagInput = function(settings = {}) {
 				var id = e.srcElement.parentElement.getAttribute('data-id');
 				if(id) {
 					id = id.replace(/[^\d]+/g, '');
-					var parent = e.srcElement.parentElement.parentElement.parentElement;
-					var input = document.getElementById(this.idPattern.replace('__name__', id));
-					input.parentNode.removeChild(input);
-					var label = document.querySelector('a[data-id="'+id+'"]').parentNode;
-					label.parentNode.removeChild(label);
+					let input = document.getElementById(this.idPattern.replace('__name__', id));
+					let parent = e.srcElement.parentElement.parentElement.parentElement;
+					let label = this.node.querySelector('a[data-id="'+id+'"]').parentNode;
+					if(this.dynamicUpdate) {
+						var x = new XMLHttpRequest();
+						x.open('GET', '/'+this.entity+'/remove/'+decodeURIComponent(input.value)+this.extraData);
+						x.onreadystatechange = (function() {
+							if(x.readyState == XMLHttpRequest.DONE && (x.status === 200 || x.status === 403 || x.status === 404)) {
+								try {
+									var res = JSON.parse(x.responseText);
+									if(res.status == 'success') {
+										input.parentNode.removeChild(input);
+										label.parentNode.removeChild(label);
+										k$.growl({	// Kickstart alert
+											text: res.msg,
+											delay: 2000,
+											type: 'alert-green'
+										});
+									} else {
+										k$.growl({	// Kickstart alert
+											text: res.msg,
+											delay: 2000,
+											type: 'alert-red'
+										});
+									}
+								} catch(e) {
+									console.log(e);
+								}
+							}
+						}).bind(this);
+						x.send();
+					} else {
+						input.parentNode.removeChild(input);
+						label.parentNode.removeChild(label);
+					}
 				}
 			}).bind(this), true);
 
@@ -150,12 +180,12 @@ var tagInput = function(settings = {}) {
 	}
 
 	this.searchForTokens = function() {
-		if(this.lastValue != this.field.value && this.field.value.length > 0) {
+		if(this.field.value.length > 1 && this.lastValue != this.field.value && this.field.value.length > 0) {
 			var x = new XMLHttpRequest();
 			x.open('GET', '/'+this.entity+'/search/'+this.field.value, true);
 			x.onreadystatechange = (function(that) {
 				return function() {
-					if(x.readyState == XMLHttpRequest.DONE && x.status === 200) {
+					if(x.readyState == XMLHttpRequest.DONE && (x.status === 200 || x.status === 403 || x.status === 404)) {
 						var tags = JSON.parse(x.responseText);
 
 						that.tooltipTagsList.innerHTML = '';

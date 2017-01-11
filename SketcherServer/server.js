@@ -8,9 +8,6 @@ var Canvas = require('canvas');
 var Image = Canvas.Image;
 var Font = Canvas.Font;
 
-Canvas.registerFont('open-sans.ttf', {family: 'Open Sans'});
-Canvas.registerFont('playfair-display.ttf', {family: 'Playfair Display'});
-
 require('Sketcher.js')();
 eval(fs.readFileSync('node_modules/Sketcher/Tools.js')+'');
 
@@ -67,7 +64,7 @@ io.on('connection', function(socket){
 					height = parsedData.height;
 					layers = parsedData.layers;
 
-					io.broadcast.emit('getFreshObjectsList', rawData);
+					socket.broadcast.emit('getFreshObjectsList', rawData);
 				} catch (e) {
 					console.log(e.message);
 				}
