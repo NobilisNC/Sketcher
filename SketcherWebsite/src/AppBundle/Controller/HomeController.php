@@ -412,6 +412,44 @@ class HomeController extends Controller
         ));
     }
 
+
+
+    /**
+    *
+    * @Route("/delete/{sketchId}",
+    *requirements={"sketchId": "\d+"},
+    * name="deleteSketch")
+    */
+    public function deleteSketchAction(Request $request, int $sketchId)
+    {
+        $user = $this->getUser();
+
+        if(!$user)
+            return $this->redirectToRoute('login');
+
+        $db = $this->getDoctrine()->getManager();
+        $sketch = $db->getRepository("AppBundle:Sketch")->findOneById($sketchId);
+
+        if(!$sketch)
+            return $this->redirectToRoute('gallery');
+
+        //If not author
+        if(!$sketch->getAuthors()->contains($user))
+            return $this->redirectToRoute('gallery');
+
+        //If last author == sketch delete
+        if ($sketch->getAuthorsNumber() == 1) {
+            $db->remove($sketch);
+            return $this->redirectToRoute('gallery');
+        } else {
+            $sketch->removeAuthor($user);
+            $db->merge($sketch);
+            $db->flush();
+            return $this->redirectToRoute('showSketch', array('sketchId' => $sketchId));
+        }
+
+    }
+
 	////////////
 	// FastInput and TagInput Ajax requests handling
 	////////////

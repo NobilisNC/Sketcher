@@ -27,7 +27,13 @@
     					<ul class="button-group" style="float:left;">
     						<li>
     							<a href="{{ path('sketch', {'sketchId': sketch.id}) }}" class="button button-small button-primary"><i class="fa fa-pencil"></i> {{ 'edit'|trans }}</a>
-    							<a href="#" class="button button-small button-red"><i class="fa fa-trash"></i> {{ 'delete'|trans }}</a>
+                                <a href="{{path('deleteSketch', {'sketchId' : sketch.id})}}" class="button button-small button-red">
+                                {% if sketch.authors|length == 1 %}
+                                    <i class="fa fa-trash"></i>{{ 'delete'|trans }}
+                                {% else %}
+                                    <i class="fa fa-times"></i>{{ 'remove_author'|trans }}
+                                {% endif %}
+                                </a>
     						</li>
     					</ul>
     					{% endif %}

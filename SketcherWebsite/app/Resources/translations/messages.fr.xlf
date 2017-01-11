@@ -250,6 +250,10 @@
                 <source>Thumbnail</source>
                 <target>Aperçu</target>
             </trans-unit>
+            <trans-unit id="remove_author">
+                <source>remove_author</source>
+                <target>Abandonner ce dessin</target>
+            </trans-unit>
         </body>
     </file>
 </xliff>
