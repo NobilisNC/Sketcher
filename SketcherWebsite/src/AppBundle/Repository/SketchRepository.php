@@ -13,8 +13,15 @@ class SketchRepository extends \Doctrine\ORM\EntityRepository
 
     public function getLastSketches($page, $number) {
         $manager = $this->getEntityManager();
-        return $manager->getRepository('AppBundle:Sketch')
-                       ->findBy(array(), array('dateUpload' => 'DESC'), $page * $number, $number);
+        $query = $manager->getRepository('AppBundle:Sketch')
+                        ->createQueryBuilder('s')
+                        ->addOrderBy('s.dateUpload', 'DESC')
+                        ->setFirstResult($page * $number)
+                        ->setMaxResults($number)
+                        ->getQuery();
+
+        return $query->execute();
+
     }
 
     public function getMostLikedSketches($page, $number) {

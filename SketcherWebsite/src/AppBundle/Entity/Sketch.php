@@ -42,7 +42,7 @@ class Sketch
 
     /**
     *
-    * @ORM\ManyToMany(targetEntity="User", inversedBy="sketches")
+    * @ORM\ManyToMany(targetEntity="User", inversedBy="sketches", cascade={"persist", "remove"})
     * @ORM\JoinColumn(name="user", referencedColumnName="id")
     *
     */
@@ -60,7 +60,7 @@ class Sketch
     /**
      * @var \DateTime
      *
-     * @ORM\Column(name="date_upload", type="date")
+     * @ORM\Column(name="date_upload", type="datetime")
      */
     private $dateUpload;
 

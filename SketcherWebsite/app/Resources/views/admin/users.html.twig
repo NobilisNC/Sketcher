@@ -26,9 +26,9 @@
 			{% endif %}
 			</td>
 			<td>
-				<a href="#" class="button button-small button-red" title="{{ 'user.delete'|trans }}"><i class="fa fa-trash"></i></a>
-				<a href="#" class="button button-small button-red" title="{{ 'user.delete'|trans }}"><i class="fa fa-trash"></i></a>
-				<a href="#" class="button button-small button-red" title="{{ 'user.delete'|trans }}"><i class="fa fa-trash"></i></a>
+                {% if user.id != app.user.id %}
+				<a href="{{path('deleteUserAdmin', {"userId" : user.id()})}}" class="button button-small button-red" title="{{ 'user.delete'|trans }}"><i class="fa fa-trash"></i></a>
+                {% endif %}
 			</td>
 		</tr>
 	{% endfor %}

@@ -1,33 +1,29 @@
 {% extends 'base.html.twig' %}
 
 {% block body %}
+
+    <div class="col-left-1 col-10" >
+        <center>
+        <h1>{{'Welcome on Sketcher !'|trans}}</h1>
+        <p class="">{{'Website description'|trans|raw}}<p>
+        </center>
+    </div>
+
 	<div class="col-left-1 col-10">
-		<h1>{{ 'Most liked drawings'|trans }}</h1>
-		<div id="top" class="alert col-12">
-			<div id="topSlide">
-				<a href="#" class="sketch">
-					<img src="{{ asset('symfony-logo.png') }}">
-					<span class="author">Author</span>
-				</a>
-				<a href="#" class="sketch">
-					<img src="{{ asset('symfony-logo.png') }}">
-					<span class="author">Author</span>
-				</a>
-				<a href="#" class="sketch">
-					<img src="{{ asset('symfony-logo.png') }}">
-					<span class="author">Author</span>
-				</a>
-				<a href="#" class="sketch">
-					<img src="{{ asset('symfony-logo.png') }}">
-					<span class="author">Author</span>
-				</a>
-				<a href="#" class="sketch">
-					<img src="{{ asset('symfony-logo.png') }}">
-					<span class="author">Author</span>
-				</a>
-			</div>
-		</div>
-	</div>
+		<h5>{{ 'Most liked drawings'|trans }}</h5>
+
+        {% if sketches|length == 0 %}
+         <div class="container container-red">
+             <header>{{'no.sketch'|trans}}</header>
+             <main>{{'no.sketch.explanation'|trans}}</main>
+        </div>
+
+        {% else %}
+        {% include 'modules/pagination.html.twig' with {    'sketches' : sketches,
+                                                            'total_sketches' : total_sketches
+                                                        }   %}
+        {% endif %}
+
 {% endblock %}
 
 {# {% block sketcher_stylesheets %}

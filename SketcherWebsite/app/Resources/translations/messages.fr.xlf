@@ -2,6 +2,14 @@
 <xliff version="1.2" xmlns="urn:oasis:names:tc:xliff:document:1.2">
     <file source-language="en" datatype="plaintext" original="file.ext">
         <body>
+            <trans-unit id="Welcome on Sketcher !">
+                <source>Welcome on Sketcher !</source>
+                <target>Bienvenue sur Sketcher !</target>
+            </trans-unit>
+            <trans-unit id="Website description">
+                <source>Website description</source>
+                <target>Sketcher est un site qui permet &lt;strong&gt;la création&lt;/strong&gt;, &lt;strong&gt;le partage&lt;/strong&gt; de dessins !</target>
+            </trans-unit>
             <trans-unit id="username">
                 <source>Username</source>
                 <target>Nom d'utilisateur</target>
@@ -64,7 +72,7 @@
             </trans-unit>
             <trans-unit id="gallery">
                 <source>Gallery</source>
-                <target>Gallerie</target>
+                <target>Galerie</target>
             </trans-unit>
             <trans-unit id="my.pictures">
                 <source>my.pictures</source>
