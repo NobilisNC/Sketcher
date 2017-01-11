@@ -83,8 +83,38 @@ class AdminController extends Controller
          return $this->redirectToRoute('sketchesAdmin', $request->get('_route_params'));
       }
 
+      /**
+       * @Route("/admin/tags", name="tagsAdmin")
+       */
+      public function tagsAction(Request $request)
+      {
+  		$user = $this->getUser();
 
+  		if(!$user || !$user->getIsAdmin())
+  			return $this->redirectToRoute('homepage');
 
+          return $this->render('admin/tags.html.twig', array(
+  			'tags' => $this->getDoctrine()->getRepository('AppBundle:Tag')->findAll()
+  		));
+      }
 
+      /**
+       * @Route("/admin/tag/delete/{tagId}", name="deleteTagAdmin")
+       */
+       public function deleteTagAction(Request $request, int $tagId)
+       {
+           $user = $this->getUser();
+
+           if(!$user || !$user->getIsAdmin())
+               return $this->redirectToRoute('homepage');
+
+          $db = $this->getDoctrine()->getManager();
+          $tag_delete = $db->getRepository('AppBundle:Tag')->findOneBy(array('id' =>$tagId));
+
+          $db->remove($tag_delete);
+          $db->flush();
+
+          return $this->redirectToRoute('tagsAdmin', $request->get('_route_params'));
+       }
 
 }

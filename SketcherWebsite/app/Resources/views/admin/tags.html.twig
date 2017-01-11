@@ -1,0 +1,25 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}- {{ 'Tags administration'|trans }}{% endblock %}
+
+{% block body %}
+<div class="col-left-2 col-8">
+	<h2>{{ 'tags'|trans }}</h2>
+	<table class="table table-zebra table-hover">
+		<tr>
+			<th>{{ 'ID'|trans }}</th>
+			<th>{{ 'tag.name'|trans }}</th>
+			<th>{{ 'tag.delete'|trans }}</th>
+		</tr>
+	{% for tag in tags %}
+		<tr>
+			<td style="text-align:center;">{{ tag.id }}</td>
+			<td style="text-align:center;">{{ tag.name }}</td>
+			<td>
+				<a href="{{path('deleteTagAdmin', {"tagId" : tag.id()})}}" class="button button-small button-red" title="{{ 'tag.delete'|trans }}"><i class="fa fa-trash"></i></a>
+			</td>
+		</tr>
+	{% endfor %}
+	</table>
+</div>
+{% endblock %}

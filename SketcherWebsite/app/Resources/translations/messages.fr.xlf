@@ -122,6 +122,10 @@
                 <source>Sketch</source>
                 <target>Dessin</target>
             </trans-unit>
+            <trans-unit id="sketches">
+                <source>sketches</source>
+                <target>Dessins</target>
+            </trans-unit>
             <trans-unit id="sketch.tags">
                 <source>sketch.tags</source>
                 <target>Tags associés</target>
@@ -225,6 +229,26 @@
             <trans-unit id="Search">
                 <source>Search</source>
                 <target>Rechercher</target>
+            </trans-unit>
+            <trans-unit id="users">
+                <source>users</source>
+                <target>Utilisateurs</target>
+            </trans-unit>
+            <trans-unit id="tags">
+                <source>tags</source>
+                <target>Tags</target>
+            </trans-unit>
+            <trans-unit id="tag.name">
+                <source>tag.name</source>
+                <target>Nom</target>
+            </trans-unit>
+            <trans-unit id="tag.delete">
+                <source>tag.delete</source>
+                <target>Supprimer</target>
+            </trans-unit>
+            <trans-unit id="thumbnail">
+                <source>Thumbnail</source>
+                <target>Aperçu</target>
             </trans-unit>
         </body>
     </file>
