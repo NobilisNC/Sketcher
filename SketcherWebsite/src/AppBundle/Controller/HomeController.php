@@ -543,7 +543,7 @@ class HomeController extends Controller
 
 		$db->flush();
 
-		return $res->setContent('{"status": "success", "msg": "Tag removed"}');
+		return $res->setContent('{"status": "success", "msg": "Tag removed", "id":'.$tag->getId().',"name":"'.$tag->getName().'"}');
 	}
 
     /**

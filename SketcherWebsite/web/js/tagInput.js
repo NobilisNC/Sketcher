@@ -64,7 +64,7 @@ var tagInput = function(settings = {}) {
 	this.set = function(id, name, update = true) {
 		if(this.tags[id] == undefined) {
 			if(this.dynamicUpdate && update) {
-				var x = new XMLHttpRequest();
+				let x = new XMLHttpRequest();
 				x.open('GET', '/'+this.entity+'/add/'+name+this.extraData, true);
 				x.onreadystatechange = (function(that) {
 					return function() {
@@ -89,7 +89,8 @@ var tagInput = function(settings = {}) {
 								console.error('Received invalid response.', x.responseText);
 								return;
 							}
-						}
+						} else
+						console.log(x.responseText);
 					}
 				}) (this);
 				x.send();
@@ -128,6 +129,7 @@ var tagInput = function(settings = {}) {
 									if(res.status == 'success') {
 										input.parentNode.removeChild(input);
 										label.parentNode.removeChild(label);
+										this.remove(res.id);
 										k$.growl({	// Kickstart alert
 											text: res.msg,
 											delay: 2000,
