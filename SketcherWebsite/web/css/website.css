@@ -10,11 +10,11 @@ hr {
 }
 
 nav {
-	z-index: 99;
+	z-index: 999;
 }
 
 	nav .menu-item ul {
-	 z-index: 99;
+	 z-index: 999;
 	}
 
 input[type="number"] {
@@ -25,9 +25,17 @@ textarea {
 	resize: none;
 }
 
-span.tag {
-	border: 1px solid #fff;
+a.tag, a.tag:hover {
+	text-decoration: none;
 }
+
+	a.tag span {
+		border: 1px solid #fff;
+	}
+
+		a.tag span:hover {
+			text-decoration: underline;
+		}
 
 .wordTruncation {
 	overflow: hidden;

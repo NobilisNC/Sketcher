@@ -15,7 +15,7 @@
 		</tr>
 	{% for sketch in sketches %}
 		<tr>
-			<td><img style="max-height: 40px; max-width: 50px;" src="{{ asset(sketches_directory ~ '/' ~ sketch.path) }}" alt="{{ sketch.name }}"></td>
+			<td><img style="max-height: 50px; max-width: 80px;" src="{{ asset(sketches_directory ~ '/' ~ sketch.path) }}" alt="{{ sketch.name }}"></td>
             <td><a href="{{ path('showSketch', {'sketchId': sketch.id}) }}">{{ sketch.name }}</a></td>
 			<td>
                 {% for author in sketch.authors %}
