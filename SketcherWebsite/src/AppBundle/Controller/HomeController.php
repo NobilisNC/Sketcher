@@ -218,7 +218,7 @@ class HomeController extends Controller
 
 			$data["comment_form"] = $form->createView();
 
-            if($user->isAuthorOf($sketch)) {
+            if($user->isAuthorOf($sketch) || $user->getIsAdmin()) {
                 $form = $this->createForm(SketchType::class, $sketch);
 
                 $data["sketch_form"] = $form->createView();
@@ -322,6 +322,33 @@ class HomeController extends Controller
 			)
 		);
 	}
+
+
+    /**
+     *
+     * @Route(
+     *   "/deleteComment/{sketchId}/{commentId}",
+     *   requirements={"commentId": "\d+","sketchId": "\d+" },
+     *   name="deleteComment"
+     * )
+     */
+     public function deleteCommentAction(Request $request, int $sketchId, int $commentId)
+     {
+         $user = $this->getUser();
+
+         if(!$user)
+             return $this->redirectToRoute('login');
+
+        $comment = $this->getDoctrine()->getRepository('AppBundle:Comment')->findOneById($commentId);
+
+        if($comment && ($comment->getAuthor()->getId() == $user->getId()) || $user->getIsAdmin()) {
+            $db = $this->getDoctrine()->getManager();
+            $db->remove($comment);
+            $db->flush();
+        }
+
+        return $this->redirectToRoute('showSketch', array('sketchId' => $sketchId));
+     }
 
     /**
     *
