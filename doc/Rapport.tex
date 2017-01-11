@@ -148,10 +148,26 @@ if(!$this->getUser())
 	return $this->redirectToRoute('login');
 \end{lstlisting}
 
+\subsubsection{Espace membre}
+Une fois connectés les membres ont accès aux fonctionnalités du site. Ils ont désormais le droit d'aimer un dessin, d'en créer, et d'éditer leur propre profil.
+
 \subsubsection{Espace d'administration}
 Le premier utilisateur (avec l'id 1), ou super-administrateur, et tous les administrateurs qu'il nommera peuvent accéder à un espace d'administration à partir duquel il peuvent supprimer et modifier les autres utilisateurs (et les autres administrateurs dans le cas du super-administrateur), les dessins et les tags.
 
 L'accès à cet espace est restreint grâce au membre booléen \texttt{is\_admin} du modèle \texttt{User}. Si il est $vrai$ la requête est acceptée, sinon le client est redirigé vers la page d'accueil.
+
+\paragraph{Gestion des utilisateurs$\newline$}
+Le super-administrateur peut élever un autre utilisateur au rang d'administrateur en cliquant sur son statut.
+Les administrateurs ainsi créés peuvent accéder à l'édition d'utilisateurs, de dessins et de tags.
+
+\paragraph{Gestion des dessins$\newline$}
+Les administrateurs peuvent modifier le titre, les tags et les auteurs de tous les dessins. Ils peuvent également les supprimer.
+
+\paragraph{Gestion des tags$\newline$}
+Les administrateurs peuvent supprimer les tags.
+
+\paragraph{Gestion des commentaires$\newline$}
+Les administrateurs peuvent supprimer les commentaires.
 
 \begin{lstlisting}
 if(!$user->getIsAdmin())
@@ -185,7 +201,7 @@ Afin de garantir un résultat similaire sur un maximum de navigateurs nous avons
 \subsubsection{Ajax}
 Nous avons privilégié des interfaces avancées pour certains formulaires (champs d'édition de tags, d'auteurs, de titre). Pour se faire nous avons eu recours à l'utilisation de \texttt{XMLHttpRequest}, une object Javascript qui permet de faire envoyer des requêtes HTTP par le client. Le client envoie donc des requêtes \texttt{GET} vers le serveur pour signaler l'ajout ou la suppression d'un tag ou d'un auteur, le serveur envoie sa réponse sous forme d'un fichier JSON avec une message d'erreur ou de succès qui sera parsé par le client pour afficher une notification.
 
-Deux modules ont été développés pour permettre la validation des ces champs via des requêtes Ajax. Il s'agit des fichiers \texttt{web/js/tagInput.js} et \texttt{web/js/fastInput.js} qui sont initialisés dans les vues qui les utilisents (\texttt{app/Resources/views/show_sketch.html.twig} par exemple).
+Deux modules ont été développés pour permettre la validation des ces champs via des requêtes Ajax. Il s'agit des fichiers \texttt{web/js/tagInput.js} et \texttt{web/js/fastInput.js} qui sont initialisés dans les vues qui les utilisents (\texttt{show\_sketch.html.twig} par exemple).
 
 \subsection{Serveur de dessin}
 Cet élément est développé en Javascript et est supposé être lancé avec le moteur \cite{NodeJS}NodeJS. Ce serveur fait la liaison entre l'application client de dessin et le serveur web. Elle s'occupe de transmettre les modifications aux utilisateurs qui modifient un même dessin.

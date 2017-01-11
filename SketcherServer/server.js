@@ -58,6 +58,8 @@ io.on('connection', function(socket){
 			"image": canvas.toDataURL().substr(22)
 		});
 
+		console.log(layers);
+
 		http.request({
 			hostname: 'sketcher',
 			port: 80,
@@ -202,6 +204,18 @@ io.on('connection', function(socket){
 			name: data.layerName,
 			objects: []
 		});
+
+		updateObjects();
+	});
+
+	socket.on('setLayerOpacity', function(data) {
+		let layer = getLayer(data.layerName);
+
+		if(layer == undefined) {
+			console.error('Layer not found');
+			return;
+		}
+		layer.opacity = data.opacity;
 
 		updateObjects();
 	});
