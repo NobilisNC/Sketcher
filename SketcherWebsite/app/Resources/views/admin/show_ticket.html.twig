@@ -3,7 +3,10 @@
 {% block body %}
 <div class="col-left-1 col-10">
     <main>
-        <h2>{{ 'tickets'|trans }}</h2>
+        <h2>{{ 'ticket'|trans }}#{{ticket.id}}
+            <td style="text-align:center;"><span class="label  {% if ticket.status == 'waiting' %}label-orange{% else  %}label-green{% endif %}">{{ ticket.status|trans }}</span></td>
+            <a style="float:right" href="{{path('tickets')}}"><span class="label label-primary"><i class="fa fa-reply"></i> {{'back_to_tickets'|trans}}</span></a>
+        </h2>
 
         <table class="table table-zebra">
             <tr>
@@ -30,8 +33,10 @@
             <tr>
                 <td>{{'action'|trans}}</td>
                 <td>
-                        <a href="{{path('deleteTicket', {'ticketId' : ticket.id})}}"><i class="fa fa-trash"></i>{{'delete'|trans}}</a>
-                        <a href="{{path('processTicket', {'ticketId' : ticket.id})}}"><i class="fa fa-trash"></i>{{'mark_as_processed'|trans}}</a>
+                        <a href="{{path('deleteTicket', {'ticketId' : ticket.id})}}"  class="button button-small button-red"><i class="fa fa-trash"></i>{{'delete'|trans}}</a>
+                        {% if ticket.status == 'waiting'%}
+                            <a href="{{path('processTicket', {'ticketId' : ticket.id})}}"  class="button button-small button-gree""><i class="fa fa-check"></i>{{'mark_as_processed'|trans}}</a>
+                        {% endif %}
                 </td>
             </tr>
             {% endif %}

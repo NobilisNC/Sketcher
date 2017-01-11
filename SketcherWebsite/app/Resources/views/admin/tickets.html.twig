@@ -7,12 +7,14 @@
 
         <table class="table table-zebra table-hover">
             <tr>
+                <th>{{ 'numero'|trans }}
                 <th>{{ 'title'|trans }}</th>
                 <th>{{ 'date'|trans }}</th>
                 <th>{{ 'status'|trans }}</th>
             </tr>
         {% for ticket in tickets %}
             <tr>
+                <td>#{{ticket.id}}</td>
                 <td style="text-align:center;"><a href="{{path('showTicket', {'ticketId' : ticket.id})}}">{{ ticket.title }}</a></td>
                 <td style="text-align:center;">{{ ticket.dateEmit|date('d/m/Y | H:i' )}}</td>
                 <td style="text-align:center;"><span class="label {% if ticket.status == 'waiting' %}label-orange{% else  %}label-green{% endif %}">{{ ticket.status|trans }}</span></td>

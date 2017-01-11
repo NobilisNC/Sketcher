@@ -253,7 +253,7 @@ class AdminController extends Controller
                 $db->flush();
             }
 
-            return $this->redirectToRoute('tickets', array('ticketId' => $ticketId));
+            return $this->redirectToRoute('tickets');
         }
 
 

@@ -274,6 +274,54 @@
                 <source>send_ticket</source>
                 <target>Envoyer ticket</target>
             </trans-unit>
+            <trans-unit id="tickets">
+                <source>tickets</source>
+                <target>Tickets</target>
+            </trans-unit>
+            <trans-unit id="title">
+                <source>title</source>
+                <target>Titre</target>
+            </trans-unit>
+            <trans-unit id="content">
+                <source>content</source>
+                <target>Contenu</target>
+            </trans-unit>
+            <trans-unit id="status">
+                <source>status</source>
+                <target>Status</target>
+            </trans-unit>
+            <trans-unit id="waiting">
+                <source>waiting</source>
+                <target>attente</target>
+            </trans-unit>
+            <trans-unit id="processed">
+                <source>processed</source>
+                <target>traité</target>
+            </trans-unit>
+            <trans-unit id="date">
+                <source>date</source>
+                <target>Date</target>
+            </trans-unit>
+            <trans-unit id="author">
+                <source>author</source>
+                <target>Autheur</target>
+            </trans-unit>
+            <trans-unit id="action">
+                <source>action</source>
+                <target>Action</target>
+            </trans-unit>
+            <trans-unit id="mark_as_processed">
+                <source>mark_as_processed</source>
+                <target>Marquer comme traité</target>
+            </trans-unit>
+            <trans-unit id="back_to_tickets">
+                <source>back_to_tickets</source>
+                <target>Retour à la liste des tickets</target>
+            </trans-unit>
+            <trans-unit id="numero">
+                <source>numero</source>
+                <target>Numéro</target>
+            </trans-unit>
         </body>
     </file>
 </xliff>
