@@ -8,7 +8,7 @@
             </trans-unit>
             <trans-unit id="Website description">
                 <source>Website description</source>
-                <target>Sketcher est un site qui permet &lt;strong&gt;la création&lt;/strong&gt;, &lt;strong&gt;le partage&lt;/strong&gt; de dessins !</target>
+                <target>Sketcher est un site qui permet &lt;strong&gt;la création&lt;/strong&gt; et &lt;strong&gt;le partage&lt;/strong&gt; de dessins !&lt;br/&gt; Tu peux même dessiner à &lt;strong&gt;plusieurs&lt;/strong&gt; en même temps !</target>
             </trans-unit>
             <trans-unit id="username">
                 <source>Username</source>

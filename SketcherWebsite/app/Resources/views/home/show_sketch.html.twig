@@ -32,10 +32,12 @@
     					{% if can_modify %}
     					<ul class="button-group" style="float:left;">
     						<li>
+                            {% if app.user.isAuthorOf(sketch) %}
+                                <a href="{{ path('sketch', {'sketchId': sketch.id}) }}" class="button button-small button-primary"><i class="fa fa-pencil"></i> {{ 'edit'|trans }}</a>
+                            {% endif %}
                             {% if app.user.isAdmin %}
                                 <a href="{{path('deleteSketchAdmin', {'sketchId' : sketch.id})}}" class="button button-small button-red"><i class="fa fa-trash"></i>{{ 'delete'|trans }}</a>
                             {% else %}
-    							<a href="{{ path('sketch', {'sketchId': sketch.id}) }}" class="button button-small button-primary"><i class="fa fa-pencil"></i> {{ 'edit'|trans }}</a>
                                 <a href="{{path('deleteSketch', {'sketchId' : sketch.id})}}" class="button button-small button-red">
                                 {% if sketch.authors|length == 1 %}
                                     <i class="fa fa-trash"></i>{{ 'delete'|trans }}
