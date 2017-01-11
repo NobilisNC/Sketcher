@@ -73,7 +73,7 @@ class AdminController extends Controller
 
 		 if($u->getIsAdmin()) {
 			 if($user->getId() == 1 && $u == $user) {
-				 $this->get('session')->getFlashBag()->add('error', 'admin.giveup.superadmin.denied');
+				 $this->get('session')->getFlashBag()->add('error', ($u == $user ? 'admin.giveup.superadmin.denied' : 'admin.permission.denied'));
 				 return $this->redirectToRoute('usersAdmin');
 			 }
 

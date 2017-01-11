@@ -43,9 +43,14 @@ Sketcher.Socket.prototype.getFreshObjectsList = function() {
 	this.socket.emit('getFreshObjectsList');
 }
 
-Sketcher.Socket.prototype.addLayer = function(layerName) {
+Sketcher.Socket.prototype.addLayer = function(layerName, opacity = 1) {
 	console.log('[+] Layer added');
-	this.socket.emit('addLayer', {"layerName": layerName});
+	this.socket.emit('addLayer', {"layerName": layerName, "opacity": opacity});
+}
+
+Sketcher.Socket.prototype.setLayerOpacity = function(layerName, opacity = 100) {
+	console.log('[+] Layer opacity set');
+	this.socket.emit('setLayerOpacity', {"layerName": layerName, "opacity": opacity});
 }
 
 Sketcher.Socket.prototype.addObject = function(layerName, object) {

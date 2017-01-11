@@ -68,7 +68,6 @@ Sketcher.Core = (function(document, window) {
 			} else {
 				var ctx = this.layers[0].getContext();
 				this.clear(ctx);
-				console.log(Sketcher.UI);
 				this.tool.onMouseMove(e, ctx);
 			}
 		}
@@ -90,24 +89,21 @@ Sketcher.Core = (function(document, window) {
 			return ret;
 		}
 
-		this.addLayer = function(name, zIndex = 0, objects = []) {
-			if(name != 'trackpad')
-				this.socket.addLayer(name);
-				
+		this.addLayer = function(name, zIndex = 0, opacity = 100, objects = []) {
 			var i = this.layers.push(
 				new Sketcher.widgets.Layer(
 					name,
 					zIndex == 0 ? this.countLayers() : zIndex,
 					this.width,
 					this.height,
-					this.frame
+					this.frame,
+					opacity
 				)
 			);
 
 			objects.forEach((function(object) {
 				let obj = JSON.stringify(object);
 				this.layers[i-1].objects.push(obj);
-				this.socket.addObject(name, obj);
 			}).bind(this));
 
 			this.layers[i-1].update();
@@ -135,6 +131,7 @@ Sketcher.Core = (function(document, window) {
 			} else {
 				name = name.toLowerCase();
 				this.addLayer(name);
+				this.socket.addLayer(name);
 
 				return true;
 			}
@@ -226,6 +223,7 @@ Sketcher.Core = (function(document, window) {
 
 		this.setLayerOpacity = function(opacity) {
 			Sketcher.Core.getSelectedLayer().setOpacity(opacity);
+			this.socket.setLayerOpacity(Sketcher.Core.getSelectedLayer().name, opacity);
 		}
 
 		this.setLayerVisibility = function(id, visibility) {
@@ -285,6 +283,7 @@ Sketcher.Core = (function(document, window) {
 				this.addLayer(
 					layer.name,
 					layer.zIndex || this.layers.length,
+					layer.opacity || 100,
 					layer.objects
 				);
 			}).bind(this));
