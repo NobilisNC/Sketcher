@@ -21,5 +21,6 @@
 		</tr>
 	{% endfor %}
 	</table>
+    {% include 'modules/pagination_buttons.html.twig' with {'total' : total_tags, 'length' : tags|length,  'nb_elements_page' : nb_elements_admin} %}
 </div>
 {% endblock %}

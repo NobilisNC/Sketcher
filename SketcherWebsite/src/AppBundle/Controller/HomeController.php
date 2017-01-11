@@ -31,7 +31,8 @@ class HomeController extends Controller
         if($request->get('_route') == 'homepage')
             return $this->redirectToRoute('homepageLiteral');
 
-        $sketches = $this->getDoctrine()->getRepository('AppBundle:Sketch')->getMostLikedSketches($page, 16);
+
+        $sketches = $this->getDoctrine()->getRepository('AppBundle:Sketch')->getMostLikedSketches($page, $this->getParameter('nb_elements_gallerie'));
 
 
         return $this->render('home/index.html.twig',
@@ -74,7 +75,7 @@ class HomeController extends Controller
      */
     public function galleryByUserAction(Request $request, string $username, int $page = 0)
     {
-        $number_page = 16;
+        $number_page = $this->getParameter('nb_elements_gallerie');
         $db = $this->getDoctrine()->getRepository('AppBundle:User');
         $user = $db->findOneBy( array('username' => $username));
         $sketches = $user->getSketchesFrom($page, $number_page);
@@ -98,7 +99,7 @@ class HomeController extends Controller
     public function galleryBySearchAction(Request $request, string $searchToken, int $page = 0)
     {
 		$db = $this->getDoctrine()->getRepository('AppBundle:Sketch');
-        $sketches = $db->getSketchesTitleLike($searchToken, $page, 16);
+        $sketches = $db->getSketchesTitleLike($searchToken, $page, $this->getParameter('nb_elements_gallerie'));
         $nb = $db->getSketchesTitleLike_NB($searchToken);
 
         return $this->render('home/gallery.html.twig',
@@ -127,7 +128,7 @@ class HomeController extends Controller
 	{
         $tag_e = $this->getDoctrine()->getRepository('AppBundle:Tag')->findOneByName($tag);
 
-		$sketches = $tag_e ? $tag_e->getSketchesFrom($page, 16) : null;
+		$sketches = $tag_e ? $tag_e->getSketchesFrom($page, $this->getParameter('nb_elements_gallerie')) : null;
 
 
 		return $this->render('home/gallery.html.twig',

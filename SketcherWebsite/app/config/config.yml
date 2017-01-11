@@ -8,6 +8,8 @@ imports:
 parameters:
     locale: en
     sketches_directory : 'uploads/sketches'
+    nb_elements_gallerie : 16
+    nb_elements_admin : 25
 
 framework:
     #esi:             ~
@@ -39,6 +41,8 @@ twig:
     strict_variables: "%kernel.debug%"
     globals:
         sketches_directory: "%sketches_directory%"
+        nb_elements_gallerie : "%nb_elements_gallerie%"
+        nb_elements_admin : "%nb_elements_admin%"
 
 # Doctrine Configuration
 doctrine:

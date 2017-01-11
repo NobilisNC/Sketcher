@@ -10,4 +10,11 @@ namespace AppBundle\Repository;
  */
 class TagRepository extends \Doctrine\ORM\EntityRepository
 {
+
+    public function getNb() {
+        return $this->createQueryBuilder('tag')
+                        ->select('COUNT(tag)')
+                        ->getQuery()
+                        ->getSingleScalarResult();
+    }
 }
