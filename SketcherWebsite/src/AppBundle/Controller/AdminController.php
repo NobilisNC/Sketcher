@@ -123,5 +123,4 @@ class AdminController extends Controller
 
           return $this->redirectToRoute('tagsAdmin', $request->get('_route_params'));
        }
-
 }
