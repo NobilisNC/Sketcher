@@ -46,4 +46,22 @@ class AdminController extends Controller
         return $this->redirectToRoute('usersAdmin');
      }
 
+
+
+     /**
+      * @Route("/admin/sketches/{page}", name="sketchesAdmin")
+      */
+     public function sketchesAction(Request $request, int $page = 0)
+     {
+        $user = $this->getUser();
+
+        if(!$user || !$user->getIsAdmin())
+            return $this->redirectToRoute('homepage');
+
+         return $this->render('admin/sketches.html.twig', array(
+            'sketches' => $this->getDoctrine()->getRepository('AppBundle:Sketch')->findBy(array(), array(), 25, $page * 25 ),
+            'total_sketches' => $this->getDoctrine()->getRepository('AppBundle:Sketch')->getNb()
+        ));
+     }
+
 }

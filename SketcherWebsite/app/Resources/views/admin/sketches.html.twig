@@ -1,0 +1,57 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}- {{ 'Users administration'|trans }}{% endblock %}
+
+{% block body %}
+<div class="col-left-2 col-8">
+	<h2>{{ 'Sketches'|trans }}</h2>
+	<table class="table table-zebra table-hover">
+		<tr>
+			<th>{{ 'Title'|trans }}</th>
+			<th>{{ 'Authors'|trans }}</th>
+			<th>{{ 'Tags'|trans }}</th>
+			<th>{{ 'Actions'|trans }}</th>
+		</tr>
+	{% for sketch in sketches %}
+		<tr>
+            <td>{{sketch.name}}</td>
+			<td>
+                {% for author in sketch.authors %}
+                    {% include 'modules/user.html.twig' with {'user' : author} %}
+                {% endfor %}
+            </td>
+            <td>
+                {% for tag in sketch.tags %}
+                    {% include 'modules/tag.html.twig' with {'tag_name' : tag.name} %}
+                {% endfor %}
+            </td>
+			<td>
+				<a href="#" class="button button-small button-red" title="{{ 'user.delete'|trans }}"><i class="fa fa-trash"></i></a>
+			</td>
+		</tr>
+	{% endfor %}
+	</table>
+
+        {% set current_page = app.request.attributes.get('page') %}
+        {% set parameters = app.request.attributes.get('_route_params') %}
+
+        <div class="row">
+            {% if current_page != 0 %}
+            <div class="container col-1">
+            {% set parameters = parameters|merge({'page' : current_page - 1})  %}
+            <a href="{{path('sketchesAdmin', parameters) }}">
+                <i class="fa fa-angle-left" aria-hidden="true"></i> {{'previous'|trans}}
+            </a>
+            </div>
+            {% endif %}
+
+            {% if current_page * 25 + sketches|length < total_sketches %}
+            {% set parameters = parameters|merge({'page' : current_page + 1})  %}
+            <div class="container col-1 col-left-11">
+                <a href="{{path('sketchesAdmin', parameters ) }}">
+                    <i class="fa fa-angle-right" aria-hidden="true"></i> {{'next'|trans}}
+                </a>
+            </div>
+            {% endif %}
+</div>
+{% endblock %}
