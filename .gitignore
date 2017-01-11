@@ -20,3 +20,11 @@
 /SketcherWebsite/web/bundles/
 /SketcherWebsite/web/uploads/
 SketcherWebsite/composer.lock
+doc/*
+!doc/*.pdf
+!doc/*.bib
+!doc/*.dia
+!doc/*.png
+!doc/*.txt
+!doc/*.tex
+

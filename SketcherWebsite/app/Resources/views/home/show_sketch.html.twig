@@ -23,7 +23,7 @@
     			<figure id="showSketch" class="thumbnail">
     				<img src="{{ asset(sketches_directory ~ '/' ~ sketch.path) }}" alt="{{ sketch.name }}">
     				<figcaption>
-    					{% if app.user is not null and app.user in sketch.authors %}
+    					{% if app.user is not null and app.user.isAuthorOf(sketch) %}
     					<ul class="button-group" style="float:left;">
     						<li>
     							<a href="{{ path('sketch', {'sketchId': sketch.id}) }}" class="button button-small button-primary"><i class="fa fa-pencil"></i> {{ 'edit'|trans }}</a>
