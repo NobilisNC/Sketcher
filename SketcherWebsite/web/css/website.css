@@ -21,6 +21,10 @@ input[type="number"] {
 	width: 100%;
 }
 
+textarea {
+	resize: none;
+}
+
 .wordTruncation {
 	overflow: hidden;
 	white-space: nowrap;
