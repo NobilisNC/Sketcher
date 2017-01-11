@@ -18,18 +18,18 @@
 					<li><a href="{{ path('homepage') }}">Sketcher</a></li>
 				</ul>
                 <ul>
-                    <li>
-                        <form class="form form-horizontal" action="{{path('gallery')}}" method="get">
+	                <li>
+                        <form class="form form-horizontal" id="search" action="{{path('gallery')}}" method="get">
                             <div class="form_group">
-                                <input name="searchSketch" type="text" placeholder="{{'Search'|trans}}" />
-                                <button type="submit"><i class="fa fa-search"></i></button>
+								<div class="col-2">
+									<button type="submit"><i class="fa fa-search"></i></button>
+								</div>
+								<div class="col-9">
+									<input name="searchSketch" type="text" placeholder="{{'Search'|trans}}" />
+								</div>
                             </div>
                         </form>
                     </li>
-                </ul>
-
-
-                <ul>
 				{% if not is_granted('IS_AUTHENTICATED_REMEMBERED') %}
 					<li><a {% if app.request.getPathInfo() == path('gallery', {'page': 0}) %}class="active"{% endif %} href="{{ path('gallery') }}"><i class="fa fa-image"></i> {{ 'Gallery'|trans }}</a></li>
 					<li><a href="{{ path('signup') }}"><i class="fa fa-pencil"></i> {{ 'Register'|trans }}</a></li>

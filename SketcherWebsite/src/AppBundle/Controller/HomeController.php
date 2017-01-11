@@ -97,8 +97,9 @@ class HomeController extends Controller
     */
     public function galleryBySearchAction(Request $request, string $searchToken, int $page = 0)
     {
-        $sketches = $this->getDoctrine()->getRepository('AppBundle:Sketch')->getSketchesTitleLike($searchToken, $page, 16);
-        $nb = $this->getDoctrine()->getRepository('AppBundle:Sketch')->getSketchesTitleLike_NB($searchToken);
+		$db = $this->getDoctrine()->getRepository('AppBundle:Sketch');
+        $sketches = $db->getSketchesTitleLike($searchToken, $page, 16);
+        $nb = $db->getSketchesTitleLike_NB($searchToken);
 
         return $this->render('home/gallery.html.twig',
             array (
