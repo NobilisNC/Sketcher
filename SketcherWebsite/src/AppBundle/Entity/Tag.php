@@ -29,7 +29,7 @@ class Tag
     private $name;
 
     /**
-    * @ORM\ManyToMany(targetEntity="Sketch", inversedBy="tags", cascade={"persist"})
+    * @ORM\ManyToMany(targetEntity="Sketch", inversedBy="tags")
     * @ORM\JoinColumn(name="sketch", referencedColumnName="id")
     */
     private $sketches;

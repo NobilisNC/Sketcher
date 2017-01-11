@@ -77,19 +77,19 @@ class User implements UserInterface, \Serializable
 	private $isAdmin;
 
     /**
-    * @ORM\ManyToMany(targetEntity="Sketch", mappedBy="authors")
+    * @ORM\ManyToMany(targetEntity="Sketch", mappedBy="authors", cascade="persist")
     * @ORM\JoinColumn(name="sketch", referencedColumnName="id")
     */
     private $sketches;
 
     /**
-    * @ORM\ManyToMany(targetEntity="Sketch", inversedBy="likers")
+    * @ORM\ManyToMany(targetEntity="Sketch", inversedBy="likers", cascade="persist")
     * @ORM\JoinColumn(name="sketch", referencedColumnName="id")
     */
     private $liked_sketches;
 
     /**
-    * @ORM\ManyToOne(targetEntity="Sketch", inversedBy="editingUsers")
+    * @ORM\ManyToOne(targetEntity="Sketch", inversedBy="editingUsers", cascade="persist")
     * @ORM\JoinColumn(name="sketch", referencedColumnName="id")
     */
     private $editedSketch;

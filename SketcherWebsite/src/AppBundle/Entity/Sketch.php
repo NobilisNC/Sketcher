@@ -42,7 +42,7 @@ class Sketch
 
     /**
     *
-    * @ORM\ManyToMany(targetEntity="User", inversedBy="sketches", cascade={"persist", "remove"})
+    * @ORM\ManyToMany(targetEntity="User", inversedBy="sketches", cascade="persist")
     * @ORM\JoinColumn(name="user", referencedColumnName="id")
     *
     */
@@ -50,7 +50,7 @@ class Sketch
 
     /**
     *
-    * @ORM\ManyToMany(targetEntity="Tag", mappedBy="sketches")
+    * @ORM\ManyToMany(targetEntity="Tag", mappedBy="sketches", cascade={"persist"})
     * @ORM\JoinColumn(name="tag", referencedColumnName="id")
     *
     */
@@ -66,7 +66,7 @@ class Sketch
 
     /**
     *
-    * @ORM\ManyToMany(targetEntity="User", mappedBy="liked_sketches")
+    * @ORM\ManyToMany(targetEntity="User", mappedBy="liked_sketches", cascade={"persist"})
     * @ORM\JoinColumn(name="user", referencedColumnName="id")
     *
     */
@@ -100,7 +100,7 @@ class Sketch
 	private $data;
 
 	/**
-	* @ORM\OneToMany(targetEntity="User", mappedBy="editedSketch")
+	* @ORM\OneToMany(targetEntity="User", mappedBy="editedSketch", cascade={"persist"})
 	*/
 	private $editingUsers;
 
