@@ -91,6 +91,9 @@ Sketcher.Core = (function(document, window) {
 		}
 
 		this.addLayer = function(name, zIndex = 0, objects = []) {
+			if(name != 'trackpad')
+				this.socket.addLayer(name);
+				
 			var i = this.layers.push(
 				new Sketcher.widgets.Layer(
 					name,
@@ -102,7 +105,9 @@ Sketcher.Core = (function(document, window) {
 			);
 
 			objects.forEach((function(object) {
-				this.layers[i-1].objects.push(JSON.stringify(object));
+				let obj = JSON.stringify(object);
+				this.layers[i-1].objects.push(obj);
+				this.socket.addObject(name, obj);
 			}).bind(this));
 
 			this.layers[i-1].update();

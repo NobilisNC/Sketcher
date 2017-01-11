@@ -163,7 +163,7 @@ if(!$user->getIsAdmin())
 \paragraph{Catégories avancées: }Pour chaque dessin les auteurs peuvent ajouter/supprimer des \textit{tags}. Il est possible d'afficher les dessins affiliés à un tag en cliquant sur l'un d'entre eux.
 \paragraph{Notation: }Un système de \textit{J'aime} a été implanté. Chaque utilisateur peut aimer ou non un dessin. Les dessins sont classés par nombre de \textit{J'aime} dans la galerie.
 \paragraph{Internationalisation: }Le site est traduit grâce au système de localisation Symfony.
-\paragraph{Statut des utilisateurs: }Tous les noms d'utilisateurs écrits sur les pages du site sont accompagnées d'un macaron de couleur indiquant si l'utilisateur est connecté (vert) ou non (gris).
+\paragraph{Statut des utilisateurs: }Tous les noms d'utilisateurs écrits sur les pages du site sont accompagnées d'un macaron de couleur indiquant si l'utilisateur est connecté (vert) ou non (gris). Pour se faire un DATETIME est mis à jour en base de données à chaque action effectuée par l'utilisateur. Si cette valeur est plus éloignée que 2 minutes avant maintenant, l'utilisateur est connecté.
 
 
 \subsubsection{Routage}

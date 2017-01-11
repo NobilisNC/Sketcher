@@ -43,8 +43,12 @@ Sketcher.Socket.prototype.getFreshObjectsList = function() {
 	this.socket.emit('getFreshObjectsList');
 }
 
-Sketcher.Socket.prototype.addObject = function(name, object) {
+Sketcher.Socket.prototype.addLayer = function(layerName) {
+	console.log('[+] Layer added');
+	this.socket.emit('addLayer', {"layerName": layerName});
+}
+
+Sketcher.Socket.prototype.addObject = function(layerName, object) {
 	console.log('[+] Object added');
-	console.log(object);
-	this.socket.emit('addObject', {"name": name, "object": object});
+	this.socket.emit('addObject', {"layerName": layerName, "object": object});
 }

@@ -4,6 +4,11 @@
 
 {% block body %}
 <div class="col-left-2 col-8">
+	{% for flashMessage in app.session.flashbag.get('error') %}
+			<div class="error">
+				{{ flashMessage|trans }}
+			</div>
+	{% endfor %}
 	<h2>{{ 'users'|trans }}</h2>
 	<table class="table table-zebra table-hover">
 		<tr>
@@ -19,11 +24,13 @@
 			<td>{{ user.email }}</td>
 			<td style="text-align:center;">{{ user.locale }}</td>
 			<td style="text-align:center;">
-			{% if user.isAdmin %}
-				<span class="label label-green">admin</span>
-			{% else %}
-				<span class="label">user</span>
-			{% endif %}
+				<a href="{{ path('toggleUserAdmin', {'userId': user.id}) }}">
+				{% if user.isAdmin %}
+					<span class="label label-green">admin</span>
+				{% else %}
+					<span class="label">user</span>
+				{% endif %}
+				</a>
 			</td>
 			<td>
                 {% if user.id != app.user.id %}

@@ -633,12 +633,16 @@ class HomeController extends Controller
 		if(!$user)
 			return $res->setStatusCode(403)->setContent('{"status": "error", "msg": "You\'re not authenticated"}');
 
+		if(!$user->getIsAdmin())
+			return $res->setStatusCode(403)->setContent('{"status": "error", "msg": "You\'re not allowed to do that."}');
+
 		$db = $this->getDoctrine()->getManager();
 		$author = $db->getRepository('AppBundle:User')->findOneByUsername($username);
 		$sketch = $db->getRepository('AppBundle:Sketch')->findOneById($sketchId);
 
 		if(!$author || !$sketch || !$author->isAuthorOf($sketch))
 			return $res->setStatusCode(404)->setContent('{"status": "error", "msg": "Sketch doesn\' exist or user doesn\'t exist or is not an author of this sketch"}');
+
 
 		if($sketch->getAuthorsNumber() < 2)
 			return $res->setStatusCode(403)->setContent('{"status": "error", "msg": "You cannot delete the last author of a sketch"}');
@@ -647,6 +651,6 @@ class HomeController extends Controller
 		$db->persist($sketch);
 		$db->flush();
 
-		return $res->setContent('{"status": "success", "msg": "Author removed"}');
+		return $res->setContent('{"status": "success", "msg": "Author removed", "id": '.$author->getId().'}');
 	}
 }

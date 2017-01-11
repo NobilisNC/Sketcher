@@ -468,7 +468,7 @@ class User implements UserInterface, \Serializable
     public function isLoggedIn()
     {
 		$d = new \DateTime('now');
-		$d->sub(new \DateInterval('PT5M'));
+		$d->sub(new \DateInterval('PT2M'));
         return ($this->lastLogin > $d);
     }
 

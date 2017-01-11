@@ -14,6 +14,7 @@ var tagInput = function(settings = {}) {
 	this.entity = settings.entity || 'tag';
 	this.prototypeId = settings.prototypeId || 'sketch_tags';
 	this.allowNew = settings.allowNew || false;
+	this.allowRemove = settings.allowRemove || false;
 	this.dynamicUpdate = settings.dynamicUpdate || false;
 	this.extraData = settings.extraData || '';
 
@@ -105,55 +106,60 @@ var tagInput = function(settings = {}) {
 			this.tags[id].label.className = 'label label-primary';
 			this.tags[id].label.innerHTML = this.tags[id].name;
 
-			// Create a remove button
-			var deleteButton = document.createElement('a');
-			deleteButton.href = '#';
-			deleteButton.className = 'button close';
-			deleteButton.innerHTML = '<i class="fa fa-close"></i>';
-			deleteButton.setAttribute('data-id', this.nTags);
-			deleteButton.addEventListener('mousedown', (function(e) {
-				e.preventDefault();
-				var id = (e.target || e.srcElement).parentElement.getAttribute('data-id');
-				if(id) {
-					id = id.replace(/[^\d]+/g, '');
-					let input = document.getElementById(this.idPattern.replace('__name__', id));
-					let parent = (e.target || e.srcElement).parentElement.parentElement.parentElement;
-					let label = this.node.querySelector('a[data-id="'+id+'"]').parentNode;
-					if(this.dynamicUpdate) {
-						var x = new XMLHttpRequest();
-						x.open('GET', '/'+this.entity+'/remove/'+decodeURIComponent(input.value)+this.extraData);
-						x.onreadystatechange = (function() {
-							if(x.readyState == XMLHttpRequest.DONE && (x.status === 200 || x.status === 403 || x.status === 404)) {
-								try {
-									var res = JSON.parse(x.responseText);
-									if(res.status == 'success') {
-										input.parentNode.removeChild(input);
-										label.parentNode.removeChild(label);
-										this.remove(res.id);
-										k$.growl({	// Kickstart alert
-											text: res.msg,
-											delay: 2000,
-											type: 'alert-green'
-										});
-									} else {
-										k$.growl({	// Kickstart alert
-											text: res.msg,
-											delay: 2000,
-											type: 'alert-red'
-										});
+			if(this.allowRemove) {
+				console.log("allowRemove");
+				// Create a remove button
+				var deleteButton = document.createElement('a');
+				deleteButton.href = '#';
+				deleteButton.className = 'button close';
+				deleteButton.innerHTML = '<i class="fa fa-close"></i>';
+				deleteButton.setAttribute('data-id', this.nTags);
+				deleteButton.addEventListener('mousedown', (function(e) {
+					e.preventDefault();
+					var id = (e.target || e.srcElement).parentElement.getAttribute('data-id');
+					if(id) {
+						id = id.replace(/[^\d]+/g, '');
+						let input = document.getElementById(this.idPattern.replace('__name__', id));
+						let parent = (e.target || e.srcElement).parentElement.parentElement.parentElement;
+						let label = this.node.querySelector('a[data-id="'+id+'"]').parentNode;
+						if(this.dynamicUpdate) {
+							var x = new XMLHttpRequest();
+							x.open('GET', '/'+this.entity+'/remove/'+decodeURIComponent(input.value)+this.extraData);
+							x.onreadystatechange = (function() {
+								if(x.readyState == XMLHttpRequest.DONE && (x.status === 200 || x.status === 403 || x.status === 404)) {
+									try {
+										var res = JSON.parse(x.responseText);
+										if(res.status == 'success') {
+											input.parentNode.removeChild(input);
+											label.parentNode.removeChild(label);
+											this.remove(res.id);
+											k$.growl({	// Kickstart alert
+												text: res.msg,
+												delay: 2000,
+												type: 'alert-green'
+											});
+										} else {
+											k$.growl({	// Kickstart alert
+												text: res.msg,
+												delay: 2000,
+												type: 'alert-red'
+											});
+										}
+									} catch(e) {
+										console.log(e);
 									}
-								} catch(e) {
-									console.log(e);
 								}
-							}
-						}).bind(this);
-						x.send();
-					} else {
-						input.parentNode.removeChild(input);
-						label.parentNode.removeChild(label);
+							}).bind(this);
+							x.send();
+						} else {
+							input.parentNode.removeChild(input);
+							label.parentNode.removeChild(label);
+						}
 					}
-				}
-			}).bind(this), true);
+				}).bind(this), true);
+
+				this.tags[id].label.appendChild(deleteButton);
+			}
 
 			// Create input
 			var input = document.getElementById(this.idPattern.replace(/__name__/g, this.nTags));
@@ -169,7 +175,6 @@ var tagInput = function(settings = {}) {
 				this.inputsWrapper.appendChild(input);
 			}
 
-			this.tags[id].label.appendChild(deleteButton);
 			this.tagWrapper.appendChild(this.tags[id].label);
 		}
 	}

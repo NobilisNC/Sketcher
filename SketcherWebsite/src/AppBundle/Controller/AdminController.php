@@ -35,8 +35,9 @@ class AdminController extends Controller
 
         $db = $this->getDoctrine()->getManager();
         $user_delete = $db->getRepository('AppBundle:User')->findOneBy(array('id' =>$userId));
-        //Delete sketch if last authors
-        foreach($user_delete->getSketches() as $sketch )
+
+        // Delete sketch if last authors
+        foreach($user_delete->getSketches() as $sketch)
             if($sketch->getAuthorsNumber() == 1)
                 $db->remove($sketch);
 
@@ -45,6 +46,46 @@ class AdminController extends Controller
 
         return $this->redirectToRoute('usersAdmin');
      }
+
+     /**
+      * @Route("/admin/users/toggleAdmin/{userId}", name="toggleUserAdmin")
+      */
+      public function toggleUserAdminAction(Request $request, int $userId)
+      {
+          $user = $this->getUser();
+
+          if(!$user || !$user->getIsAdmin())
+              return $this->redirectToRoute('homepage');
+
+         $db = $this->getDoctrine()->getManager();
+         $u = $db->getRepository('AppBundle:User')->findOneBy(array('id' =>$userId));
+
+		 if($u != $user && $user->getId() != 1) {
+			 $this->get('session')->getFlashBag()->add('error', 'admin.permission.denied');
+			 return $this->redirectToRoute('usersAdmin');
+		 }
+
+		 if($u->getIsAdmin()) {
+			 if($user->getId() == 1 && $u == $user) {
+				 $this->get('session')->getFlashBag()->add('error', 'admin.giveup.superadmin.denied');
+				 return $this->redirectToRoute('usersAdmin');
+			 }
+
+			 $u->setIsAdmin(false);
+		 } else {
+			 if($user->getId() != 1) {
+				 $this->get('session')->getFlashBag()->add('error', 'admin.permission.denied');
+				 return $this->redirectToRoute('usersAdmin');
+			 }
+
+			 $u->setIsAdmin(true);
+		 }
+
+		 $db->persist($u);
+         $db->flush();
+
+         return $this->redirectToRoute('usersAdmin');
+      }
 
 
 

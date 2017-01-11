@@ -254,6 +254,14 @@
                 <source>Thumbnail</source>
                 <target>Thumbnail</target>
             </trans-unit>
+            <trans-unit id="admin.permission.denied">
+                <source>admin.permission.denied</source>
+                <target>Permission denied</target>
+            </trans-unit>
+            <trans-unit id="admin.giveup.superadmin.denied">
+                <source>admin.giveup.superadmin.denied</source>
+                <target>You cannot give up super-admin role</target>
+            </trans-unit>
         </body>
     </file>
 </xliff>

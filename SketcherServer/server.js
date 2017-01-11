@@ -29,6 +29,80 @@ io.on('connection', function(socket){
 
 	console.log('Client has connected.');
 
+	function getLayer(layerName) {
+		let ret;
+		layers.forEach(function(layer) {
+			if(layerName == layer.name) {
+				ret = layer;
+			}
+		});
+
+		return ret;
+	}
+
+	function updateObjects() {
+		let canvas = new Canvas(width, height);
+		let ctx = canvas.getContext('2d');
+
+		ctx.fillStyle = '#fff';
+		ctx.fillRect(0, 0, width, height);
+
+		layers.forEach(function(layer) {
+			layer.objects.forEach(function(object) {
+				Sketcher.Tools.drawFromJSON(JSON.stringify(object), ctx);
+			});
+		});
+
+		let postData = querystring.stringify({
+			"layers": JSON.stringify(layers),
+			"image": canvas.toDataURL().substr(22)
+		});
+
+		http.request({
+			hostname: 'sketcher',
+			port: 80,
+			path: '/api/'+token,
+			method: 'POST',
+			headers: {
+			    'Content-Type': 'application/x-www-form-urlencoded',
+			    'Content-Length': Buffer.byteLength(postData)
+			}
+		}, (res) => {
+			const statusCode = res.statusCode;
+			const contentType = res.headers['content-type'];
+
+			let error;
+			if (statusCode !== 200) {
+				error = new Error('[!] '+token+' - Add object request FAILED.\tStatus Code: '+statusCode);
+			} else if (!/^application\/json/.test(contentType)) {
+				error = new Error('[!] '+token+' - Invalid content-type.\tExpected application/json but received '+contentType);
+			}
+			if (error) {
+				console.log(error.message);
+				res.resume();
+				return;
+			}
+
+			res.setEncoding('utf8');
+			let rawData = '';
+			res.on('data', (chunk) => rawData += chunk);
+			res.on('end', () => {
+				try {
+					let parsedData = JSON.parse(rawData);
+					if(parsedData.status == 'success') {
+						console.log('[+] '+token+' - Sketch updated');
+					} else {
+						console.log("An error occured.");
+					}
+				} catch (e) {
+					console.log(e.message);
+				}
+			});
+		}).on('error', (e) => {
+		  console.log('Got error: '+e.message);
+	  }).write(postData);
+	}
+
 	// Returns a fresh version of this sketch objects
 	function getFreshObjectsList(token) {
 		if(!token) {
@@ -117,29 +191,27 @@ io.on('connection', function(socket){
 		});
 	});
 
+	socket.on('addLayer', function(data) {
+		let layer = getLayer(data.layerName);
+
+		if(layer != undefined) {
+			console.error('Layer already exists');
+			return;
+		}
+		layers.push({
+			name: data.layerName,
+			objects: []
+		});
+
+		updateObjects();
+	});
+
 	socket.on('addObject', function(data){
 		data.object = JSON.parse(data.object);
 
 		//!\ Get proper layer to add object
-		layers[0].objects.push(data.object);
-
-		let canvas = new Canvas(width, height);
-		let ctx = canvas.getContext('2d');
-
-		ctx.fillStyle = '#fff';
-		ctx.fillRect(0, 0, width, height);
-
-		layers.forEach(function(layer) {
-			layer.objects.forEach(function(object) {
-				Sketcher.Tools.drawFromJSON(JSON.stringify(object), ctx);
-			});
-		});
-		let postData = querystring.stringify({
-			"layers": JSON.stringify(layers),
-			"image": canvas.toDataURL().substr(22)
-		});
-
-		if(	//!\ Need better sanitizing !
+		let layer = getLayer(data.layerName);
+		if(	layer == undefined ||
 			Object.keys(data.object).length != 2 ||
 			typeof data.object.type != 'string' ||
 			typeof data.object.data != 'object'
@@ -148,49 +220,9 @@ io.on('connection', function(socket){
 			return;
 		}
 
-		http.request({
-			hostname: 'sketcher',
-			port: 80,
-			path: '/api/'+token,
-			method: 'POST',
-			headers: {
-			    'Content-Type': 'application/x-www-form-urlencoded',
-			    'Content-Length': Buffer.byteLength(postData)
-			}
-		}, (res) => {
-			const statusCode = res.statusCode;
-			const contentType = res.headers['content-type'];
+		layer.objects.push(data.object);
 
-			let error;
-			if (statusCode !== 200) {
-				error = new Error('[!] '+token+' - Add object request FAILED.\tStatus Code: '+statusCode);
-			} else if (!/^application\/json/.test(contentType)) {
-				error = new Error('[!] '+token+' - Invalid content-type.\tExpected application/json but received '+contentType);
-			}
-			if (error) {
-				console.log(error.message);
-				res.resume();
-				return;
-			}
-
-			res.setEncoding('utf8');
-			let rawData = '';
-			res.on('data', (chunk) => rawData += chunk);
-			res.on('end', () => {
-				try {
-					let parsedData = JSON.parse(rawData);
-					if(parsedData.status == 'success') {
-						console.log('[+] '+token+' - Sketch updated');
-					} else {
-						console.log("An error occured.");
-					}
-				} catch (e) {
-					console.log(e.message);
-				}
-			});
-		}).on('error', (e) => {
-		  console.log('Got error: '+e.message);
-	  }).write(postData);
+		updateObjects();
     });
 
 	socket.on('getFreshObjectsList', getFreshObjectsList.bind(this, token));

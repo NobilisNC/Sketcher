@@ -124,6 +124,7 @@
 		entity: 'tag',
 		prototypeId: 'tagInputPrototype',
 		allowNew: true,
+		allowRemove: true,
 		dynamicUpdate: true,
 		extraData: '/{{ sketch.id }}'
 	});
@@ -132,7 +133,7 @@
 		idPattern: 'sketch_authors___name___name',
 		entity: 'author',
 		prototypeId: 'authorInputPrototype',
-		allowNew: false,
+		{{ app.user.isAdmin ? 'allowRemove: true,' : '' }}
 		dynamicUpdate: true,
 		extraData: '/{{ sketch.id }}'
 	});

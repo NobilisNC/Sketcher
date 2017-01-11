@@ -250,6 +250,14 @@
                 <source>Thumbnail</source>
                 <target>Aperçu</target>
             </trans-unit>
+            <trans-unit id="admin.permission.denied">
+                <source>admin.permission.denied</source>
+                <target>Permission refusée</target>
+            </trans-unit>
+            <trans-unit id="admin.giveup.superadmin.denied">
+                <source>admin.giveup.superadmin.denied</source>
+                <target>Vous ne pouvez pas abandonner le rôle de super-admin.</target>
+            </trans-unit>
         </body>
     </file>
 </xliff>
