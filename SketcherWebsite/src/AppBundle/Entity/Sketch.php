@@ -12,7 +12,6 @@ use Doctrine\Common\Collections\ArrayCollection;
  *
  * @ORM\Table(name="sketch")
  * @ORM\Entity(repositoryClass="AppBundle\Repository\SketchRepository")
- * @UniqueEntity(fields="name", message="sketch.title.unique")
  */
 class Sketch
 {

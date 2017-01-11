@@ -68,7 +68,6 @@ Sketcher.Core = (function(document, window) {
 			} else {
 				var ctx = this.layers[0].getContext();
 				this.clear(ctx);
-				console.log(Sketcher.UI);
 				this.tool.onMouseMove(e, ctx);
 			}
 		}
@@ -91,11 +90,6 @@ Sketcher.Core = (function(document, window) {
 		}
 
 		this.addLayer = function(name, zIndex = 0, opacity = 100, objects = []) {
-			if(name != 'trackpad')
-				this.socket.addLayer(name);
-
-			console.log(opacity);
-
 			var i = this.layers.push(
 				new Sketcher.widgets.Layer(
 					name,
@@ -110,7 +104,6 @@ Sketcher.Core = (function(document, window) {
 			objects.forEach((function(object) {
 				let obj = JSON.stringify(object);
 				this.layers[i-1].objects.push(obj);
-				this.socket.addObject(name, obj);
 			}).bind(this));
 
 			this.layers[i-1].update();
@@ -138,6 +131,7 @@ Sketcher.Core = (function(document, window) {
 			} else {
 				name = name.toLowerCase();
 				this.addLayer(name);
+				this.socket.addLayer(name);
 
 				return true;
 			}

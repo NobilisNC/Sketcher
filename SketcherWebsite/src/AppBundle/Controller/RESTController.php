@@ -86,9 +86,9 @@ class RESTController extends Controller
 		if(!$sketch)
 			return $res->setStatusCode(404)->setContent('{"status": "error", "msg": "Sketch not found."}');
 
-		$layer = $request->request->all()['layers'];
-		if($layer) {
-			$sketch->setData($layer);
+		$layers = $request->request->all()['layers'];
+		if($layers) {
+			$sketch->setData($layers);
 			file_put_contents($this->getParameter('sketches_directory').'/'.$sketch->getPath(), base64_decode($request->request->all()['image']));
 		}
 

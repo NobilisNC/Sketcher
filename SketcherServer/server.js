@@ -49,7 +49,18 @@ io.on('connection', function(socket){
 
 		layers.forEach(function(layer) {
 			layer.objects.forEach(function(object) {
+				let opacity = (layer.opacity != undefined ? layer.opacity/100 : 1);
+				let strokeColor = object.data.stroke_color;
+				let fillColor = object.data.fill_color;
+
+				if(strokeColor)
+					object.data.stroke_color = object.data.stroke_color.replace(/[\d\.]+\)/, opacity+')');
+				if(fillColor)
+					object.data.fill_color = object.data.fill_color.replace(/[\d\.]+\)$/, opacity+')');
 				Sketcher.Tools.drawFromJSON(JSON.stringify(object), ctx);
+
+				object.data.stroke_color = strokeColor;
+				object.data.fill_color = fillColor;
 			});
 		});
 
@@ -57,8 +68,6 @@ io.on('connection', function(socket){
 			"layers": JSON.stringify(layers),
 			"image": canvas.toDataURL().substr(22)
 		});
-
-		console.log(layers);
 
 		http.request({
 			hostname: 'sketcher',
@@ -136,6 +145,7 @@ io.on('connection', function(socket){
 				try {
 					let parsedData = JSON.parse(rawData);
 					console.log('[+] '+token+' - Sent back fresh objects');
+					console.log(parsedData);
 					width = parsedData.width;
 					height = parsedData.height;
 					layers = parsedData.layers;
@@ -200,6 +210,7 @@ io.on('connection', function(socket){
 			console.error('Layer already exists');
 			return;
 		}
+
 		layers.push({
 			name: data.layerName,
 			objects: []
