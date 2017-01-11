@@ -53,19 +53,25 @@ div#topSlide {
 	overflow: hidden;
 }
 
-form#search {
+li#search {
+	padding: 2px 0;
 }
 
-	form#search div.form_group {
+	li#search:hover {
+		background: #e0e0e0;
+	}
+
+	li#search form.form-horizontal div.form_group {
 		margin: 0;
 	}
 
-	form#search input {
+	li#search form input {
 		display: inline-block;
 	}
 
-		form#search input + button {
+		li#search form input + button {
 			float: right;
+			background: none;
 		}
 
 div.error, div.info {
