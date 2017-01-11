@@ -257,6 +257,10 @@
             <trans-unit id="admin.giveup.superadmin.denied">
                 <source>admin.giveup.superadmin.denied</source>
                 <target>Vous ne pouvez pas abandonner le rôle de super-admin.</target>
+			</trans-unit>
+            <trans-unit id="remove_author">
+                <source>remove_author</source>
+                <target>Abandonner ce dessin</target>
             </trans-unit>
         </body>
     </file>

@@ -9,17 +9,21 @@ use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 class AdminController extends Controller
 {
     /**
-     * @Route("/admin/users", name="usersAdmin")
+     * @Route("/admin/users/{page}", name="usersAdmin")
      */
-    public function usersAction(Request $request)
+    public function usersAction(Request $request, int $page = 0)
     {
 		$user = $this->getUser();
 
 		if(!$user || !$user->getIsAdmin())
 			return $this->redirectToRoute('homepage');
 
+
+            $nb_elemnts = $nb_elements = $this->getParameter('nb_elements_admin');
+
         return $this->render('admin/users.html.twig', array(
-			'users' => $this->getDoctrine()->getRepository('AppBundle:User')->findAll()
+			'users' => $this->getDoctrine()->getRepository('AppBundle:User')->findBy(array(), array(), $nb_elements , $page * $nb_elements ),
+            'total_users' => $this->getDoctrine()->getRepository('AppBundle:User')->getNb()
 		));
     }
 
@@ -99,8 +103,9 @@ class AdminController extends Controller
         if(!$user || !$user->getIsAdmin())
             return $this->redirectToRoute('homepage');
 
+        $nb_elements = $this->getParameter('nb_elements_admin');
          return $this->render('admin/sketches.html.twig', array(
-            'sketches' => $this->getDoctrine()->getRepository('AppBundle:Sketch')->findBy(array(), array(), 25, $page * 25 ),
+            'sketches' => $this->getDoctrine()->getRepository('AppBundle:Sketch')->findBy(array(), array(), $nb_elements , $page * $nb_elements ),
             'total_sketches' => $this->getDoctrine()->getRepository('AppBundle:Sketch')->getNb()
         ));
      }
@@ -125,17 +130,19 @@ class AdminController extends Controller
       }
 
       /**
-       * @Route("/admin/tags", name="tagsAdmin")
+       * @Route("/admin/tags/{page}", name="tagsAdmin")
        */
-      public function tagsAction(Request $request)
+      public function tagsAction(Request $request, int $page = 0)
       {
   		$user = $this->getUser();
 
   		if(!$user || !$user->getIsAdmin())
   			return $this->redirectToRoute('homepage');
 
+        $nb_elements = $this->getParameter('nb_elements_admin');
           return $this->render('admin/tags.html.twig', array(
-  			'tags' => $this->getDoctrine()->getRepository('AppBundle:Tag')->findAll()
+  			'tags' => $this->getDoctrine()->getRepository('AppBundle:Tag')->findBy(array(), array(), $nb_elements , $page * $nb_elements ),
+            'total_tags' => $this->getDoctrine()->getRepository('AppBundle:Tag')->getNb()
   		));
       }
 

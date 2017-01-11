@@ -24,7 +24,9 @@
 
     {% else %}
     {% include 'modules/pagination.html.twig' with {    'sketches' : sketches,
-                                                        'total_sketches' : total_sketches
+                                                        'total' : total_sketches,
+                                                        'nb_elements_page' : nb_elements_gallerie
+
                                                     }   %}
     {% endif %}
 </div>

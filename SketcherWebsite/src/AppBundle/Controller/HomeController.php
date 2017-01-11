@@ -31,7 +31,8 @@ class HomeController extends Controller
         if($request->get('_route') == 'homepage')
             return $this->redirectToRoute('homepageLiteral');
 
-        $sketches = $this->getDoctrine()->getRepository('AppBundle:Sketch')->getMostLikedSketches($page, 16);
+
+        $sketches = $this->getDoctrine()->getRepository('AppBundle:Sketch')->getMostLikedSketches($page, $this->getParameter('nb_elements_gallerie'));
 
 
         return $this->render('home/index.html.twig',
@@ -74,7 +75,7 @@ class HomeController extends Controller
      */
     public function galleryByUserAction(Request $request, string $username, int $page = 0)
     {
-        $number_page = 16;
+        $number_page = $this->getParameter('nb_elements_gallerie');
         $db = $this->getDoctrine()->getRepository('AppBundle:User');
         $user = $db->findOneBy( array('username' => $username));
         $sketches = $user->getSketchesFrom($page, $number_page);
@@ -98,7 +99,7 @@ class HomeController extends Controller
     public function galleryBySearchAction(Request $request, string $searchToken, int $page = 0)
     {
 		$db = $this->getDoctrine()->getRepository('AppBundle:Sketch');
-        $sketches = $db->getSketchesTitleLike($searchToken, $page, 16);
+        $sketches = $db->getSketchesTitleLike($searchToken, $page, $this->getParameter('nb_elements_gallerie'));
         $nb = $db->getSketchesTitleLike_NB($searchToken);
 
         return $this->render('home/gallery.html.twig',
@@ -127,7 +128,7 @@ class HomeController extends Controller
 	{
         $tag_e = $this->getDoctrine()->getRepository('AppBundle:Tag')->findOneByName($tag);
 
-		$sketches = $tag_e ? $tag_e->getSketchesFrom($page, 16) : null;
+		$sketches = $tag_e ? $tag_e->getSketchesFrom($page, $this->getParameter('nb_elements_gallerie')) : null;
 
 
 		return $this->render('home/gallery.html.twig',
@@ -409,6 +410,44 @@ class HomeController extends Controller
         return $this->render('home/new_sketch.html.twig', array(
             'form' => $form->createView(),
         ));
+    }
+
+
+
+    /**
+    *
+    * @Route("/delete/{sketchId}",
+    *requirements={"sketchId": "\d+"},
+    * name="deleteSketch")
+    */
+    public function deleteSketchAction(Request $request, int $sketchId)
+    {
+        $user = $this->getUser();
+
+        if(!$user)
+            return $this->redirectToRoute('login');
+
+        $db = $this->getDoctrine()->getManager();
+        $sketch = $db->getRepository("AppBundle:Sketch")->findOneById($sketchId);
+
+        if(!$sketch)
+            return $this->redirectToRoute('gallery');
+
+        //If not author
+        if(!$sketch->getAuthors()->contains($user))
+            return $this->redirectToRoute('gallery');
+
+        //If last author == sketch delete
+        if ($sketch->getAuthorsNumber() == 1) {
+            $db->remove($sketch);
+            return $this->redirectToRoute('gallery');
+        } else {
+            $sketch->removeAuthor($user);
+            $db->merge($sketch);
+            $db->flush();
+            return $this->redirectToRoute('showSketch', array('sketchId' => $sketchId));
+        }
+
     }
 
 	////////////
