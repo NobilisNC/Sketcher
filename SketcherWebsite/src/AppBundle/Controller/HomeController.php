@@ -23,11 +23,23 @@ class HomeController extends Controller
 {
     /**
      * @Route("/", name="homepage")
-     * @Route("/home", name="homepageLiteral")
+     * @Route("/home/{page}", name="homepageLiteral")
      */
-    public function indexAction(Request $request)
+    public function indexAction(Request $request, int $page = 0)
     {
-        return $this->render('home/index.html.twig');
+        if($request->get('_route') == 'homepage')
+            return $this->redirectToRoute('homepageLiteral');
+            
+        $sketches = $this->getDoctrine()->getRepository('AppBundle:Sketch')->getMostLikedSketches($page, 16);
+
+
+        return $this->render('home/index.html.twig',
+            array (
+                'sketches' => $sketches,
+                'sketches_directory' => $this->getParameter('sketches_directory'),
+                'total_sketches' => $this->getDoctrine()->getRepository('AppBundle:Sketch')->getNb()
+            )
+        );
     }
 
 	/**
@@ -35,10 +47,10 @@ class HomeController extends Controller
 	 * @Route("/gallery/{page}", name="gallery",
      *         defaults = {"page" : 0} )
 	 */
-	public function galleryAction(Request $request, int $page)
+	public function galleryAction(Request $request, int $page = 0)
 	{
-        $sketches = $this->getDoctrine()->getRepository('AppBundle:Sketch')->getMostLikedSketches($page, 16);
-        //$sketches = $this->getDoctrine()->getRepository('AppBundle:Sketch')->getLastSketches($page, 16);
+        //$sketches = $this->getDoctrine()->getRepository('AppBundle:Sketch')->getMostLikedSketches($page, 16);
+        $sketches = $this->getDoctrine()->getRepository('AppBundle:Sketch')->getLastSketches($page, 16);
 
 
 		return $this->render('home/gallery.html.twig',
@@ -81,7 +93,7 @@ class HomeController extends Controller
 	 *   name="galleryByTag"
 	 * )
 	 */
-	public function galleryByTagAction(Request $request, string $tag, int $page)
+	public function galleryByTagAction(Request $request, string $tag, int $page = 0)
 	{
         $tag = $this->getDoctrine()->getRepository('AppBundle:Tag')->findOneByName($tag);
 

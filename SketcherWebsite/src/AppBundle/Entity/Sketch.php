@@ -60,7 +60,7 @@ class Sketch
     /**
      * @var \DateTime
      *
-     * @ORM\Column(name="date_upload", type="date")
+     * @ORM\Column(name="date_upload", type="datetime")
      */
     private $dateUpload;
 
