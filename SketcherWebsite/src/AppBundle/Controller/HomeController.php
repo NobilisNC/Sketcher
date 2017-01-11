@@ -71,7 +71,7 @@ class HomeController extends Controller
 
     /**
      *
-     * @Route("/gallery/user/{username}/{page}", name="user_gallery")
+     * @Route("/galleryof/{username}/{page}", name="user_gallery")
      */
     public function galleryByUserAction(Request $request, string $username, int $page = 0)
     {
@@ -80,7 +80,7 @@ class HomeController extends Controller
         $user = $db->findOneBy( array('username' => $username));
         $sketches = $user->getSketchesFrom($page, $number_page);
 
-        return $this->redirectToRoute('search_gallery', array('searchToken' => "caca"));
+        
 
         return $this->render('home/gallery.html.twig',
             array (
