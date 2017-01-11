@@ -2,7 +2,10 @@
 
 {% block title %}- {{ sketch is not null ? sketch.name : 'sketch.not.found'|trans }}{% endblock %}
 
-{% set can_modify = app.user is not null and app.user.isAuthorOf(sketch) or app.user.isAdmin %}
+{% set can_modify = app.user is not null  %}
+{% if can_modify %}
+{% set can_modify = app.user.isAuthorOf(sketch) or app.user.isAdmin %}
+{% endif %}
 
 
 {% block body %}
@@ -150,7 +153,9 @@
 		idPattern: 'sketch_authors___name___name',
 		entity: 'author',
 		prototypeId: 'authorInputPrototype',
+        {% if app.user is not null %}
 		{{ app.user.isAdmin ? 'allowRemove: true,' : '' }}
+        {% endif %}
 		dynamicUpdate: true,
 		extraData: '/{{ sketch.id }}'
 	});
