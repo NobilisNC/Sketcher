@@ -22,4 +22,28 @@ class AdminController extends Controller
 			'users' => $this->getDoctrine()->getRepository('AppBundle:User')->findAll()
 		));
     }
+
+    /**
+     * @Route("/admin/delete/{userId}", name="deleteUserAdmin")
+     */
+     public function deleteUserAction(Request $request, int $userId)
+     {
+         $user = $this->getUser();
+
+         if(!$user || !$user->getIsAdmin())
+             return $this->redirectToRoute('homepage');
+
+        $db = $this->getDoctrine()->getManager();
+        $user_delete = $db->getRepository('AppBundle:User')->findOneBy(array('id' =>$userId));
+        //Delete sketch if last authors
+        foreach($user_delete->getSketches() as $sketch )
+            if($sketch->getAuthorsNumber() == 1)
+                $db->remove($sketch);
+
+        $db->remove($user_delete);
+        $db->flush();
+
+        return $this->redirectToRoute('usersAdmin');
+     }
+
 }

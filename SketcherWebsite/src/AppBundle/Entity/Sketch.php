@@ -42,7 +42,7 @@ class Sketch
 
     /**
     *
-    * @ORM\ManyToMany(targetEntity="User", inversedBy="sketches")
+    * @ORM\ManyToMany(targetEntity="User", inversedBy="sketches", cascade={"persist", "remove"})
     * @ORM\JoinColumn(name="user", referencedColumnName="id")
     *
     */
