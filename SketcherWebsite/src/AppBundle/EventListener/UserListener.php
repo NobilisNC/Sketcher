@@ -40,8 +40,8 @@ class UserListener
 		$user = $this->getUser();
 		if($user !== null && $user !== 'anon.') {
 			$user->setLastLogin(new \DateTime('now'));
-			$this->db->persist($user);
-			$this->db->flush();
+			// $this->db->persist($user);
+			// $this->db->flush();
 		}
     }
 
