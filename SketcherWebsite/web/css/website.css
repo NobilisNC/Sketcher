@@ -53,6 +53,22 @@ div#topSlide {
 	overflow: hidden;
 }
 
+form#search {
+	padding: 10px 0;
+}
+
+	form#search div.form_group {
+		margin: 0;
+	}
+
+	form#search input {
+		display: inline-block;
+	}
+
+		form#search input + button {
+			float: right;
+		}
+
 div.error, div.info {
 	border-width: 1px;
 	border-style: solid;
