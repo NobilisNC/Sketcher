@@ -112,11 +112,11 @@ var tagInput = function(settings = {}) {
 			deleteButton.setAttribute('data-id', this.nTags);
 			deleteButton.addEventListener('mousedown', (function(e) {
 				e.preventDefault();
-				var id = e.srcElement.parentElement.getAttribute('data-id');
+				var id = (e.target || e.srcElement).parentElement.getAttribute('data-id');
 				if(id) {
 					id = id.replace(/[^\d]+/g, '');
 					let input = document.getElementById(this.idPattern.replace('__name__', id));
-					let parent = e.srcElement.parentElement.parentElement.parentElement;
+					let parent = (e.target || e.srcElement).parentElement.parentElement.parentElement;
 					let label = this.node.querySelector('a[data-id="'+id+'"]').parentNode;
 					if(this.dynamicUpdate) {
 						var x = new XMLHttpRequest();
