@@ -80,7 +80,7 @@ class HomeController extends Controller
         $user = $db->findOneBy( array('username' => $username));
         $sketches = $user->getSketchesFrom($page, $number_page);
 
-        
+
 
         return $this->render('home/gallery.html.twig',
             array (
@@ -438,7 +438,6 @@ class HomeController extends Controller
             'form' => $form->createView(),
         ));
     }
-
 
 
     /**

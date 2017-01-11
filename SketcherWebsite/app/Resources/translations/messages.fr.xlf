@@ -262,6 +262,18 @@
                 <source>remove_author</source>
                 <target>Abandonner ce dessin</target>
             </trans-unit>
+            <trans-unit id="result_for">
+                <source>result_for</source>
+                <target>Résultats pour "%term%"</target>
+            </trans-unit>
+            <trans-unit id="ticket">
+                <source>ticket</source>
+                <target>Ticket</target>
+            </trans-unit>
+            <trans-unit id="send_ticket">
+                <source>send_ticket</source>
+                <target>Envoyer ticket</target>
+            </trans-unit>
         </body>
     </file>
 </xliff>

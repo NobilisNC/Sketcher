@@ -1,0 +1,42 @@
+{% extends 'base.html.twig' %}
+
+{% block body %}
+<div class="col-left-1 col-10">
+    <main>
+        <h2>{{ 'tickets'|trans }}</h2>
+
+        <table class="table table-zebra">
+            <tr>
+                <th></th>
+                <th></th>
+            </tr>
+            <tr>
+                <td>{{'title'|trans}}</td>
+                <td>{{ ticket.title }}</td>
+            </tr>
+            <tr>
+                <td>{{'date'|trans}}</td>
+                <td>{{ ticket.dateEmit|date('d/m/Y | H:i' )}}</td>
+            </tr>
+            <tr>
+                <td>{{'author'|trans}}</td>
+                <td >{% include 'modules/user.html.twig' with {'user' : ticket.author} %}</td>
+            </tr>
+            <tr>
+                <td>{{'content'|trans}}</td>
+                <td>{{ticket.content}}</td>
+            </tr>
+            {% if app.user.isAdmin %}
+            <tr>
+                <td>{{'action'|trans}}</td>
+                <td>
+                        <a href="{{path('deleteTicket', {'ticketId' : ticket.id})}}"><i class="fa fa-trash"></i>{{'delete'|trans}}</a>
+                        <a href="{{path('processTicket', {'ticketId' : ticket.id})}}"><i class="fa fa-trash"></i>{{'mark_as_processed'|trans}}</a>
+                </td>
+            </tr>
+            {% endif %}
+    </table>
+</div>
+
+
+{% endblock %}

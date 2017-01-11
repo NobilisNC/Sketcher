@@ -1,0 +1,73 @@
+{% extends 'base.html.twig' %}
+
+{% block body %}
+<div class="col-left-1 col-10">
+    <main>
+        <h2>{{ 'tickets'|trans }}</h2>
+
+        <table class="table table-zebra table-hover">
+            <tr>
+                <th>{{ 'title'|trans }}</th>
+                <th>{{ 'date'|trans }}</th>
+                <th>{{ 'status'|trans }}</th>
+            </tr>
+        {% for ticket in tickets %}
+            <tr>
+                <td style="text-align:center;"><a href="{{path('showTicket', {'ticketId' : ticket.id})}}">{{ ticket.title }}</a></td>
+                <td style="text-align:center;">{{ ticket.dateEmit|date('d/m/Y | H:i' )}}</td>
+                <td style="text-align:center;"><span class="label {% if ticket.status == 'waiting' %}label-orange{% else  %}label-green{% endif %}">{{ ticket.status|trans }}</span></td>
+            </tr>
+        {% endfor %}
+    </table>
+        {% include 'modules/pagination_buttons.html.twig' with {'total' : total_tickets, 'length' : tickets|length,  'nb_elements_page' : nb_elements_admin} %}
+</div>
+
+<div class="container col-left-1 col-10">
+	<header>{{ 'send_ticket'|trans }}</header>
+
+{{ form_start(form, {'attr': {'class': 'form form-left'}}) }}
+        <div class="form_group row">
+            {{ form_label(form.title, null, {
+                'label': form.title.vars.label|trans,
+                'label_attr': {
+                    'class': 'col-2'
+                }
+            }) }}
+            <div class="input col-9">
+                {% set class = '' %}
+                {% if form.title.vars.value|length > 0 %}
+                    {% set class = class ~ (form.title.vars.valid ? ' success' : ' error')  %}
+                {% endif %}
+                {{ form_widget(form.title, {'attr': {'class': class} }) }}
+                {% if form.title.vars.errors|length > 0 %}
+                    {% for error in form.title.vars.errors %}
+                        <p class="error">{{ error.message|trans }}</p>
+                    {% endfor %}
+                {% endif %}
+            </div>
+        </div>
+        <div class="form_group row">
+            {{ form_label(form.content, null, {
+                'label': form.content.vars.label|trans,
+                'label_attr': {
+                    'class': 'col-2'
+                }
+            }) }}
+            <div class="input col-9">
+                {% set class = '' %}
+                {% if form.content.vars.value|length > 0 %}
+                    {% set class = class ~ (form.content.vars.valid ? ' success' : ' error')  %}
+                {% endif %}
+                {{ form_widget(form.content, {'attr': {'class': class} }) }}
+                {% if form.content.vars.errors|length > 0 %}
+                    {% for error in form.content.vars.errors %}
+                        <p class="error">{{ error.message|trans }}</p>
+                    {% endfor %}
+                {% endif %}
+            </div>
+        </div>
+
+    <input type="submit" role="button" name="upload" value={{'send_ticket'|trans}} class="col-12 button button-primary" />
+{{ form_end(form) }}
+
+{% endblock %}
