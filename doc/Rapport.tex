@@ -185,6 +185,8 @@ Afin de garantir un résultat similaire sur un maximum de navigateurs nous avons
 \subsubsection{Ajax}
 Nous avons privilégié des interfaces avancées pour certains formulaires (champs d'édition de tags, d'auteurs, de titre). Pour se faire nous avons eu recours à l'utilisation de \texttt{XMLHttpRequest}, une object Javascript qui permet de faire envoyer des requêtes HTTP par le client. Le client envoie donc des requêtes \texttt{GET} vers le serveur pour signaler l'ajout ou la suppression d'un tag ou d'un auteur, le serveur envoie sa réponse sous forme d'un fichier JSON avec une message d'erreur ou de succès qui sera parsé par le client pour afficher une notification.
 
+Deux modules ont été développés pour permettre la validation des ces champs via des requêtes Ajax. Il s'agit des fichiers \texttt{web/js/tagInput.js} et \texttt{web/js/fastInput.js} qui sont initialisés dans les vues qui les utilisents (\texttt{app/Resources/views/show_sketch.html.twig} par exemple).
+
 \subsection{Serveur de dessin}
 Cet élément est développé en Javascript et est supposé être lancé avec le moteur \cite{NodeJS}NodeJS. Ce serveur fait la liaison entre l'application client de dessin et le serveur web. Elle s'occupe de transmettre les modifications aux utilisateurs qui modifient un même dessin.
 
