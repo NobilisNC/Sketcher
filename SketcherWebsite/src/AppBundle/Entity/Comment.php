@@ -29,14 +29,14 @@ class Comment
     private $content;
 
     /**
-    *  @ORM\ManyToOne(targetEntity="User", cascade={"all"})
-     * @ORM\JoinColumn(name="user", referencedColumnName="id")
+    *  @ORM\ManyToOne(targetEntity="User")
+     * @ORM\JoinColumn(name="user", referencedColumnName="id", onDelete="cascade")
     */
     private $author;
 
     /**
-    *  @ORM\ManyToOne(targetEntity="Sketch", cascade={"remove"})
-     * @ORM\JoinColumn(name="sketch", referencedColumnName="id")
+    *  @ORM\ManyToOne(targetEntity="Sketch")
+     * @ORM\JoinColumn(name="sketch", referencedColumnName="id", onDelete="cascade")
     */
     private $sketch;
 

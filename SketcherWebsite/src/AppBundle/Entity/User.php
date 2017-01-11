@@ -89,8 +89,8 @@ class User implements UserInterface, \Serializable
     private $liked_sketches;
 
     /**
-    * @ORM\ManyToOne(targetEntity="Sketch", inversedBy="editingUsers", cascade="persist")
-    * @ORM\JoinColumn(name="sketch", referencedColumnName="id")
+    * @ORM\ManyToOne(targetEntity="Sketch", inversedBy="editingUsers", cascade={"remove"})
+    * @ORM\JoinColumn(name="sketch", referencedColumnName="id", onDelete="SET NULL")
     */
     private $editedSketch;
 
