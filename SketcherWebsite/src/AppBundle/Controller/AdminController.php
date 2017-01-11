@@ -24,7 +24,7 @@ class AdminController extends Controller
     }
 
     /**
-     * @Route("/admin/delete/{userId}", name="deleteUserAdmin")
+     * @Route("/admin/users/delete/{userId}", name="deleteUserAdmin")
      */
      public function deleteUserAction(Request $request, int $userId)
      {
@@ -63,5 +63,28 @@ class AdminController extends Controller
             'total_sketches' => $this->getDoctrine()->getRepository('AppBundle:Sketch')->getNb()
         ));
      }
+
+     /**
+      * @Route("/admin/sketches/delete/{sketchId}", name="deleteSketchAdmin")
+      */
+      public function deleteSketchAction(Request $request, int $sketchId)
+      {
+          $user = $this->getUser();
+
+          if(!$user || !$user->getIsAdmin())
+              return $this->redirectToRoute('homepage');
+
+         $db = $this->getDoctrine()->getManager();
+         $sketch_delete = $db->getRepository('AppBundle:Sketch')->findOneBy(array('id' =>$sketchId));
+
+         $db->remove($sketch_delete);
+         $db->flush();
+
+         return $this->redirectToRoute('sketchesAdmin', $request->get('_route_params'));
+      }
+
+
+
+
 
 }

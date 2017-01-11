@@ -29,7 +29,7 @@ class Comment
     private $content;
 
     /**
-    *  @ORM\ManyToOne(targetEntity="User", cascade={"remove"})
+    *  @ORM\ManyToOne(targetEntity="User", cascade={"all"})
      * @ORM\JoinColumn(name="user", referencedColumnName="id")
     */
     private $author;
