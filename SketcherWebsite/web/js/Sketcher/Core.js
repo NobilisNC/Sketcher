@@ -276,9 +276,14 @@ Sketcher.Core = (function(document, window) {
 		this.frame.style.height = this.height+"px";
 
 		window.onload = (function() {
-			// console.log(JSON.parse(Sketcher.data));
 			// Add the needed trackpad layer and a first drawing layer
 			this.addLayer("trackpad", 98);
+
+			try {
+				let json = JSON.parse(Sketcher.data);
+				Sketcher.data = json;
+			} catch(e) { }
+
 			Sketcher.data.layers.forEach((function(layer) {
 				this.addLayer(
 					layer.name,

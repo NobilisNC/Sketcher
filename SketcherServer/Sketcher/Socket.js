@@ -1,5 +1,5 @@
 Sketcher.Socket = function(host, port) {
-	this.host = host || 'sketcher';
+	this.host = host || 'localhost';
 	this.port = port || 10053;
 	this.loginState = 'disconnected';
 	this.localID = window.localStorage.getItem('user_id');

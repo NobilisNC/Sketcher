@@ -278,6 +278,7 @@ Sketcher.Core = (function(document, window) {
 
 		// Add the needed trackpad layer and a first drawing layer
 		this.addLayer("trackpad", 98);
+		console.log(Sketcher.data);
 		Sketcher.data.layers.forEach((function(layer) {
 			this.addLayer(
 				layer.name,

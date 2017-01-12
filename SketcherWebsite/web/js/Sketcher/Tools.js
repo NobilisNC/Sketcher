@@ -441,7 +441,6 @@ Sketcher.ToolsAbstract = (function() {
 
 		ctx.fillStyle = this.fill_color;
 		ctx.strokeStyle = this.stroke_color;
-		console.log(this.font);
 		ctx.font = 'normal normal '+this.options.size+'px "'+this.font+'"';
 
 		if(this.options.stroke)

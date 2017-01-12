@@ -8,9 +8,11 @@ var Canvas = require('canvas');
 var Image = Canvas.Image;
 var Font = Canvas.Font;
 
-require('Sketcher.js')();
-eval(fs.readFileSync('node_modules/Sketcher/Tools.js')+'');
+require('./Sketcher.js')();
+eval(fs.readFileSync('Sketcher/Tools.js')+'');
 
+var apiHost = 'localhost';
+var apiPort = 8000;
 var port = 10053;
 var verb = 2; // Can be 0: errors, 1: warnings, 2: info
 
@@ -70,8 +72,8 @@ io.on('connection', function(socket){
 		});
 
 		http.request({
-			hostname: 'sketcher',
-			port: 80,
+			hostname: apiHost,
+			port: apiPort,
 			path: '/api/'+token,
 			method: 'POST',
 			headers: {
@@ -122,7 +124,7 @@ io.on('connection', function(socket){
 
 		console.log('[+] '+token+' - getFreshObjectsList request received.');
 
-		http.get('http://sketcher/api/'+token+'/refresh', (res) => {
+		http.get('http://'+apiHost+':'+apiPort+'/api/'+token+'/refresh', (res) => {
 			const statusCode = res.statusCode;
 			const contentType = res.headers['content-type'];
 
@@ -169,7 +171,7 @@ io.on('connection', function(socket){
 	socket.on('login', function(data) {
 		data = JSON.parse(data);
 
-		http.get('http://sketcher/api/'+data.token, (res) => {
+		http.get('http://'+apiHost+':'+apiPort+'/api/'+data.token, (res) => {
 			const statusCode = res.statusCode;
 			const contentType = res.headers['content-type'];
 

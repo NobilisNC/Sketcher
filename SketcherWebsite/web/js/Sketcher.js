@@ -68,6 +68,12 @@ var Sketcher = Sketcher || (function(document, window) {
 		};
 
 		this.data = settings.data || {};
+
+		try {
+			let json = JSON.parse(this.data);
+			this.data = json;
+		} catch(e) { }
+
 		this.token = settings.token || null;
 
 		if(this.token == null && this.settings.offline == false) {
