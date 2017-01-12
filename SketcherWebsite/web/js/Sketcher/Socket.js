@@ -28,6 +28,10 @@ Sketcher.Socket = function(host, port) {
 		Sketcher.data = objects;
 		console.log('[+] got fresh objects');
 	});
+
+	this.socket.on('error', function(objects) {
+		console.error('[!] An error occurred');
+	});
 }
 
 Sketcher.Socket.prototype.login = function() {
