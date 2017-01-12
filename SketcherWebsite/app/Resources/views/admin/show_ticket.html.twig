@@ -14,20 +14,20 @@
                 <th></th>
             </tr>
             <tr>
-                <td>{{'title'|trans}}</td>
+                <td>{{ 'title'|trans }}</td>
                 <td>{{ ticket.title }}</td>
             </tr>
             <tr>
-                <td>{{'date'|trans}}</td>
+                <td>{{ 'date'|trans }}</td>
                 <td>{{ ticket.dateEmit|date('d/m/Y | H:i' )}}</td>
             </tr>
             <tr>
-                <td>{{'author'|trans}}</td>
-                <td >{% include 'modules/user.html.twig' with {'user' : ticket.author} %}</td>
+                <td>{{ 'author'|trans }}</td>
+                <td >{% include 'modules/user.html.twig' with { 'user': ticket.author } %}</td>
             </tr>
             <tr>
-                <td>{{'content'|trans}}</td>
-                <td>{{ticket.content}}</td>
+                <td>{{ 'content'|trans }}</td>
+                <td>{{ ticket.content|nl2br }}</td>
             </tr>
             {% if app.user.isAdmin %}
             <tr>

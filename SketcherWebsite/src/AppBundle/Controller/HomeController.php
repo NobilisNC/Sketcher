@@ -58,15 +58,16 @@ class HomeController extends Controller
          else
             $sketches = $this->getDoctrine()->getRepository('AppBundle:Sketch')->getLastSketches($page, 16);
 
-
-
-		return $this->render('home/gallery.html.twig',
+		$response = $this->render('home/gallery.html.twig',
             array (
                 'sketches' => $sketches,
             	'sketches_directory' => $this->getParameter('sketches_directory'),
                 'total_sketches' => $this->getDoctrine()->getRepository('AppBundle:Sketch')->getNb()
             )
         );
+		$response->headers->addCacheControlDirective('must-revalidate', true);
+
+		return $response;
 	}
 
     /**
@@ -225,18 +226,18 @@ class HomeController extends Controller
             }
         }
 
-
-
         $db = $this->getDoctrine()->getRepository('AppBundle:Comment');
         $data["comments"] = $db->findBy(array('sketch' => $sketch));
 
         $data["sketch"] = $sketch;
 
-
-		return $this->render(
+		$response = $this->render(
 			'home/show_sketch.html.twig',
             $data
         );
+		$response->headers->addCacheControlDirective('must-revalidate', true);
+
+		return $response;
 	}
 
 	/**

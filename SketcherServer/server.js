@@ -145,12 +145,11 @@ io.on('connection', function(socket){
 				try {
 					let parsedData = JSON.parse(rawData);
 					console.log('[+] '+token+' - Sent back fresh objects');
-					console.log(parsedData);
 					width = parsedData.width;
 					height = parsedData.height;
 					layers = parsedData.layers;
 
-					socket.broadcast.emit('getFreshObjectsList', rawData);
+					io.sockets.emit('getFreshObjectsList', rawData);
 				} catch (e) {
 					console.log(e.message);
 				}
@@ -241,7 +240,7 @@ io.on('connection', function(socket){
 			typeof data.object.type != 'string' ||
 			typeof data.object.data != 'object'
 		) {
-			socket.emit('error');
+			io.emit('error');
 			return;
 		}
 
