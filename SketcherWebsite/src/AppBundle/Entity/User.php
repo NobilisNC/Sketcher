@@ -100,6 +100,15 @@ class User implements UserInterface, \Serializable
 	private $editToken;
 
 
+    /**
+    * @ORM\OneToMany(targetEntity="Ticket", mappedBy="author")
+    * @ORM\JoinColumn(name="ticket", referencedColumnName="id", onDelete="SET NULL")
+    */
+    private $tickets;
+
+
+
+
 	public function __construct() {
 		$this->isActive = true;
 		$this->lastLogin = new \DateTime('now');
@@ -526,6 +535,51 @@ class User implements UserInterface, \Serializable
     */
     public function getNb() {
         return $this->sketches->count();
+    }
+
+    /**
+     * Add ticket
+     *
+     * @param \AppBundle\Entity\Ticket $ticket
+     *
+     * @return User
+     */
+    public function addTicket(\AppBundle\Entity\Ticket $ticket)
+    {
+        $this->tickets[] = $ticket;
+
+        return $this;
+    }
+
+    /**
+     * Remove ticket
+     *
+     * @param \AppBundle\Entity\Ticket $ticket
+     */
+    public function removeTicket(\AppBundle\Entity\Ticket $ticket)
+    {
+        $this->tickets->removeElement($ticket);
+    }
+
+    /**
+     * Get tickets
+     *
+     * @return \Doctrine\Common\Collections\Collection
+     */
+    public function getTickets(int $page = null, int $number = null)
+    {
+        return $this->tickets->slice($page * $number , $number );
+
+    }
+
+    /**
+     * Get tickets numbers
+     *
+     * @return int
+     */
+    public function getTicketsNumber()
+    {
+        return $this->tickets->count();
     }
 
 

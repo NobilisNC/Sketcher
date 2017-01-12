@@ -20,7 +20,7 @@
 		</tr>
 	{% for user in users %}
 		<tr>
-			<td>{% include 'modules/user.html.twig' with {'user' : user} %}</a></td>
+			<td>{% include 'modules/user.html.twig' with {'user' : user} %}</td>
 			<td>{{ user.email }}</td>
 			<td style="text-align:center;">{{ user.locale }}</td>
 			<td style="text-align:center;">

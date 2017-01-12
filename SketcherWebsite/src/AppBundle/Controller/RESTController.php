@@ -92,7 +92,7 @@ class RESTController extends Controller
 			file_put_contents($this->getParameter('sketches_directory').'/'.$sketch->getPath(), base64_decode($request->request->all()['image']));
 		}
 
-		$db->persist($sketch);
+		$db->merge($sketch);
 		$db->flush();
 
 		return $res->setContent('{"status": "success"}');

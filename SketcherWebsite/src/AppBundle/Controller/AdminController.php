@@ -5,6 +5,8 @@ namespace AppBundle\Controller;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
+use AppBundle\Entity\Ticket;
+use AppBundle\Form\TicketType;
 
 class AdminController extends Controller
 {
@@ -164,4 +166,122 @@ class AdminController extends Controller
 
           return $this->redirectToRoute('tagsAdmin', $request->get('_route_params'));
        }
+
+
+       /**
+       *
+       * @Route("/tickets/{page}" ,  name="tickets")
+       *
+       */
+       public function ticketAction(Request $request, int $page = 0)
+       {
+           $user = $this->getUser();
+
+           if(!$user)
+               return $this->redirectToRoute('login');
+
+           $ticket = new Ticket();
+
+           $form = $this->createForm(TicketType::class, $ticket);
+           $form->handleRequest($request);
+
+           if($form->isSubmitted() && $form->isValid()) {
+                $ticket->setAuthor($user);
+       			$db = $this->getDoctrine()->getManager();
+                $db->persist($ticket);
+                $db->flush();
+            }
+
+            $nb_elements = $this->getParameter('nb_elements_admin');
+            $db = $this->getDoctrine()->getmanager();
+            if ($user->getIsAdmin()) {
+                $tickets = $db->getRepository('AppBundle:Ticket')->findBy(array(), array('status' => 'ASC'), $nb_elements , $page * $nb_elements );
+                $nb_tickets = $db->getRepository('AppBundle:Ticket')->getNb();
+            } else {
+            $tickets = $db->getRepository('AppBundle:Ticket')->getTicketWithAuthor($user, $page, $nb_elements);
+            $nb_tickets = $user->getTicketsNumber();
+            }
+
+
+            return $this->render('admin/tickets.html.twig',array(
+                                'form' => $form->createView(),
+                                'tickets' => $tickets,
+                                'total_tickets' => $nb_tickets
+            ));
+       }
+
+
+       /**
+       *
+       * @Route("/tickets/view/{ticketId}" , name="showTicket")
+       *
+       */
+       public function show_ticketAction(Request $request, int $ticketId)
+       {
+           $user = $this->getUser();
+
+           if(!$user)
+               return $this->redirectToRoute('login');
+
+           $ticket = $this->getDoctrine()->getRepository('AppBundle:Ticket')->findOneById($ticketId);
+
+
+            return $this->render('admin/show_ticket.html.twig',array(
+                                'ticket' => $ticket
+            ));
+       }
+
+       /**
+       *
+       * @Route("/ticket/delete/{ticketId}" , name="deleteTicket")
+       *
+       */
+        public function deleteTicketAction(Request $request, int $ticketId)
+        {
+            $user = $this->getUser();
+
+            if(!$user)
+                return $this->redirectToRoute('login');
+
+            if(!$user->getIsAdmin())
+                return $this->redirectToRoute('showTicket', array('ticketId' => $ticketId));
+
+            $ticket = $this->getDoctrine()->getRepository('AppBundle:Ticket')->findOneById($ticketId);
+            if($ticket) {
+                $db = $this->getDoctrine()->getManager();
+                $db->remove($ticket);
+                $db->flush();
+            }
+
+            return $this->redirectToRoute('tickets');
+        }
+
+
+        /**
+        *
+        * @Route("/ticket/process/{ticketId}" , name="processTicket")
+        *
+        */
+         public function processTicketAction(Request $request, int $ticketId)
+         {
+             $user = $this->getUser();
+
+             if(!$user)
+                 return $this->redirectToRoute('login');
+
+             if(!$user->getIsAdmin())
+                return $this->redirectToRoute('showTicket', array('ticketId' => $ticketId));
+
+             $ticket = $this->getDoctrine()->getRepository('AppBundle:Ticket')->findOneById($ticketId);
+             if($ticket) {
+                 $ticket->setStatus('processed');
+                 $db = $this->getDoctrine()->getManager();
+                 $db->merge($ticket);
+                 $db->flush();
+             }
+
+             return $this->redirectToRoute('showTicket', array('ticketId' => $ticketId));
+         }
+
+
 }
