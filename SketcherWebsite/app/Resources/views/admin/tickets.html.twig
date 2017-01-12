@@ -14,8 +14,8 @@
             </tr>
         {% for ticket in tickets %}
             <tr>
-                <td>#{{ticket.id}}</td>
-                <td style="text-align:center;"><a href="{{path('showTicket', {'ticketId' : ticket.id})}}">{{ ticket.title }}</a></td>
+                <td><a href="{{path('showTicket', {'ticketId' : ticket.id})}}">#{{ticket.id}}</a></td>
+                <td style="text-align:center;">{{ ticket.title }}</td>
                 <td style="text-align:center;">{{ ticket.dateEmit|date('d/m/Y | H:i' )}}</td>
                 <td style="text-align:center;"><span class="label {% if ticket.status == 'waiting' %}label-orange{% else  %}label-green{% endif %}">{{ ticket.status|trans }}</span></td>
             </tr>

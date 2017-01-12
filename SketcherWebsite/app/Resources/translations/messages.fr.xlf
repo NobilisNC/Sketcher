@@ -322,6 +322,14 @@
                 <source>numero</source>
                 <target>Numéro</target>
             </trans-unit>
+            <trans-unit id="something_wrong">
+                <source>something_wrong</source>
+                <target>Quelque chose ne va pas ? </target>
+            </trans-unit>
+            <trans-unit id="send_us_ticket">
+                <source>send_us_ticket</source>
+                <target>Envoyer nous un ticket</target>
+            </trans-unit>
         </body>
     </file>
 </xliff>
