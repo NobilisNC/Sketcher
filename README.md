@@ -1,13 +1,24 @@
 # Sketcher
-A collaborative drawing app.
+Une application de création et de partage de dessins en PHP et Javascript.
 
 ## Installation
-### Website
-All you need is Composer. Go to SketcherWebsite and run `composer update`.
+### Site web
+Vous avez besoin de Composer. Rendez-vous dans le dossier *SketcherWebsite* et lancez `composer update`.
 
-Then, you got a classic Symfony 3 development environment. You can setup the dev server by running `php bin/console server:run`.
+Créez la base de données avec les commandes
+```bash
+php bin/console doctrine:database:create
+php bin/console doctrine:schema:create
+```
 
-### Server
-You need NodeJS and NPM installed. Run `npm i` to install dependencies.
+Lancez le serveur avec la commande `php bin/console server:run`.
 
-Start the server with `node server.js`.
+### Serveur de dessin
+Rendez-vous dans le dossier *SketcherServer*
+
+Installez les dépendances du projet avec `npm i`.
+
+Lancez le serveur avec la commande `node server.js`.
+
+### Rapport et documentation
+Vous trouverez dans le dossier *doc* le rapport aux formats .tex et .pdf

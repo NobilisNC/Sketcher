@@ -199,6 +199,9 @@ class HomeController extends Controller
 		$db = $this->getDoctrine()->getRepository('AppBundle:Sketch');
 		$sketch = $db->findOneById($sketchId);
 
+		if(!$sketch)
+			return $this->redirectToRoute('gallery');
+
         if($user) {
             $comment = new Comment();
 
